@@ -4,6 +4,7 @@ RUN mkdir /project
 WORKDIR /project
 
 RUN npm install -g @angular/cli@15
+RUN npm install -g bootstrap@v5.2.3
 
 COPY package.json ./
 RUN npm install --package-lock-only
