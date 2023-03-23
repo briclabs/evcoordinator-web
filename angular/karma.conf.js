@@ -31,12 +31,12 @@ module.exports = function (config) {
         { type: 'text-summary' }
       ]
     },
-    reporters: ['progress', 'kjhtml'],
+    preprocessors: {'src/**/*.js': ['coverage'], 'src/**/*.ts': ['coverage'], 'src/**/*.html': ['coverage']},
+    reporters: ['progress', 'kjhtml', 'coverage'],
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: [''],
     singleRun: false,
     restartOnFileChange: true
   });
