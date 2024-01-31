@@ -5,6 +5,7 @@ WORKDIR /project
 
 RUN npm install -g @angular/cli@15
 RUN npm install -g bootstrap@v5.2.3
+RUN npm install i bootstrap-icons --save
 
 COPY package.json ./
 RUN npm install --package-lock-only

@@ -1,18 +1,18 @@
-import {CoordinatorToolsMenuComponent} from "./coordinator-tools-menu.component";
+import {ToolsMenuComponent} from "./tools-menu.component";
 import {ComponentFixture, TestBed} from "@angular/core/testing";
 
-describe('Coordinator Tools Menu', () => {
-  let fixture: ComponentFixture<CoordinatorToolsMenuComponent>;
-  let component: CoordinatorToolsMenuComponent;
+describe('Tools Menu', () => {
+  let fixture: ComponentFixture<ToolsMenuComponent>;
+  let component: ToolsMenuComponent;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [CoordinatorToolsMenuComponent]
+      declarations: [ToolsMenuComponent]
     }).compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CoordinatorToolsMenuComponent);
+    fixture = TestBed.createComponent(ToolsMenuComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   })

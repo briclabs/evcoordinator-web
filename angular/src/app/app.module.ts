@@ -8,6 +8,15 @@ import { NavModule } from "./nav/nav.module";
 import { DonationsComponent } from "./donations/donations.component";
 import { GuidelinesComponent } from "./guidelines/guidelines.component";
 import { RegistrationComponent } from "./registration/registration.component";
+import { EventsComponent } from "./tools/events/events.component";
+import { HistoryComponent } from "./tools/history/history.component";
+import { ParticipantsComponent } from "./tools/participants/participants.component";
+import { PaymentsComponent } from "./tools/payments/payments.component";
+import { SiteConfigComponent } from "./tools/site-config/site-config.component";
+import { MyProfileComponent } from './tools/my-profile/my-profile.component';
+import { ProfileManagementComponent } from "./tools/profile-management/profile-management.component";
+import { TableControlsComponent } from './tools/subcomponents/table-controls/table-controls.component';
+import { TableComponent } from './tools/subcomponents/table/table.component';
 
 
 @NgModule({
@@ -15,7 +24,16 @@ import { RegistrationComponent } from "./registration/registration.component";
     AppComponent,
     DonationsComponent,
     GuidelinesComponent,
-    RegistrationComponent
+    RegistrationComponent,
+    EventsComponent,
+    HistoryComponent,
+    ParticipantsComponent,
+    PaymentsComponent,
+    SiteConfigComponent,
+    ProfileManagementComponent,
+    MyProfileComponent,
+    TableControlsComponent,
+    TableComponent
   ],
   imports: [
     NavModule,

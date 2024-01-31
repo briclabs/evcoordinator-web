@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { AppComponent } from "../app.component";
+import { AuthenticationService } from "../app-services/authentication/authentication.service";
 
 @Component({
   selector: 'evc-nav',
@@ -6,4 +8,6 @@ import { Component } from '@angular/core';
   styleUrls: ['./nav.component.css']
 })
 export class NavComponent {
+  protected readonly AppComponent = AppComponent;
+  authenticationService: AuthenticationService = inject(AuthenticationService)
 }

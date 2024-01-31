@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { AuthenticationService } from "../../app-services/authentication/authentication.service";
 
 @Component({
   selector: 'evc-header',
@@ -6,4 +7,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent {
+  authenticationService: AuthenticationService = inject(AuthenticationService)
 }
