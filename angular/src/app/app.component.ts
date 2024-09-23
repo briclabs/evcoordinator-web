@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { OidcSecurityService } from "angular-auth-oidc-client";
 
 @Component({
   selector: 'app-root',
@@ -6,5 +7,11 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  appName: string = 'EVCoordinator';
+  protected readonly appName: string = 'EVCoordinator';
+
+  private readonly authenticationService = inject(OidcSecurityService);
+
+  ngOnInit(): void {
+    this.authenticationService.checkAuth().subscribe();
+  }
 }

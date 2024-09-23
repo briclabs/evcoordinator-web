@@ -17,6 +17,8 @@ import { MyProfileComponent } from './tools/my-profile/my-profile.component';
 import { ProfileManagementComponent } from "./tools/profile-management/profile-management.component";
 import { TableControlsComponent } from './tools/subcomponents/table-controls/table-controls.component';
 import { TableComponent } from './tools/subcomponents/table/table.component';
+import { HttpClientModule } from "@angular/common/http";
+import { AuthModule, LogLevel } from "angular-auth-oidc-client";
 
 
 @NgModule({
@@ -33,7 +35,7 @@ import { TableComponent } from './tools/subcomponents/table/table.component';
     ProfileManagementComponent,
     MyProfileComponent,
     TableControlsComponent,
-    TableComponent
+    TableComponent,
   ],
   imports: [
     NavModule,
@@ -41,6 +43,20 @@ import { TableComponent } from './tools/subcomponents/table/table.component';
     FormsModule,
     ReactiveFormsModule,
     AppRoutingModule,
+    HttpClientModule,
+    AuthModule.forRoot({
+      config: {
+        authority: 'http://localhost:9000/application/o/evcoordinator/',
+        redirectUrl: window.location.origin,
+        postLogoutRedirectUri: window.location.origin,
+        clientId: 'evcoordinator',
+        scope: 'openid profile email offline_access',
+        responseType: 'code',
+        silentRenew: true,
+        useRefreshToken: true,
+        logLevel: LogLevel.Debug,
+      }
+    })
   ],
   exports: [
     FormsModule,

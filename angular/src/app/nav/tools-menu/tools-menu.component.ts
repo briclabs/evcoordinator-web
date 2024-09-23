@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { AuthenticationService } from "../../app-services/authentication/authentication.service";
+import { OidcSecurityService } from "angular-auth-oidc-client";
 
 @Component({
   selector: 'evc-tools-menu',
@@ -7,5 +7,11 @@ import { AuthenticationService } from "../../app-services/authentication/authent
   styleUrls: ['./tools-menu.component.css']
 })
 export class ToolsMenuComponent {
-  authenticationService: AuthenticationService = inject(AuthenticationService);
+  private readonly authenticationService: OidcSecurityService = inject(OidcSecurityService);
+
+  logout(): void {
+    this.authenticationService
+      .logoff()
+      .subscribe((result) => console.log(result));
+  }
 }

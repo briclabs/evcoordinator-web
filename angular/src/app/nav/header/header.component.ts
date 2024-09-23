@@ -1,5 +1,5 @@
-import { Component, inject } from '@angular/core';
-import { AuthenticationService } from "../../app-services/authentication/authentication.service";
+import { Component, inject, Signal } from '@angular/core';
+import { AuthenticatedResult, OidcSecurityService, UserDataResult } from "angular-auth-oidc-client";
 
 @Component({
   selector: 'evc-header',
@@ -7,5 +7,19 @@ import { AuthenticationService } from "../../app-services/authentication/authent
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent {
-  authenticationService: AuthenticationService = inject(AuthenticationService)
+  private readonly authenticationService: OidcSecurityService = inject(OidcSecurityService)
+  protected readonly authenticated: Signal<AuthenticatedResult> = this.authenticationService.authenticated;
+  private readonly userData: Signal<UserDataResult> = this.authenticationService.userData;
+
+  login(): void {
+    this.authenticationService.authorize();
+  }
+
+  getUsername(): string {
+    return this.userData().userData['preferred_username'];
+  }
+
+  getIsAuthenticated(): boolean {
+    return this.authenticated().isAuthenticated;
+  }
 }

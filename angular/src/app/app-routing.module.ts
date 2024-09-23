@@ -12,7 +12,7 @@ import { EventsComponent } from "./tools/events/events.component";
 import { ProfileManagementComponent } from "./tools/profile-management/profile-management.component";
 import { MyProfileComponent } from "./tools/my-profile/my-profile.component";
 
-const routes: Routes = [
+export const routes: Routes = [
   {
     path: 'guidelines',
     component: GuidelinesComponent
