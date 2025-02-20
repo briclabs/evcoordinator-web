@@ -11,6 +11,7 @@ import { ParticipantsComponent } from "./tools/participants/participants.compone
 import { EventsComponent } from "./tools/events/events.component";
 import { ProfileManagementComponent } from "./tools/profile-management/profile-management.component";
 import { MyProfileComponent } from "./tools/my-profile/my-profile.component";
+import { authGuard } from "./auth.guard";
 
 export const routes: Routes = [
   {
@@ -27,31 +28,38 @@ export const routes: Routes = [
   },
   {
     path: 'tools/events',
-    component: EventsComponent
+    component: EventsComponent,
+    canActivate: [() => authGuard()],
   },
   {
     path: 'tools/participants',
-    component: ParticipantsComponent
+    component: ParticipantsComponent,
+    canActivate: [() => authGuard()]
   },
   {
     path: 'tools/payments',
-    component: PaymentsComponent
+    component: PaymentsComponent,
+    canActivate: [() => authGuard()]
   },
   {
     path: 'tools/history',
-    component: HistoryComponent
+    component: HistoryComponent,
+    canActivate: [() => authGuard()]
   },
   {
     path: 'tools/configuration',
-    component: SiteConfigComponent
+    component: SiteConfigComponent,
+    canActivate: [() => authGuard()]
   },
   {
     path: 'tools/my-profile',
-    component: MyProfileComponent
+    component: MyProfileComponent,
+    canActivate: [() => authGuard()]
   },
   {
     path: 'tools/profile-management',
-    component: ProfileManagementComponent
+    component: ProfileManagementComponent,
+    canActivate: [() => authGuard()]
   },
   {
     path: '',

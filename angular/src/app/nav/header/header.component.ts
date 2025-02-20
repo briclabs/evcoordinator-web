@@ -7,7 +7,7 @@ import { AuthenticatedResult, OidcSecurityService, UserDataResult } from "angula
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent {
-  private readonly authenticationService: OidcSecurityService = inject(OidcSecurityService)
+  private readonly authenticationService: OidcSecurityService = inject(OidcSecurityService);
   protected readonly authenticated: Signal<AuthenticatedResult> = this.authenticationService.authenticated;
   private readonly userData: Signal<UserDataResult> = this.authenticationService.userData;
 

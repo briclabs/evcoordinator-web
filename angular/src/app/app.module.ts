@@ -17,8 +17,10 @@ import { MyProfileComponent } from './tools/my-profile/my-profile.component';
 import { ProfileManagementComponent } from "./tools/profile-management/profile-management.component";
 import { TableControlsComponent } from './tools/subcomponents/table-controls/table-controls.component';
 import { TableComponent } from './tools/subcomponents/table/table.component';
-import { HttpClientModule } from "@angular/common/http";
+import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http";
 import { AuthModule, LogLevel } from "angular-auth-oidc-client";
+import { GatewayInterceptor } from "./interceptors/gateway.interceptor";
+import { AuthInterceptor } from "./interceptors/auth.interceptor";
 
 
 @NgModule({
@@ -62,7 +64,10 @@ import { AuthModule, LogLevel } from "angular-auth-oidc-client";
     FormsModule,
     ReactiveFormsModule,
   ],
-  providers: [],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: GatewayInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
