@@ -103,7 +103,6 @@
       }
     }
   },
-  "defaultProject": "EVCoordinator",
   "cli": {
     "analytics": false
   }

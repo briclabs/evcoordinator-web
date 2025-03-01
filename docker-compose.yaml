@@ -1,12 +1,15 @@
 services:
-
   web:
     container_name: evcoordinator-web
     build:
       context: angular
-      target: builder
+      dockerfile: dockerfile
+      network: host
+      args:
+        API_URL: ${API_URL}
+        AUTH_AUTHORITY: ${AUTH_AUTHORITY}
+        CLIENT_ID: ${CLIENT_ID}
     ports:
-      - 4200:4200
-    volumes:
-      - ./angular:/project
-      - /project/node_modules
+      - "4200:80"
+    env_file:
+      - angular/.env

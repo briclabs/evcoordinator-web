@@ -5,6 +5,8 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "buildDev": "ng build --configuration development",
+    "buildProd": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
@@ -28,7 +30,7 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^17.1.2",
-    "@angular/cli": "~17.1.2",
+    "@angular/cli": "^17.1.2",
     "@angular/compiler-cli": "^17.1.0",
     "@types/bootstrap": "^5.2.10",
     "@types/jasmine": "~5.1.0",

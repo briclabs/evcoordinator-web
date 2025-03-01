@@ -2,9 +2,17 @@ import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { ConfigurationResponse } from "../models/configuration-response";
 import * as bootstrap from 'bootstrap';
+import { NgFor } from "@angular/common";
+import { RouterModule } from "@angular/router";
+import { environment } from "../../environments/environment";
 
 @Component({
   selector: 'guidelines',
+  standalone: true,
+  imports: [
+    NgFor,
+    RouterModule,
+  ],
   templateUrl: './guidelines.component.html',
   styleUrls: ['./guidelines.component.css'],
 })
@@ -12,19 +20,27 @@ export class GuidelinesComponent implements OnInit, AfterViewInit {
 
   eventGuidelines: { [category: string]: string[] } = {};
 
-  private apiEndpoint = 'http://localhost:8080/v1/configuration/latest';
+  private apiEndpoint = '';
 
   constructor(private http: HttpClient) { }
 
   ngOnInit() {
-    this.fetchConfiguration();
+    try {
+      this.apiEndpoint = environment.apiUrl + '/configuration/latest';
+
+      this.fetchConfiguration();
+    } catch (error) {
+      console.error('Error loading app configuration:', error);
+    }
   }
 
   fetchConfiguration(): void {
 
     this.http.get<ConfigurationResponse>(this.apiEndpoint).subscribe({
       next: (data: ConfigurationResponse) => {
-        this.eventGuidelines = data.eventGuidelines;
+        const resolvedData = data ?? { eventGuidelines: {} };
+        this.eventGuidelines = resolvedData.eventGuidelines;
+
       },
       error: (error) => {
         console.error('Error fetching configuration:', error);

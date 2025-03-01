@@ -1,10 +1,15 @@
 import { Component, inject, Signal } from '@angular/core';
 import { AuthenticatedResult, OidcSecurityService, UserDataResult } from "angular-auth-oidc-client";
+import { NgIf } from "@angular/common";
 
 @Component({
   selector: 'evc-header',
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.css']
+  standalone: true,
+  imports: [
+    NgIf,
+  ],
+  styleUrls: ['./header.component.css'],
 })
 export class HeaderComponent {
   private readonly authenticationService: OidcSecurityService = inject(OidcSecurityService);

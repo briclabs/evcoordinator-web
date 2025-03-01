@@ -1,8 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from "../../../environments/environment";
+import { FormsModule } from "@angular/forms";
 
 @Component({
   selector: 'site-config',
+  standalone: true,
+  imports: [
+    FormsModule,
+  ],
   templateUrl: './site-config.component.html',
   styleUrls: ['./site-config.component.css'],
 })
@@ -17,16 +23,22 @@ export class SiteConfigComponent implements OnInit {
 
   isNewConfiguration: boolean = false;
 
-  private apiUrl = 'http://localhost:8080/v1/configuration';
+  private apiUrl = '';
 
   constructor(private http: HttpClient) { }
 
-  ngOnInit() {
-    this.fetchLatestConfiguration();
+  async ngOnInit() {
+    try {
+      this.apiUrl = environment.apiUrl + '/configuration';
 
-    setTimeout(() => {
-      this.adjustTextAreaSizes();
-    }, 0);
+      this.fetchLatestConfiguration();
+
+      setTimeout(() => {
+        this.adjustTextAreaSizes();
+      }, 0);
+    } catch (error) {
+      console.error('Error loading configuration:', error);
+    }
   }
 
   fetchLatestConfiguration(): void {

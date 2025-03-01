@@ -3,7 +3,10 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  apiUrl: 'http://localhost:8080/v1', // Default API URL
+  authAuthority: 'http://localhost:9000/application/o/evcoordinator/', // Default Auth URL
+  clientId: 'evcoordinator', // Default clientId
 };
 
 /*

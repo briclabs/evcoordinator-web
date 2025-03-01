@@ -1,10 +1,12 @@
 import { Component, inject } from '@angular/core';
 import { OidcSecurityService } from "angular-auth-oidc-client";
+import { HeaderComponent } from "../header/header.component";
 
 @Component({
   selector: 'evc-tools-menu',
   templateUrl: './tools-menu.component.html',
-  styleUrls: ['./tools-menu.component.css']
+  standalone: true,
+  styleUrls: ['./tools-menu.component.css'],
 })
 export class ToolsMenuComponent {
   private readonly authenticationService: OidcSecurityService = inject(OidcSecurityService);

@@ -1,32 +1,38 @@
-FROM --platform=$BUILDPLATFORM node:19.6.0-bullseye-slim as builder
+# #######
+# Stage 1: Build Stage
+FROM --platform=$BUILDPLATFORM node:23.8.0-bullseye-slim AS builder
+
+ARG API_URL
+ARG AUTH_AUTHORITY
+ARG CLIENT_ID
 
 RUN mkdir /project
 WORKDIR /project
 
-RUN npm install -g @angular/cli@15
-RUN npm install -g bootstrap@v5.2.3
-RUN npm install i bootstrap-icons --save
-
+# Install Angular CLI and necessary dependencies
 COPY package.json ./
-RUN npm install --package-lock-only
+COPY package-lock.json ./
 RUN npm ci
 
+# Copy and build the application
 COPY . .
-CMD ["ng", "serve", "--host", "0.0.0.0"]
+RUN sed -i "s|__API_URL__|${API_URL}|g" src/environments/environment.prod.ts
+RUN sed -i "s|__AUTH_AUTHORITY__|${AUTH_AUTHORITY}|g" src/environments/environment.prod.ts
+RUN sed -i "s|__CLIENT_ID__|${CLIENT_ID}|g" src/environments/environment.prod.ts
+RUN cat -v src/environments/environment.prod.ts
+RUN npm run buildProd
 
-FROM builder as dev-envs
+# #######
+# Stage 2: Serve with nginx
+FROM nginx:alpine
+COPY --from=builder /project/dist /usr/share/nginx/html
 
-RUN <<EOF
-apt-get update
-apt-get install -y --no-install-recommends git
-EOF
+# Copy the entrypoint script
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
-RUN <<EOF
-useradd -s /bin/bash -m vscode
-groupadd docker
-usermod -aG docker vscode
-EOF
-# install Docker tools (cli, buildx, compose)
-COPY --from=gloursdocker/docker / /
+# Replace existing nginx configuration to serve Angular files
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-CMD ["ng", "serve", "--host", "0.0.0.0"]
+# Entrypoint script to dynamically populate environment variables
+ENTRYPOINT ["/entrypoint.sh"]
