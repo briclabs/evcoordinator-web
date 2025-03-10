@@ -1,23 +1,23 @@
 <div class="row mt-4 ms-3">
   <nav aria-label="Page Controls" class="pagination">
     <div class="col-4">
-      <a class="bi-plus-circle" style="font-size: x-large" href="#" aria-label="add-record"></a>
+      <a class="bi-plus-circle" style="font-size: x-large; cursor: pointer;" (click)="onAddRecord()" aria-label="add-record"></a>
     </div>
     <div class="col-4">
       <div class="input-group mb-3">
-        <input type="text" class="form-control" placeholder="search fields for value" aria-label="search" aria-describedby="button-addon2">
-        <button class="btn btn-outline-secondary" type="button" id="button-addon2">Search</button>
+        <input type="text" class="form-control" placeholder="search fields for value" aria-label="search" aria-describedby="button-addon2" [(ngModel)]="searchString" (keydown.enter)="onSearch()">
+        <button class="btn btn-outline-secondary" type="button" id="button-addon2" (click)="onSearch()">Search</button>
       </div>
     </div>
     <ul class="pagination col-4 justify-content-end px-3" aria-label="pagination">
-      <li class="page-item disabled">
-        <a class="page-link bi-caret-left"></a>
+      <li class="page-item" [class.disabled]="currentPage === 1" [style.cursor]="currentPage === 1 ? 'default' : 'pointer'">
+        <a class="page-link bi-caret-left" (click)="onPreviousPage()"></a>
       </li>
-      <li class="page-item"><a class="page-link" href="#">1</a></li>
-      <li class="page-item"><a class="page-link" href="#">2</a></li>
-      <li class="page-item"><a class="page-link" href="#">3</a></li>
-      <li class="page-item">
-        <a class="page-link bi-caret-right" href="#"></a>
+      <li class="page-item" *ngFor="let page of visiblePages" [class.active]="page === currentPage" [class.disabled]="page === '...'" [style.cursor]="page !== '...' && page !== currentPage ? 'pointer' : 'default'">
+        <a class="page-link" (click)="onPageClick(page)">{{ page }}</a>
+      </li>
+      <li class="page-item" [class.disabled]="currentPage === pages.length" [style.cursor]="currentPage === pages.length ? 'default' : 'pointer'">
+        <a class="page-link bi-caret-right" (click)="onNextPage()"></a>
       </li>
     </ul>
   </nav>

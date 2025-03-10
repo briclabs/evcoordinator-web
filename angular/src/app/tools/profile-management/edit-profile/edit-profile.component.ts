@@ -1,13 +1,13 @@
 import { Component, inject, OnInit } from '@angular/core';
 import {
   ContactUtilityServiceService
-} from "../../app-services/contact-utility-service/contact-utility-service.service";
+} from "../../../app-services/contact-utility-service/contact-utility-service.service";
 import { FormsModule } from "@angular/forms";
 import { HttpClient } from "@angular/common/http";
-import { environment } from "../../../environments/environment";
-import { Participant } from '../../models/participant-response';
+import { environment } from "../../../../environments/environment";
+import { Participant } from '../../../models/participant-response';
 import { CommonModule } from "@angular/common";
-import { OidcSecurityService } from "angular-auth-oidc-client";
+import { ActivatedRoute } from "@angular/router";
 
 @Component({
   selector: 'app-my-profile',
@@ -16,14 +16,15 @@ import { OidcSecurityService } from "angular-auth-oidc-client";
     CommonModule,
     FormsModule,
   ],
-  templateUrl: './my-profile.component.html',
-  styleUrls: ['./my-profile.component.css']
+  templateUrl: './edit-profile.component.html',
+  styleUrls: ['./edit-profile.component.css']
 })
-export class MyProfileComponent implements OnInit {
+export class EditProfileComponent implements OnInit {
   contactUtilityServiceService: ContactUtilityServiceService = inject(ContactUtilityServiceService);
 
   id: number | null = null;
   participantType: string | null = null;
+  profileType: string[] = ["VENDOR", "VENUE", "ATTENDEE"];
   sponsor: string | null = null;
   nameFirst: string | null = null;
   nameLast: string | null = null;
@@ -38,56 +39,65 @@ export class MyProfileComponent implements OnInit {
   phoneDigits: number | null = null;
 
   private apiUrl = '';
-  private authenticationService = inject(OidcSecurityService);
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private route: ActivatedRoute) { }
 
   async ngOnInit() {
     this.apiUrl = environment.apiUrl + '/participant';
 
-    this.authenticationService.getUserData().subscribe((userData: any) => {
-      if (userData && userData.email) {
-        this.fetchMyProfile(userData.email);
+    this.route.paramMap.subscribe(params => {
+      const id = params.get('id');
+      if (id) {
+        this.fetchProfileById(parseInt(id, 10));
       } else {
-        this.addrEmail = userData.email;
+        this.id = null;
+        this.participantType = null;
+        this.sponsor = null;
+        this.nameFirst = null;
+        this.nameLast = null;
+        this.nameNick = null;
+        this.dob = null;
+        this.addrStreet_1 = null;
+        this.addrStreet_2 = null;
+        this.addrCity = null;
+        this.addrStateAbbr = null;
+        this.addrZip = null;
+        this.addrEmail = null;
+        this.phoneDigits = null;
       }
     });
   }
 
-  fetchMyProfile(email: string): void {
-    try {
-      this.http.get<Participant[]>(`${this.apiUrl}/${0}/${1}`, {
-        params: { email },
-      }).subscribe({
-        next: (data) => {
-          if (!(data == null || Object.keys(data).length === 0)) {
-            this.id = data[0].id;
-            this.participantType = data[0].participantType;
-            this.sponsor = data[0].sponsor;
-            this.nameFirst = data[0].nameFirst;
-            this.nameLast = data[0].nameLast;
-            this.nameNick = data[0].nameNick;
-            this.dob = data[0].dob;
-            this.addrStreet_1 = data[0].addrStreet_1;
-            this.addrStreet_2 = data[0].addrStreet_2 ?? '';
-            this.addrCity = data[0].addrCity;
-            this.addrStateAbbr = data[0].addrStateAbbr;
-            this.addrZip = data[0].addrZip;
-            this.addrEmail = data[0].addrEmail;
-            this.phoneDigits = data[0].phoneDigits;
-          }
+  fetchProfileById(id: number): void {
+    this.http.get<Participant>(`${this.apiUrl}/${id}`).subscribe({
+      next: (data: Participant) => {
+        if (data) {
+          this.id = data.id;
+          this.participantType = data.participantType;
+          this.sponsor = data.sponsor;
+          this.nameFirst = data.nameFirst;
+          this.nameLast = data.nameLast;
+          this.nameNick = data.nameNick;
+          this.dob = data.dob;
+          this.addrStreet_1 = data.addrStreet_1;
+          this.addrStreet_2 = data.addrStreet_2;
+          this.addrCity = data.addrCity;
+          this.addrStateAbbr = data.addrStateAbbr;
+          this.addrZip = data.addrZip;
+          this.addrEmail = data.addrEmail;
+          this.phoneDigits = data.phoneDigits;
         }
-      });
-    } catch (error) {
-      console.error('Error fetching my profile:', error);
-      throw error;
-    }
+      },
+      error: (error) => {
+        console.error('Error loading profile:', error);
+      }
+    });
   }
 
   create() {
     this.http.post(this.apiUrl, {
       id: this.id,
-      participantType: 'ATTENDEE',
+      participantType: this.participantType,
       sponsor: this.sponsor,
       nameFirst: this.nameFirst,
       nameLast: this.nameLast,

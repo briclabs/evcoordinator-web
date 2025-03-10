@@ -9,7 +9,7 @@ import { AuthInterceptor } from './app/interceptors/auth.interceptor';
 import { provideRouter } from "@angular/router";
 import { authGuard } from "./app/auth.guard";
 import { ProfileManagementComponent } from "./app/tools/profile-management/profile-management.component";
-import { MyProfileComponent } from "./app/tools/my-profile/my-profile.component";
+import { MyProfileComponent } from "./app/tools/profile-management/my-profile/my-profile.component";
 import { SiteConfigComponent } from "./app/tools/site-config/site-config.component";
 import { HistoryComponent } from "./app/tools/history/history.component";
 import { PaymentsComponent } from "./app/tools/payments/payments.component";
@@ -18,6 +18,7 @@ import { EventsComponent } from "./app/tools/events/events.component";
 import { DonationsComponent } from "./app/donations/donations.component";
 import { RegistrationComponent } from "./app/registration/registration.component";
 import { GuidelinesComponent } from "./app/guidelines/guidelines.component";
+import { EditProfileComponent } from "./app/tools/profile-management/edit-profile/edit-profile.component";
 
 if (environment.production) {
   enableProdMode();
@@ -63,6 +64,16 @@ bootstrapApplication(AppComponent, {
       {
         path: 'tools/profile-management',
         component: ProfileManagementComponent,
+        canActivate: [() => authGuard()],
+      },
+      {
+        path: 'tools/edit-profile/:id',
+        component: EditProfileComponent,
+        canActivate: [() => authGuard()],
+      },
+      {
+        path: 'tools/edit-profile',
+        component: EditProfileComponent,
         canActivate: [() => authGuard()],
       },
       { path: '', redirectTo: '/', pathMatch: 'full' },

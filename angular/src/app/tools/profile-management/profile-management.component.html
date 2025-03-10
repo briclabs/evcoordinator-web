@@ -1,1 +1,11 @@
-<app-table></app-table>
+<app-table
+  [columns]="columns"
+  [rows]="rows"
+  [pages]="pages"
+  [currentPage]="currentPage"
+  (rowClick)="onRowClick($event)"
+  (addRecord)="onAddRecord()"
+  (search)="onSearch($event)"
+  (pageChange)="onPageChange($event)"
+  (columnSort)="onColumnSort($event)"
+></app-table>

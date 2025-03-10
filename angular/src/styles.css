@@ -35,6 +35,14 @@ a:hover {
   color: forestgreen;
 }
 
+table tbody tr:hover {
+  background-color: forestgreen;
+}
+
+table tbody tr:hover td {
+  color: white !important;
+}
+
 .short-row {
   margin-top: -0.3em;
 }
