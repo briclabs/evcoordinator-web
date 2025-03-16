@@ -1,85 +1,97 @@
 <div class="row mt-4 ms-3">
+  <div class="row">
+    <div class="progress mb-4">
+      <div
+        class="progress-bar"
+        role="progressbar"
+        [style.width.%]="(currentStep / totalSteps) * 100"
+        [attr.aria-valuenow]="currentStep"
+        aria-valuemin="1"
+        [attr.aria-valuemax]="totalSteps"
+      >
+        Step {{ currentStep }} of {{ totalSteps }}
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="d-flex justify-content-between mt-4">
+      <button class="btn btn-primary" [disabled]="currentStep === 1" (click)="previousStep()">Previous</button>
+      <button class="btn btn-primary" *ngIf="currentStep < totalSteps" (click)="nextStep()">Next</button>
+    </div>
+  </div>
+
   <div class="col-2"></div>
   <div class="col-9">
-    <div class="row">
-      <div class="col-4 form-floating"><input type="text" id="nameFirst" class="form-control" required><label for="nameFirst" class="form-label">Legal First Name</label></div>
-      <div class="col-5 form-floating"><input type="text" id="nameLast" class="form-control" required><label for="nameLast" class="form-label">Legal Last Name</label></div>
+
+    <div *ngIf="currentStep === 1" class="step step-1">
+      <profile-form
+        [(nameFirst)]="nameFirst"
+        [(nameLast)]="nameLast"
+        [(nameNick)]="nameNick"
+        [(dob)]="dob"
+        [(addrStreet_1)]="addrStreet_1"
+        [(addrStreet_2)]="addrStreet_2"
+        [(addrCity)]="addrCity"
+        [(addrStateAbbr)]="addrStateAbbr"
+        [(addrZip)]="addrZip"
+        [(addrEmail)]="addrEmail"
+        [(phoneDigits)]="phoneDigits"
+        [(sponsor)]="sponsor"
+        [participantType]="'ATTENDEE'"
+        [isParticipantTypeDropdown]="false"
+        [isEmailAddressChangeable]="true"
+        [showSubmitButton]="false">
+      </profile-form>
     </div>
-    <div class="row mt-2">
-      <div class="col-3 form-floating"><input type="text" id="nameNick" class="form-control"><label for="nameNick" class="form-label">Nickname</label></div>
-      <div class="col-4 form-floating"><input type="email" id="addressEmail" class="form-control"><label for="addressEmail" class="form-label">Email Address</label></div>
-      <div class="col-2 form-floating"><input type="date" datatype="" id="dateBirth" class="form-control" required><label for="dateBirth" class="form-label">Date of Birth</label></div>
-    </div>
-    <div class="row mt-4">
-      <div class="col-5 form-floating"><input type="text" id="addressStreet1" class="form-control"><label for="addressStreet1" class="form-label">Street 1</label></div>
-      <div class="col-4 form-floating"><input type="text" id="addressStreet2" class="form-control"><label for="addressStreet2" class="form-label">Street 2</label></div>
-    </div>
-    <div class="row mt-2">
-      <div class="col-1 form-floating"><input type="number" id="addressZipcode" class="form-control"><label for="addressZipcode" class="form-label">Zipcode</label></div>
-      <div class="col-3 form-floating"><input type="text" id="addressCity" class="form-control"><label for="addressCity" class="form-label">City</label></div>
-      <div class="col-1 form-floating">
-        <select class="form-select form-control" id="addressState">
-          <option selected></option>
-          <option *ngFor="let option of contactUtilityServiceService.getStateAbbreviations()" [ngValue]="option">{{option}}</option>
-        </select>
-        <label for="addressState" class="form-label">State</label>
+
+    <div *ngIf="currentStep === 2" class="step step-2">
+      <div class="row">
+        <div class="col-9"><label for="guests" class="form-label">Name(s) of guest(s) you will be inviting</label><input type="text" id="guests" class="form-control"></div>
       </div>
-      <div class="col-2 form-floating"><input type="tel" id="phoneHome" class="form-control"><label for="phoneHome" class="form-label">Home Phone Number</label></div>
-      <div class="col-2 form-floating"><input type="tel" id="phoneMobile" class="form-control"><label for="phoneMobile" class="form-label">Mobile Phone Number</label></div>
-    </div>
-    <div class="row mt-2">
-      <div class="col-4 form-floating"><input type="text" id="nameEmergency" class="form-control"><label for="nameEmergency" class="form-label">Emergency Contact</label></div>
-      <div class="col-3 form-floating"><input type="tel" id="phoneEmergency" class="form-control"><label for="phoneEmergency" class="form-label">Emergency Phone</label></div>
-      <div class="col-2 form-floating">
-        <select class="form-select" id="relationEmergency">
-          <option selected></option>
-          <option *ngFor="let option of contactUtilityServiceService.getRelationshipEmergencyContact()" [ngValue]="option.key">{{option.value}}</option>
-        </select>
-        <label for="relationEmergency" class="form-label">Relationship to Self</label>
+      <div class="row mt-2">
+        <div class="col-6"><label for="minors" class="form-label">Guest minor(s) in your care</label><input type="text" id="minors" class="form-control"></div>
+        <div class="col-3"><label for="relationMinors" class="form-label">Relation to minor(s) in your care</label><input type="text" id="relationMinors" class="form-control"></div><!-- TODO - sourced from DB -->
+      </div>
+      <div class="row mt-2">
+        <div class="col-6"><label for="pets" class="form-label">Guests pet(s) in your care</label><input type="text" id="pets" class="form-control"></div>
+        <div class="col-3"><label for="relationPets" class="form-label">Relation to pet(s) in your care</label><input type="text" id="relationPets" class="form-control"></div><!-- TODO - sourced from DB -->
       </div>
     </div>
-    <div class="row mt-4">
-      <div class="col-3 form-floating"><input type="text" id="nameSponsor" class="form-control"><label for="nameSponsor" class="form-label">Name of person(s) that first invited me</label></div>
-      <div class="col-6 form-floating"><input type="text" id="guests" class="form-control"><label for="guests" class="form-label">Name of guest(s) I will be inviting</label></div>
-    </div>
-    <div class="row mt-2">
-      <div class="col-6 form-floating"><input type="text" id="minors" class="form-control"><label for="minors" class="form-label">Guest minor(s) in my care</label></div>
-      <div class="col-3 form-floating"><input type="text" id="relationMinors" class="form-control"><label for="relationMinors" class="form-label">Relation to minor(s) in my care</label></div><!-- TODO - sourced from DB -->
-    </div>
-    <div class="row mt-2">
-      <div class="col-6 form-floating"><input type="text" id="pets" class="form-control"><label for="pets" class="form-label">Guests pet(s) in my care</label></div>
-      <div class="col-3 form-floating"><input type="text" id="relationPets" class="form-control"><label for="relationPets" class="form-label">Relation to pet(s) in my care</label></div><!-- TODO - sourced from DB -->
-    </div>
-    <div class="row mt-4">
-      <div class="col-1"></div>
-      <div class="col-2"><label for="event" class="form-label">Registration for Event</label><input type="text" id="event" class="form-control" disabled></div><!-- TODO - sourced from DB -->
-      <div class="col-1">
-        <label for="amountDonation" class="form-label">Donation</label>
-        <div class="input-group">
-          <span class="input-group-text">$</span>
-          <input type="number" id="amountDonation" class="form-control px-0">
+
+    <div *ngIf="currentStep === 3" class="step step-3">
+      <div class="row">
+        <div class="col-1"></div>
+        <div class="col-2"><label for="event" class="form-label">Registration for Event</label><input type="text" id="event" class="form-control" disabled></div><!-- TODO - sourced from DB -->
+        <div class="col-1">
+          <label for="amountDonation" class="form-label">Donation</label>
+          <div class="input-group">
+            <span class="input-group-text">$</span>
+            <input type="number" id="amountDonation" class="form-control px-0">
+          </div>
         </div>
+        <div class="col-4"><label for="signature" class="form-label">Signature</label><input type="text" id="signature" class="form-control"></div>
       </div>
-      <div class="col-4"><label for="signature" class="form-label">Signature</label><input type="text" id="signature" class="form-control"></div>
-    </div>
-    <div class="row mt-2 mt-3">
-      <div class="col-9 text-center">
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmationModal">
-          Submit Registration
-        </button>
-        <div class="modal fade" id="confirmationModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
-          <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h1 class="modal-title fs-5" id="confirmationModalLabel">Submit Registration</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cancel"></button>
-              </div>
-              <div class="modal-body">
-                I agree to abide by the Guidelines, and,<br>I understand submission of my registration is a promise<br>to contribute the amount I specified in my registration.
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary">I Agree</button>
+
+      <div class="row mt-2 mt-3">
+        <div class="col-9 text-center">
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmationModal">
+            Submit Registration
+          </button>
+          <div class="modal fade" id="confirmationModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="confirmationModalLabel">Submit Registration</h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cancel"></button>
+                </div>
+                <div class="modal-body">
+                  I agree to abide by the Guidelines, and,<br>I understand submission of my registration is a promise<br>to contribute the amount I specified in my registration.
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                  <button type="button" class="btn btn-primary" (click)="submitRegistration()">Submit</button>
+                </div>
               </div>
             </div>
           </div>

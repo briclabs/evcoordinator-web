@@ -1,0 +1,22 @@
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 100%;
+  margin: 2rem 0;
+}
+
+.section-header::before,
+.section-header::after {
+  content: '';
+  flex: 1;
+  border-top: 1px solid rgba(35, 93, 11, 0.10);
+}
+
+.section-header span {
+  margin: 0 1rem;
+  font-size: 1rem;
+  font-style: italic;
+  color: rgba(35, 93, 11, 0.33);
+}

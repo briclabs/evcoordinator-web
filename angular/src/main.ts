@@ -9,7 +9,6 @@ import { AuthInterceptor } from './app/interceptors/auth.interceptor';
 import { provideRouter } from "@angular/router";
 import { authGuard } from "./app/auth.guard";
 import { ProfileManagementComponent } from "./app/tools/profile-management/profile-management.component";
-import { MyProfileComponent } from "./app/tools/profile-management/my-profile/my-profile.component";
 import { SiteConfigComponent } from "./app/tools/site-config/site-config.component";
 import { HistoryComponent } from "./app/tools/history/history.component";
 import { PaymentsComponent } from "./app/tools/payments/payments.component";
@@ -58,7 +57,7 @@ bootstrapApplication(AppComponent, {
       },
       {
         path: 'tools/my-profile',
-        component: MyProfileComponent,
+        component: EditProfileComponent,
         canActivate: [() => authGuard()],
       },
       {

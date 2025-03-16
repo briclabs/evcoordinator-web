@@ -1,43 +1,24 @@
 <div class="row mt-4 ms-3">
   <div class="col-2"></div>
   <div class="col-9">
-    <div class="row">
-      <div class="col-4"><label for="nameFirst" class="form-label">Legal First Name</label><input type="text" id="nameFirst" class="form-control" [(ngModel)]="nameFirst" required></div>
-      <div class="col-5"><label for="nameLast" class="form-label">Legal Last Name</label><input type="text" id="nameLast" class="form-control" [(ngModel)]="nameLast" required></div>
-    </div>
-
-    <div class="row mt-2">
-      <div class="col-4"><label for="nameNick" class="form-label">Nickname</label><input type="text" id="nameNick" class="form-control" [(ngModel)]="nameNick"></div>
-      <div class="col-2"><label for="dateBirth" class="form-label">Date of Birth</label><input type="date" id="dateBirth" class="form-control" [(ngModel)]="dob" required></div>
-      <div class="col-3"><label for="nameSponsor" class="form-label">Name of person(s) that first invited you</label><input type="text" id="nameSponsor" class="form-control" [(ngModel)]="sponsor" required></div>
-    </div>
-
-    <div class="row mt-5">
-      <div class="col-5"><label for="addressStreet1" class="form-label">Street 1</label><input type="text" id="addressStreet1" class="form-control" [(ngModel)]="addrStreet_1" required></div>
-      <div class="col-4"><label for="addressStreet2" class="form-label">Street 2</label><input type="text" id="addressStreet2" class="form-control" [(ngModel)]="addrStreet_2"></div>
-    </div>
-    <div class="row mt-2">
-      <div class="col-1"></div>
-      <div class="col-1"><label for="addressZipcode" class="form-label">Zipcode</label><input type="number" id="addressZipcode" class="form-control" [(ngModel)]="addrZip" required></div>
-      <div class="col-3"><label for="addressCity" class="form-label">City</label><input type="text" id="addressCity" class="form-control" [(ngModel)]="addrCity" required></div>
-      <div class="col-1"><label for="addressState" class="form-label">State</label><select class="form-select form-control" id="addressState" [(ngModel)]="addrStateAbbr" required><option *ngFor="let option of contactUtilityServiceService.getStateAbbreviations()" [ngValue]="option">{{ option }}</option></select></div>
-      <div class="col-2"><label for="phoneNumber" class="form-label">Phone Number</label><input type="tel" id="phoneNumber" class="form-control" [(ngModel)]="phoneDigits" required></div>
-    </div>
-
-    <div class="row mt-5">
-      <div class="col-2 mx-4"></div>
-      <div class="col-4 mx-2"><label for="profileType" class="form-label">Profile Type</label><select class="form-select" id="profileType" [(ngModel)]="participantType" required><option *ngFor="let type of profileType" [ngValue]="type">{{ type }}</option></select></div>
-    </div>
-
-    <div class="row mt-5">
-      <div class="col-2 mx-4"></div>
-      <div class="col-4 mx-2"><label for="addressEmail" class="form-label">Email Address (this will be your username)</label><input type="email" id="addressEmail" class="form-control" [(ngModel)]="addrEmail" required></div>
-    </div>
-
-    <div class="row mt-5">
-      <div class="col-9 text-center">
-        <button type="button" class="btn btn-primary" (click)="id ? update() : create()">Update</button>
-      </div>
-    </div>
+    <profile-form
+      [(nameFirst)]="nameFirst"
+      [(nameLast)]="nameLast"
+      [(nameNick)]="nameNick"
+      [(dob)]="dob"
+      [(addrStreet_1)]="addrStreet_1"
+      [(addrStreet_2)]="addrStreet_2"
+      [(addrCity)]="addrCity"
+      [(addrStateAbbr)]="addrStateAbbr"
+      [(addrZip)]="addrZip"
+      [(addrEmail)]="addrEmail"
+      [(phoneDigits)]="phoneDigits"
+      [(sponsor)]="sponsor"
+      [(participantType)]="participantType"
+      [participantTypeOptions]="participantTypeOptions"
+      [isParticipantTypeDropdown]="!isSelf"
+      [isEmailAddressChangeable]="!isSelf"
+      (formSubmit)="id ? update() : create()">
+    </profile-form>
   </div>
 </div>
