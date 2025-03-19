@@ -47,30 +47,42 @@
 
     <div *ngIf="currentStep === 2" class="step step-2">
       <div class="row">
-        <div class="col-9"><label for="guests" class="form-label">Name(s) of guest(s) you will be inviting</label><input type="text" id="guests" class="form-control"></div>
+        <div class="col-8">
+          <label class="form-label col d-flex justify-content-center align-items-center">Please note any guests that will be accompanying you. Adult guests should still submit their own registration.</label>
+          <br>
+          <hr>
+        </div>
       </div>
-      <div class="row mt-2">
-        <div class="col-6"><label for="minors" class="form-label">Guest minor(s) in your care</label><input type="text" id="minors" class="form-control"></div>
-        <div class="col-3"><label for="relationMinors" class="form-label">Relation to minor(s) in your care</label><input type="text" id="relationMinors" class="form-control"></div><!-- TODO - sourced from DB -->
+      <div class="row mb-3" *ngFor="let association of participantAssociations; let i = index">
+        <div class="col-1 d-flex justify-content-end align-items-end">
+          <button class="btn btn-outline-danger bi-person-fill-dash" aria-label="Remove Guest" (click)="onRemoveAssociation(i)"></button>
+        </div>
+        <div class="col-11">
+          <app-participant-association [(associationType)]="association.association" [(associationName)]="association.rawAssociateName"></app-participant-association>
+        </div>
       </div>
-      <div class="row mt-2">
-        <div class="col-6"><label for="pets" class="form-label">Guests pet(s) in your care</label><input type="text" id="pets" class="form-control"></div>
-        <div class="col-3"><label for="relationPets" class="form-label">Relation to pet(s) in your care</label><input type="text" id="relationPets" class="form-control"></div><!-- TODO - sourced from DB -->
+
+      <div class="row">
+        <div class="col">
+          <button class="btn btn-outline-primary bi-person-fill-add" aria-label="Add Guest" (click)="onAddAssociation()"></button>
+        </div>
       </div>
     </div>
 
     <div *ngIf="currentStep === 3" class="step step-3">
       <div class="row">
-        <div class="col-1"></div>
-        <div class="col-2"><label for="event" class="form-label">Registration for Event</label><input type="text" id="event" class="form-control" disabled></div><!-- TODO - sourced from DB -->
-        <div class="col-1">
+        <div class="col-3 d-flex flex-column justify-content-center align-items-center">
+          <div class="form-label">Registration for Event:</div>
+          <div>{{ latestEventInfoName }}: <i>{{ latestEventInfoTitle }}</i></div>
+        </div>
+        <div class="col-2">
           <label for="amountDonation" class="form-label">Donation</label>
           <div class="input-group">
             <span class="input-group-text">$</span>
-            <input type="number" id="amountDonation" class="form-control px-0">
+            <input type="number" id="amountDonation" class="form-control px-0" [(ngModel)]="pledgedAmount" >
           </div>
         </div>
-        <div class="col-4"><label for="signature" class="form-label">Signature</label><input type="text" id="signature" class="form-control"></div>
+        <div class="col-4"><label for="signature" class="form-label">Signature</label><input type="text" id="signature" class="form-control" [(ngModel)]="signature" ></div>
       </div>
 
       <div class="row mt-2 mt-3">

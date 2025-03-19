@@ -5,6 +5,8 @@ import { environment } from "../../environments/environment";
 import { Participant } from "../models/participant-response";
 import { HttpClient } from "@angular/common/http";
 import { ProfileFormComponent } from "../profile-form/profile-form.component";
+import { EventInfo } from "../models/event-info-response";
+import { ParticipantAssociationComponent } from "../participant-association/participant-association.component";
 
 @Component({
   selector: 'registration',
@@ -13,6 +15,7 @@ import { ProfileFormComponent } from "../profile-form/profile-form.component";
     CommonModule,
     FormsModule,
     ProfileFormComponent,
+    ParticipantAssociationComponent,
   ],
   templateUrl: './registration.component.html',
   styleUrls: ['./registration.component.css'],
@@ -32,8 +35,15 @@ export class RegistrationComponent implements OnInit{
   addrZip: number | null = null;
   addrEmail: string | null = null;
   phoneDigits: number | null = null;
+  participantAssociations: { association: string | null, rawAssociateName: string | null }[] = [];
+  pledgedAmount: number | null = null;
+  signature: string | null = null;
 
-  private apiUrl = '';
+  private registrationUrl = '';
+  private eventInfoUrl = '';
+  private latestEventInfoId: number | null = null;
+  protected latestEventInfoName: string | null = null;
+  protected latestEventInfoTitle: string | null = null;
 
   constructor(private http: HttpClient) { }
 
@@ -41,7 +51,8 @@ export class RegistrationComponent implements OnInit{
   totalSteps: number = 3;
 
   async ngOnInit() {
-    this.apiUrl = environment.apiUrl + '/participant';
+    this.registrationUrl = environment.apiUrl + '/registration';
+    this.eventInfoUrl = environment.apiUrl + '/event/info';
 
     this.id = null;
     this.participantType = null;
@@ -57,6 +68,18 @@ export class RegistrationComponent implements OnInit{
     this.addrZip = null;
     this.addrEmail = null;
     this.phoneDigits = null;
+
+    this.fetchLatestEventInfo();
+  }
+
+  onAddAssociation(): void {
+    this.participantAssociations.push({ association: null, rawAssociateName: null });
+  }
+
+  onRemoveAssociation(index: number): void {
+    if (index > -1 && index < this.participantAssociations.length) {
+      this.participantAssociations.splice(index, 1);
+    }
   }
 
   nextStep(): void {
@@ -85,7 +108,7 @@ export class RegistrationComponent implements OnInit{
           addr_email: email,
         }
       };
-      this.http.post<{ list: Participant[], count: number }>(`${this.apiUrl}/search`, searchRequest).subscribe({
+      this.http.post<{ list: Participant[], count: number }>(`${this.registrationUrl}/search`, searchRequest).subscribe({
         next: (data) => {
           if (!data || !data.list || data.list.length === 0 || !(data.count > 0)) {
             return;
@@ -113,13 +136,23 @@ export class RegistrationComponent implements OnInit{
     }
   }
 
-  submitRegistration() {
-    this.createProfile();
-    this.createRegistration();
+  fetchLatestEventInfo(): void {
+    this.http.get<EventInfo>(`${this.eventInfoUrl}/latest`).subscribe({
+      next: (data: EventInfo) => {
+        if (data) {
+          this.latestEventInfoId = data.id;
+          this.latestEventInfoName = data.eventName;
+          this.latestEventInfoTitle = data.eventTitle;
+        }
+      },
+      error: (error) => {
+        console.error('Error loading event info:', error);
+      }
+    });
   }
 
-  createProfile(): void {
-    const profileToCreate = {
+  submitRegistration(): void {
+    const participant = {
       participantType: 'ATTENDEE',
       sponsor: this.sponsor,
       nameFirst: this.nameFirst,
@@ -135,7 +168,15 @@ export class RegistrationComponent implements OnInit{
       phoneDigits: this.phoneDigits,
     };
 
-    this.http.post<{ id: number }>(this.apiUrl, profileToCreate).subscribe({
+    const registration = {
+      participant: participant,
+      associations: this.participantAssociations,
+      eventInfoId: this.latestEventInfoId,
+      donationPledge: this.pledgedAmount,
+      signature: this.signature,
+    }
+
+    this.http.post<{ id: number }>(this.registrationUrl, registration).subscribe({
       next: response => {
         if (response && response.id) {
           this.id = response.id;
@@ -148,9 +189,5 @@ export class RegistrationComponent implements OnInit{
         console.error('Error creating profile:', err);
       }
     });
-  }
-
-  createRegistration(): void {
-    // the ID will have already been set by now, and so should be usable directly by calling this.id when creating the registration record.
   }
 }

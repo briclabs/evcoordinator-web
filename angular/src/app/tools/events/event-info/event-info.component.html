@@ -1,0 +1,40 @@
+<div class="row mt-4 ms-3">
+  <div class="col-3"></div>
+  <div class="col-8">
+      <div class="row">
+      <div class="col-4">
+        <label for="eventName" class="form-label">Event Name</label>
+        <input type="text" id="eventName" class="form-control" [(ngModel)]="eventName" required />
+      </div>
+      <div class="col-5">
+        <label for="eventTitle" class="form-label">Event Title</label>
+        <input type="text" id="eventTitle" class="form-control" [(ngModel)]="eventTitle" required />
+      </div>
+    </div>
+
+    <div class="row mt-4">
+      <div class="col-1"></div>
+      <div class="col-2">
+        <label for="dateStart" class="form-label">Date Start</label>
+        <input type="date" id="dateStart" class="form-control" [(ngModel)]="dateStart" required />
+      </div>
+      <div class="col-2">
+        <label for="dateEnd" class="form-label">Date End</label>
+        <input type="date" id="dateEnd" class="form-control" [(ngModel)]="dateEnd" required />
+      </div>
+      <div class="col-3">
+        <label for="eventStatus" class="form-label">Event Status</label>
+        <select class="form-select" id="eventStatus" [(ngModel)]="eventStatus" required>
+          <option *ngFor="let status of eventStatusOptions" [ngValue]="status">{{ status }}</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row mt-5">
+      <div class="col-3"></div>
+      <div class="col-3 mx-2 text-center">
+        <button type="button" class="btn btn-primary" (click)="id ? update() : create()">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>

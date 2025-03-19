@@ -18,6 +18,8 @@ import { DonationsComponent } from "./app/donations/donations.component";
 import { RegistrationComponent } from "./app/registration/registration.component";
 import { GuidelinesComponent } from "./app/guidelines/guidelines.component";
 import { EditProfileComponent } from "./app/tools/profile-management/edit-profile/edit-profile.component";
+import { EventInfoComponent } from "./app/tools/events/event-info/event-info.component";
+import { CsrfInterceptor } from "./app/interceptors/csrf.interceptor";
 
 if (environment.production) {
   enableProdMode();
@@ -33,6 +35,16 @@ bootstrapApplication(AppComponent, {
       {
         path: 'tools/events',
         component: EventsComponent,
+        canActivate: [() => authGuard()],
+      },
+      {
+        path: 'tools/event-info/:id',
+        component: EventInfoComponent,
+        canActivate: [() => authGuard()],
+      },
+      {
+        path: 'tools/event-info',
+        component: EventInfoComponent,
         canActivate: [() => authGuard()],
       },
       {
@@ -93,5 +105,6 @@ bootstrapApplication(AppComponent, {
     }),
     { provide: HTTP_INTERCEPTORS, useClass: GatewayInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: CsrfInterceptor, multi: true },
   ],
 }).catch((err) => console.error(err));
