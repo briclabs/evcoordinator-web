@@ -18,6 +18,11 @@ export class ProfileFormComponent {
   @Input() nameLast: string | null = null;
   @Output() nameLastChange = new EventEmitter<string | null>();
 
+  @Input() addrEmail: string | null = null;
+  @Output() addrEmailChange = new EventEmitter<string | null>();
+
+  @Input() isPreexisting: boolean = false;
+
   @Input() nameNick: string | null = null;
   @Output() nameNickChange = new EventEmitter<string | null>();
 
@@ -38,9 +43,6 @@ export class ProfileFormComponent {
 
   @Input() addrZip: number | null = null;
   @Output() addrZipChange = new EventEmitter<number | null>();
-
-  @Input() addrEmail: string | null = null;
-  @Output() addrEmailChange = new EventEmitter<string | null>();
 
   @Input() phoneDigits: number | null = null;
   @Output() phoneDigitsChange = new EventEmitter<number | null>();

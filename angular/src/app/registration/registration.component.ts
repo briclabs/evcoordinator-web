@@ -10,6 +10,7 @@ import { ParticipantAssociationComponent } from "../participant-association/part
 import { createDefaultRegistration, Registration } from "../models/registration";
 import { createDefaultParticipantAssociation, ParticipantAssociation } from "../models/participant-association";
 import { RegistrationPacket } from "../models/registration-packet";
+import { catchError, map, Observable, of } from "rxjs";
 
 @Component({
   selector: 'registration',
@@ -30,7 +31,10 @@ export class RegistrationComponent implements OnInit{
 
   protected latestEventInfo: EventInfo;
 
+  protected isPreexisting: boolean = false;
+
   private registrationUrl = '';
+  private participantUrl = '';
   private eventInfoUrl = '';
 
   currentStep: number = 1;
@@ -38,6 +42,7 @@ export class RegistrationComponent implements OnInit{
 
   constructor(private http: HttpClient) {
     this.registrationUrl = environment.apiUrl + '/registration';
+    this.participantUrl = environment.apiUrl + '/participant';
     this.eventInfoUrl = environment.apiUrl + '/event/info';
 
     this.latestEventInfo = createDefaultEventInfo();
@@ -73,31 +78,28 @@ export class RegistrationComponent implements OnInit{
     }
   }
 
-  fetchProfileByEmailAddress(email: string): void {
-    try {
-      let searchRequest = {
-        searchConfiguration: {
-          exactMatch: true,
-          sortColumn: 'id',
-          sortAsc: true,
-          offset: 0,
-          max: 1,
-        },
-        searchCriteria: {
-          addr_email: email,
+  preexists(): Observable<boolean> {
+    return this.http.post<void>(this.participantUrl + '/preexists', this.participant, { observe: 'response' }).pipe(
+      map(response => {
+        return response.status === 200;
+      }),
+      catchError(err => {
+        if (err.status === 404) {
+          console.warn('Profile not found:', err);
+          return of(false);
         }
-      };
-      this.http.post<{ list: Participant[], count: number }>(`${this.registrationUrl}/search`, searchRequest).subscribe({
-        next: (data) => {
-          if (!data || !data.list || data.list.length === 0 || !(data.count > 0)) {
-            return;
-          }
-          this.participant = data.list[0];
-        }
+        console.error('Unexpected error while checking profile preexists:', err);
+        return of(false);
+      })
+    );
+  }
+
+
+  checkPreexistingProfile(): void {
+    if (this.participant.nameFirst && this.participant.nameLast && this.participant.addrEmail) {
+      this.preexists().subscribe((exists: boolean) => {
+        this.isPreexisting = exists;
       });
-    } catch (error) {
-      console.error('Error fetching my profile:', error);
-      throw error;
     }
   }
 
@@ -122,7 +124,7 @@ export class RegistrationComponent implements OnInit{
       registration: this.registration,
     }
 
-    this.http.post<{ id: number }>(this.registrationUrl, registrationPacket).subscribe({
+    this.http.post<{ id: number }>(this.isPreexisting ? this.registrationUrl + '/preExisting' : this.registrationUrl + '/newProfile', registrationPacket).subscribe({
       next: response => {
         if (response && response.id) {
           this.registration.id = response.id;

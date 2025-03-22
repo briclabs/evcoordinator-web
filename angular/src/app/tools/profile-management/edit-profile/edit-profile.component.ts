@@ -7,6 +7,7 @@ import { CommonModule } from "@angular/common";
 import { ActivatedRoute } from "@angular/router";
 import { OidcSecurityService } from "angular-auth-oidc-client";
 import { ProfileFormComponent } from "../../../profile-form/profile-form.component";
+import { Observable, of } from "rxjs";
 
 @Component({
   selector: 'edit-profile',
@@ -42,6 +43,8 @@ export class EditProfileComponent implements OnInit {
 
   private apiUrl = '';
   private authenticationService = inject(OidcSecurityService);
+
+  protected isPreexisting: boolean = false;
 
   constructor(private http: HttpClient, private route: ActivatedRoute) { }
 
@@ -143,6 +146,18 @@ export class EditProfileComponent implements OnInit {
     } catch (error) {
       console.error('Error fetching my profile:', error);
       throw error;
+    }
+  }
+
+  preexists(): Observable<boolean> {
+    return of(this.isPreexisting = false);
+  }
+
+  checkPreexistingProfile(): void {
+    if (this.nameFirst && this.nameLast && this.addrEmail) {
+      this.preexists().subscribe((exists: boolean) => {
+        this.isPreexisting = exists;
+      });
     }
   }
 
