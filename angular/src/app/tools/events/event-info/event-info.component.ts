@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { ActivatedRoute } from "@angular/router";
 import { environment } from "../../../../environments/environment";
-import { EventInfo } from "../../../models/event-info-response";
+import { createDefaultEventInfo, EventInfo } from "../../../models/event-info";
 import { FormsModule } from "@angular/forms";
 import { NgForOf } from "@angular/common";
 
@@ -17,19 +17,15 @@ import { NgForOf } from "@angular/common";
   styleUrl: './event-info.component.css'
 })
 export class EventInfoComponent implements OnInit {
-  id: number | null = null;
-  eventName: string | null = null;
-  eventTitle: string | null = null;
-  dateStart: string | null = null;
-  dateEnd: string | null = null;
-  eventStatus: string | null = null;
-  timeRecorded: string | null = null;
+  eventInfo: EventInfo;
 
   eventStatusOptions: string[] = ["CURRENT", "PAST", "CANCELLED"]; // TODO - source from DB.
 
   private apiUrl = '';
 
-  constructor(private http: HttpClient, private route: ActivatedRoute) { }
+  constructor(private http: HttpClient, private route: ActivatedRoute) {
+    this.eventInfo = createDefaultEventInfo();
+  }
 
   async ngOnInit() {
     this.apiUrl = environment.apiUrl + '/event/info';
@@ -38,14 +34,6 @@ export class EventInfoComponent implements OnInit {
       const id = params.get('id');
       if (id) {
         this.fetchEventInfoById(parseInt(id, 10));
-      } else {
-        this.id = null;
-        this.eventName = null;
-        this.eventTitle = null;
-        this.dateStart = null;
-        this.dateEnd = null;
-        this.eventStatus = null;
-        this.timeRecorded = null;
       }
     });
   }
@@ -53,15 +41,7 @@ export class EventInfoComponent implements OnInit {
   fetchEventInfoById(id: number): void {
     this.http.get<EventInfo>(`${this.apiUrl}/${id}`).subscribe({
       next: (data: EventInfo) => {
-        if (data) {
-          this.id = data.id;
-          this.eventName = data.eventName;
-          this.eventTitle = data.eventTitle;
-          this.dateStart = data.dateStart;
-          this.dateEnd = data.dateEnd;
-          this.eventStatus = data.eventStatus;
-          this.timeRecorded = data.timeRecorded;
-        }
+        this.eventInfo = data;
       },
       error: (error) => {
         console.error('Error loading event info:', error);
@@ -70,13 +50,7 @@ export class EventInfoComponent implements OnInit {
   }
 
   create() {
-    this.http.post(this.apiUrl, {
-      eventName: this.eventName,
-      eventTitle: this.eventTitle,
-      dateStart: this.dateStart,
-      dateEnd: this.dateEnd,
-      eventStatus: this.eventStatus,
-    }).subscribe({
+    this.http.post(this.apiUrl, this.eventInfo).subscribe({
       next: (response) => {
         console.log('Event info created successfully:', response);
       },
@@ -87,14 +61,7 @@ export class EventInfoComponent implements OnInit {
   }
 
   update() {
-    this.http.put(this.apiUrl, {
-      id: this.id,
-      eventName: this.eventName,
-      eventTitle: this.eventTitle,
-      dateStart: this.dateStart,
-      dateEnd: this.dateEnd,
-      eventStatus: this.eventStatus,
-    }).subscribe({
+    this.http.put(this.apiUrl, this.eventInfo).subscribe({
       next: (response) => {
         console.log('Event info saved successfully:', response);
       },

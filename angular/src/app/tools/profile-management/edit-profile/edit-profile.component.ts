@@ -2,7 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from "@angular/forms";
 import { HttpClient } from "@angular/common/http";
 import { environment } from "../../../../environments/environment";
-import { Participant } from '../../../models/participant-response';
+import { Participant } from '../../../models/participant';
 import { CommonModule } from "@angular/common";
 import { ActivatedRoute } from "@angular/router";
 import { OidcSecurityService } from "angular-auth-oidc-client";

@@ -3,7 +3,7 @@ import { FormsModule } from "@angular/forms";
 import { TableComponent } from "../subcomponents/table/table.component";
 import { environment } from "../../../environments/environment";
 import { HttpClient } from "@angular/common/http";
-import { Participant } from "../../models/participant-response";
+import { Participant } from "../../models/participant";
 import { Router } from "@angular/router";
 import { OidcSecurityService } from "angular-auth-oidc-client";
 import { SearchRequest } from "../../models/search-request";

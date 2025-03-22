@@ -26,18 +26,18 @@
 
     <div *ngIf="currentStep === 1" class="step step-1">
       <profile-form
-        [(nameFirst)]="nameFirst"
-        [(nameLast)]="nameLast"
-        [(nameNick)]="nameNick"
-        [(dob)]="dob"
-        [(addrStreet_1)]="addrStreet_1"
-        [(addrStreet_2)]="addrStreet_2"
-        [(addrCity)]="addrCity"
-        [(addrStateAbbr)]="addrStateAbbr"
-        [(addrZip)]="addrZip"
-        [(addrEmail)]="addrEmail"
-        [(phoneDigits)]="phoneDigits"
-        [(sponsor)]="sponsor"
+        [(nameFirst)]="participant.nameFirst"
+        [(nameLast)]="participant.nameLast"
+        [(nameNick)]="participant.nameNick"
+        [(dob)]="participant.dob"
+        [(addrStreet_1)]="participant.addrStreet_1"
+        [(addrStreet_2)]="participant.addrStreet_2"
+        [(addrCity)]="participant.addrCity"
+        [(addrStateAbbr)]="participant.addrStateAbbr"
+        [(addrZip)]="participant.addrZip"
+        [(addrEmail)]="participant.addrEmail"
+        [(phoneDigits)]="participant.phoneDigits"
+        [(sponsor)]="participant.sponsor"
         [participantType]="'ATTENDEE'"
         [isParticipantTypeDropdown]="false"
         [isEmailAddressChangeable]="true"
@@ -73,16 +73,16 @@
       <div class="row">
         <div class="col-3 d-flex flex-column justify-content-center align-items-center">
           <div class="form-label">Registration for Event:</div>
-          <div>{{ latestEventInfoName }}: <i>{{ latestEventInfoTitle }}</i></div>
+          <div>{{ latestEventInfo.eventName }}: <i>{{ latestEventInfo.eventTitle }}</i></div>
         </div>
         <div class="col-2">
           <label for="amountDonation" class="form-label">Donation</label>
           <div class="input-group">
             <span class="input-group-text">$</span>
-            <input type="number" id="amountDonation" class="form-control px-0" [(ngModel)]="pledgedAmount" >
+            <input type="number" id="amountDonation" class="form-control px-0" [(ngModel)]="registration.donationPledge" >
           </div>
         </div>
-        <div class="col-4"><label for="signature" class="form-label">Signature</label><input type="text" id="signature" class="form-control" [(ngModel)]="signature" ></div>
+        <div class="col-4"><label for="signature" class="form-label">Signature</label><input type="text" id="signature" class="form-control" [(ngModel)]="registration.signature" ></div>
       </div>
 
       <div class="row mt-2 mt-3">

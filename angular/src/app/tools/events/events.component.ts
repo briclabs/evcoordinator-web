@@ -4,7 +4,7 @@ import { HttpClient } from "@angular/common/http";
 import { Router } from "@angular/router";
 import { SearchRequest } from "../../models/search-request";
 import { environment } from "../../../environments/environment";
-import { EventInfo } from "../../models/event-info-response";
+import { EventInfo } from "../../models/event-info";
 
 @Component({
   selector: 'events',
