@@ -3,7 +3,7 @@ import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { environment } from "../../environments/environment";
 import { createDefaultParticipant, Participant } from "../models/participant";
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpResponse } from "@angular/common/http";
 import { ProfileFormComponent } from "../profile-form/profile-form.component";
 import { createDefaultEventInfo, EventInfo } from "../models/event-info";
 import { ParticipantAssociationComponent } from "../participant-association/participant-association.component";
@@ -80,7 +80,7 @@ export class RegistrationComponent implements OnInit{
 
   preexists(): Observable<boolean> {
     return this.http.post<void>(this.participantUrl + '/preexists', this.participant, { observe: 'response' }).pipe(
-      map(response => {
+      map((response: HttpResponse<void>) => {
         return response.status === 200;
       }),
       catchError(err => {
@@ -125,7 +125,7 @@ export class RegistrationComponent implements OnInit{
     }
 
     this.http.post<{ id: number }>(this.isPreexisting ? this.registrationUrl + '/preExisting' : this.registrationUrl + '/newProfile', registrationPacket).subscribe({
-      next: response => {
+      next: (response: { id: number }) => {
         if (response && response.id) {
           this.registration.id = response.id;
           console.log('Profile created with ID:', response.id);

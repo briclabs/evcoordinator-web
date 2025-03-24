@@ -2,7 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from "@angular/forms";
 import { HttpClient } from "@angular/common/http";
 import { environment } from "../../../../environments/environment";
-import { Participant } from '../../../models/participant';
+import { createDefaultParticipant, Participant } from '../../../models/participant';
 import { CommonModule } from "@angular/common";
 import { ActivatedRoute } from "@angular/router";
 import { OidcSecurityService } from "angular-auth-oidc-client";
@@ -22,22 +22,9 @@ import { Observable, of } from "rxjs";
 })
 export class EditProfileComponent implements OnInit {
   isSelf: boolean = false;
+  addrEmailFromAuthenticationService: string;
 
-  id: number | null = null;
-  participantType: string | null = null;
-  sponsor: string | null = null;
-  nameFirst: string | null = null;
-  nameLast: string | null = null;
-  nameNick: string | null = null;
-  dob: string | null = null;
-  addrStreet_1: string | null = null;
-  addrStreet_2: string | null = null;
-  addrCity: string | null = null;
-  addrStateAbbr: string | null = null;
-  addrZip: number | null = null;
-  addrEmail: string | null = null;
-  addrEmailFromAuthenticationService: string | null = null;
-  phoneDigits: number | null = null;
+  protected participant: Participant;
 
   participantTypeOptions: string[] = ["VENDOR", "VENUE", "ATTENDEE"]; // TODO - source from DB.
 
@@ -46,36 +33,27 @@ export class EditProfileComponent implements OnInit {
 
   protected isPreexisting: boolean = false;
 
-  constructor(private http: HttpClient, private route: ActivatedRoute) { }
+  constructor(private http: HttpClient, private route: ActivatedRoute) {
+    this.participant = createDefaultParticipant();
+    this.addrEmailFromAuthenticationService = '';
+  }
 
   async ngOnInit() {
     this.apiUrl = environment.apiUrl + '/participant';
     const currentUrl = this.route.snapshot.url.map(segment => segment.path).join('/');
 
     this.route.paramMap.subscribe(params => {
-      const id = params.get('id');
+      const id: string | null = params.get('id');
       this.authenticationService.getUserData().subscribe((userData: any) => {
         if (id) {
           this.fetchProfileById(parseInt(id, 10));
         } else if (currentUrl === 'tools/my-profile' && userData && userData.email) {
           this.fetchProfileByEmailAddress(userData.email);
-          this.isSelf = this.addrEmail === userData.email || this.addrEmail === null;
-          this.addrEmailFromAuthenticationService = this.isSelf ? userData.email : null;
-        } else {
-          this.id = null;
-          this.participantType = null;
-          this.sponsor = null;
-          this.nameFirst = null;
-          this.nameLast = null;
-          this.nameNick = null;
-          this.dob = null;
-          this.addrStreet_1 = null;
-          this.addrStreet_2 = null;
-          this.addrCity = null;
-          this.addrStateAbbr = null;
-          this.addrZip = null;
-          this.addrEmail = null;
-          this.phoneDigits = null;
+          this.isSelf = this.participant.addrEmail === userData.email || this.participant.addrEmail === '';
+          this.addrEmailFromAuthenticationService = this.isSelf ? userData.email : '';
+
+          this.participant.participantType = this.authenticationService.isAuthenticated() && !this.isSelf ? this.participant.participantType : 'ATTENDEE';
+          this.participant.addrEmail = this.authenticationService.isAuthenticated() && this.isSelf ? this.addrEmailFromAuthenticationService : this.participant.addrEmail;
         }
       });
     });
@@ -85,20 +63,7 @@ export class EditProfileComponent implements OnInit {
     this.http.get<Participant>(`${this.apiUrl}/${id}`).subscribe({
       next: (data: Participant) => {
         if (data) {
-          this.id = data.id;
-          this.participantType = data.participantType;
-          this.sponsor = data.sponsor;
-          this.nameFirst = data.nameFirst;
-          this.nameLast = data.nameLast;
-          this.nameNick = data.nameNick;
-          this.dob = data.dob;
-          this.addrStreet_1 = data.addrStreet_1;
-          this.addrStreet_2 = data.addrStreet_2;
-          this.addrCity = data.addrCity;
-          this.addrStateAbbr = data.addrStateAbbr;
-          this.addrZip = data.addrZip;
-          this.addrEmail = data.addrEmail;
-          this.phoneDigits = data.phoneDigits;
+          this.participant = data;
         }
       },
       error: (error) => {
@@ -122,25 +87,11 @@ export class EditProfileComponent implements OnInit {
         }
       };
       this.http.post<{ list: Participant[], count: number }>(`${this.apiUrl}/search`, searchRequest).subscribe({
-        next: (data) => {
+        next: (data: { list: Participant[]; count: number }) => {
           if (!data || !data.list || data.list.length === 0 || !(data.count > 0)) {
             return;
           }
-          const participant = data.list[0];
-          this.id = participant.id;
-          this.participantType = participant.participantType;
-          this.sponsor = participant.sponsor;
-          this.nameFirst = participant.nameFirst;
-          this.nameLast = participant.nameLast;
-          this.nameNick = participant.nameNick;
-          this.dob = participant.dob;
-          this.addrStreet_1 = participant.addrStreet_1;
-          this.addrStreet_2 = participant.addrStreet_2 ?? '';
-          this.addrCity = participant.addrCity;
-          this.addrStateAbbr = participant.addrStateAbbr;
-          this.addrZip = participant.addrZip;
-          this.addrEmail = participant.addrEmail;
-          this.phoneDigits = participant.phoneDigits;
+          this.participant = data.list[0];
         }
       });
     } catch (error) {
@@ -154,7 +105,7 @@ export class EditProfileComponent implements OnInit {
   }
 
   checkPreexistingProfile(): void {
-    if (this.nameFirst && this.nameLast && this.addrEmail) {
+    if (this.participant.nameFirst && this.participant.nameLast && this.participant.addrEmail) {
       this.preexists().subscribe((exists: boolean) => {
         this.isPreexisting = exists;
       });
@@ -162,21 +113,7 @@ export class EditProfileComponent implements OnInit {
   }
 
   create() {
-    this.http.post(this.apiUrl, {
-      participantType: this.authenticationService.isAuthenticated() && !this.isSelf ? this.participantType : 'ATTENDEE',
-      sponsor: this.sponsor,
-      nameFirst: this.nameFirst,
-      nameLast: this.nameLast,
-      nameNick: this.nameNick,
-      dob: this.dob,
-      addrStreet_1: this.addrStreet_1,
-      addrStreet_2: this.addrStreet_2,
-      addrCity: this.addrCity,
-      addrStateAbbr: this.addrStateAbbr,
-      addrZip: this.addrZip,
-      addrEmail: this.authenticationService.isAuthenticated() && this.isSelf ? this.addrEmailFromAuthenticationService : this.addrEmail,
-      phoneDigits: this.phoneDigits,
-    }).subscribe({
+    this.http.post(this.apiUrl, this.participant).subscribe({
       next: (response) => {
         console.log('Profile created successfully:', response);
       },
@@ -187,22 +124,7 @@ export class EditProfileComponent implements OnInit {
   }
 
   update() {
-    this.http.put(this.apiUrl, {
-      id: this.id,
-      participantType: this.authenticationService.isAuthenticated() && !this.isSelf ? this.participantType : 'ATTENDEE',
-      sponsor: this.sponsor,
-      nameFirst: this.nameFirst,
-      nameLast: this.nameLast,
-      nameNick: this.nameNick,
-      dob: this.dob,
-      addrStreet_1: this.addrStreet_1,
-      addrStreet_2: this.addrStreet_2,
-      addrCity: this.addrCity,
-      addrStateAbbr: this.addrStateAbbr,
-      addrZip: this.addrZip,
-      addrEmail: this.addrEmail,
-      phoneDigits: this.phoneDigits,
-    }).subscribe({
+    this.http.put(this.apiUrl, this.participant).subscribe({
       next: (response) => {
         console.log('Profile saved successfully:', response);
       },

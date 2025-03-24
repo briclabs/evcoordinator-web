@@ -2,27 +2,13 @@
   <div class="col-2"></div>
   <div class="col-9">
     <profile-form
-      [(nameFirst)]="nameFirst"
-      [(nameLast)]="nameLast"
-      [(addrEmail)]="addrEmail"
-      (nameFirstChange)="checkPreexistingProfile()"
-      (nameLastChange)="checkPreexistingProfile()"
-      (addrEmailChange)="checkPreexistingProfile()"
+      (participantChange)="checkPreexistingProfile()"
       [isPreexisting]="isPreexisting"
-      [(nameNick)]="nameNick"
-      [(dob)]="dob"
-      [(addrStreet_1)]="addrStreet_1"
-      [(addrStreet_2)]="addrStreet_2"
-      [(addrCity)]="addrCity"
-      [(addrStateAbbr)]="addrStateAbbr"
-      [(addrZip)]="addrZip"
-      [(phoneDigits)]="phoneDigits"
-      [(sponsor)]="sponsor"
-      [(participantType)]="participantType"
+      [(participant)]="participant"
       [participantTypeOptions]="participantTypeOptions"
       [isParticipantTypeDropdown]="!isSelf"
       [isEmailAddressChangeable]="!isSelf"
-      (formSubmit)="id ? update() : create()">
+      (formSubmit)="participant.id > 0 ? update() : create()">
     </profile-form>
   </div>
 </div>

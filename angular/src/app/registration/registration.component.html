@@ -26,23 +26,9 @@
 
     <div *ngIf="currentStep === 1" class="step step-1">
       <profile-form
-        [(nameFirst)]="participant.nameFirst"
-        [(nameLast)]="participant.nameLast"
-        [(addrEmail)]="participant.addrEmail"
-        (nameFirstChange)="checkPreexistingProfile()"
-        (nameLastChange)="checkPreexistingProfile()"
-        (addrEmailChange)="checkPreexistingProfile()"
+        [(participant)]="participant"
+        (participantChange)="checkPreexistingProfile()"
         [isPreexisting]="isPreexisting"
-        [(nameNick)]="participant.nameNick"
-        [(dob)]="participant.dob"
-        [(addrStreet_1)]="participant.addrStreet_1"
-        [(addrStreet_2)]="participant.addrStreet_2"
-        [(addrCity)]="participant.addrCity"
-        [(addrStateAbbr)]="participant.addrStateAbbr"
-        [(addrZip)]="participant.addrZip"
-        [(phoneDigits)]="participant.phoneDigits"
-        [(sponsor)]="participant.sponsor"
-        [participantType]="'ATTENDEE'"
         [isParticipantTypeDropdown]="false"
         [isEmailAddressChangeable]="true"
         [showSubmitButton]="false">
