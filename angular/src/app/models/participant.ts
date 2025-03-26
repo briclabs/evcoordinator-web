@@ -13,6 +13,9 @@ export interface Participant {
   addrZip: number;
   addrEmail: string;
   phoneDigits: number;
+  nameEmergency: string;
+  phoneEmergency: number;
+  emergencyContactAssociationType: string;
   timeRecorded: string;
 }
 
@@ -32,6 +35,9 @@ export function createDefaultParticipant(): Participant {
     addrZip: 0,
     addrEmail: '',
     phoneDigits: 0,
+    nameEmergency: '',
+    phoneEmergency: 0,
+    emergencyContactAssociationType: '',
     timeRecorded: '',
   };
 }
