@@ -1,0 +1,50 @@
+<div *ngIf="participantList && participantList.length > 0 && eventInfoList && eventInfoList.length > 0" class="row mb-3">
+  <div class="col-4">
+    <label for="participantSelect" class="form-label">Participant</label>
+    <select
+      id="participantSelect"
+      class="form-select"
+      [(ngModel)]="registration.participantId"
+      (ngModelChange)="updateParticipant($event)"
+    >
+      <option *ngFor="let participant of participantList" [value]="participant.id">
+        {{ participant.nameLast }}, {{ participant.nameFirst }}
+      </option>
+    </select>
+  </div>
+  <div class="col-5">
+    <label for="eventInfoSelect" class="form-label">Event</label>
+    <select
+      id="eventInfoSelect"
+      class="form-select"
+      [(ngModel)]="registration.eventInfoId"
+      (ngModelChange)="updateEventInfo($event)"
+    >
+      <option *ngFor="let eventInfo of eventInfoList" [value]="eventInfo.id">
+        {{ eventInfo.eventName }}: {{ eventInfo.eventTitle }}
+      </option>
+    </select>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-3 d-flex flex-column justify-content-center align-items-center">
+    <div class="form-label">Registration for Event:</div>
+    <div>{{ registration.eventName }}: <i>{{ registration.eventTitle }}</i></div>
+  </div>
+  <div class="col-2">
+    <label for="amountDonation" class="form-label">Donation</label>
+    <div class="input-group">
+      <span class="input-group-text">$</span>
+      <input type="number" id="amountDonation" class="form-control px-0" [(ngModel)]="registration.donationPledge" >
+    </div>
+  </div>
+  <div class="col-4"><label for="signature" class="form-label">Signature</label><input type="text" id="signature" class="form-control" [(ngModel)]="registration.signature" ></div>
+</div>
+
+<div class="row mt-5" *ngIf="showSubmitButton">
+  <div class="col-3"></div>
+  <div class="col-3 mx-2 text-center">
+    <button type="button" class="btn btn-primary" (click)="submitForm()">Submit</button>
+  </div>
+</div>

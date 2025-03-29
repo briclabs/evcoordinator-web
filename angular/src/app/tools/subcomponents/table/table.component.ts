@@ -31,7 +31,9 @@ export class TableComponent {
     return this.columns.filter(column =>
       column !== 'id' &&
       column !== 'sponsor' &&
-      column !== 'timeRecorded'
+      column !== 'timeRecorded' &&
+      column !== 'participantId' &&
+      column !== 'eventInfoId'
     );
   }
 

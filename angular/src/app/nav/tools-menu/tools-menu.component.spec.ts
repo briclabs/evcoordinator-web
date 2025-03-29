@@ -32,9 +32,12 @@ describe('Tools Menu', () => {
       linkText.push(link.innerText);
     })
 
-    expect(linkText).toContain('Events');
-    expect(linkText).toContain('Participants');
-    expect(linkText).toContain('Payments');
+    expect(linkText).toContain('Event Management');
+    expect(linkText).toContain('Profile Management');
+    expect(linkText).toContain('Registration Management');
+    expect(linkText).toContain('Guest Management');
+    expect(linkText).toContain('Payment Management');
+    expect(linkText).toContain('Site Configuration');
     expect(linkText).toContain('History');
 
   });

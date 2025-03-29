@@ -7,10 +7,12 @@ import { HttpClient, HttpResponse } from "@angular/common/http";
 import { ProfileFormComponent } from "../profile-form/profile-form.component";
 import { createDefaultEventInfo, EventInfo } from "../models/event-info";
 import { ParticipantAssociationComponent } from "../participant-association/participant-association.component";
-import { createDefaultRegistration, Registration } from "../models/registration";
+import { Registration } from "../models/registration";
 import { createDefaultParticipantAssociation, ParticipantAssociation } from "../models/participant-association";
 import { RegistrationPacket } from "../models/registration-packet";
 import { catchError, map, Observable, of } from "rxjs";
+import { RegistrationFormComponent } from "../registration-form/registration-form.component";
+import { createDefaultRegistrationWithLabels, RegistrationWithLabels } from "../models/registration-with-labels";
 
 @Component({
   selector: 'registration',
@@ -19,6 +21,7 @@ import { catchError, map, Observable, of } from "rxjs";
     CommonModule,
     FormsModule,
     ProfileFormComponent,
+    RegistrationFormComponent,
     ParticipantAssociationComponent,
   ],
   templateUrl: './registration.component.html',
@@ -27,9 +30,9 @@ import { catchError, map, Observable, of } from "rxjs";
 export class RegistrationComponent implements OnInit{
   protected participant: Participant;
   protected participantAssociations: ParticipantAssociation[];
-  protected registration: Registration;
+  protected registration: RegistrationWithLabels;
 
-  protected latestEventInfo: EventInfo;
+  protected eventInfo: EventInfo;
 
   protected isPreexisting: boolean = false;
 
@@ -41,19 +44,22 @@ export class RegistrationComponent implements OnInit{
   totalSteps: number = 3;
 
   constructor(private http: HttpClient) {
-    this.registrationUrl = environment.apiUrl + '/registration';
+    this.registrationUrl = environment.apiUrl + '/registrationPacket';
     this.participantUrl = environment.apiUrl + '/participant';
     this.eventInfoUrl = environment.apiUrl + '/event/info';
 
-    this.latestEventInfo = createDefaultEventInfo();
+    this.eventInfo = createDefaultEventInfo();
 
     this.participant = createDefaultParticipant();
     this.participantAssociations = [];
-    this.registration = createDefaultRegistration();
+    this.registration = createDefaultRegistrationWithLabels();
   }
 
   async ngOnInit() {
     this.fetchLatestEventInfo();
+    this.registration.eventInfoId = this.eventInfo.id;
+    this.registration.eventTitle = this.eventInfo.eventTitle;
+    this.registration.eventName = this.eventInfo.eventName;
   }
 
   onAddAssociation(): void {
@@ -106,7 +112,7 @@ export class RegistrationComponent implements OnInit{
   fetchLatestEventInfo(): void {
     this.http.get<EventInfo>(`${this.eventInfoUrl}/latest`).subscribe({
       next: (data: EventInfo) => {
-        this.latestEventInfo = data;
+        this.eventInfo = data;
       },
       error: (error) => {
         console.error('Error loading event info:', error);
@@ -116,12 +122,17 @@ export class RegistrationComponent implements OnInit{
 
   submitRegistration(): void {
     this.participant.participantType = 'ATTENDEE';
-    this.registration.eventInfoId = this.latestEventInfo.id;
+
+    const registrationToCreate: Registration = {
+      eventInfoId: this.registration.eventInfoId,
+      donationPledge: this.registration.donationPledge,
+      signature: this.registration.signature,
+    }
 
     const registrationPacket: RegistrationPacket = {
       participant: this.participant,
       associations: this.participantAssociations,
-      registration: this.registration,
+      registration: registrationToCreate,
     }
 
     this.http.post<{ id: number }>(this.isPreexisting ? this.registrationUrl + '/preExisting' : this.registrationUrl + '/newProfile', registrationPacket).subscribe({

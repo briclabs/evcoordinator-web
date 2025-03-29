@@ -12,7 +12,6 @@ import { ProfileManagementComponent } from "./app/tools/profile-management/profi
 import { SiteConfigComponent } from "./app/tools/site-config/site-config.component";
 import { HistoryComponent } from "./app/tools/history/history.component";
 import { PaymentsComponent } from "./app/tools/payments/payments.component";
-import { ParticipantsComponent } from "./app/tools/participants/participants.component";
 import { EventsComponent } from "./app/tools/events/events.component";
 import { DonationsComponent } from "./app/donations/donations.component";
 import { RegistrationComponent } from "./app/registration/registration.component";
@@ -20,6 +19,11 @@ import { GuidelinesComponent } from "./app/guidelines/guidelines.component";
 import { EditProfileComponent } from "./app/tools/profile-management/edit-profile/edit-profile.component";
 import { EventInfoComponent } from "./app/tools/events/event-info/event-info.component";
 import { CsrfInterceptor } from "./app/interceptors/csrf.interceptor";
+import { RegistrationManagementComponent } from "./app/tools/registration-management/registration-management.component";
+import { GuestManagementComponent } from "./app/tools/guest-management/guest-management.component";
+import {
+  EditRegistrationComponent
+} from "./app/tools/registration-management/edit-registration/edit-registration.component";
 
 if (environment.production) {
   enableProdMode();
@@ -48,8 +52,13 @@ bootstrapApplication(AppComponent, {
         canActivate: [() => authGuard()],
       },
       {
-        path: 'tools/participants',
-        component: ParticipantsComponent,
+        path: 'tools/registrations',
+        component: RegistrationManagementComponent,
+        canActivate: [() => authGuard()],
+      },
+      {
+        path: 'tools/guests',
+        component: GuestManagementComponent,
         canActivate: [() => authGuard()],
       },
       {
@@ -85,6 +94,16 @@ bootstrapApplication(AppComponent, {
       {
         path: 'tools/edit-profile',
         component: EditProfileComponent,
+        canActivate: [() => authGuard()],
+      },
+      {
+        path: 'tools/edit-registration/:id',
+        component: EditRegistrationComponent,
+        canActivate: [() => authGuard()],
+      },
+      {
+        path: 'tools/edit-registration',
+        component: EditRegistrationComponent,
         canActivate: [() => authGuard()],
       },
       { path: '', redirectTo: '/', pathMatch: 'full' },
