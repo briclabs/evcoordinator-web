@@ -10,6 +10,7 @@ import { createDefaultRegistrationWithLabels, RegistrationWithLabels } from "../
 import { EventInfo } from "../../../models/event-info";
 import { Registration } from "../../../models/registration";
 import { SearchRequest } from "../../../models/search-request";
+import { createDefaultGuestWithLabels } from "../../../models/guest-with-labels";
 
 @Component({
   selector: 'edit-profile',
@@ -151,5 +152,16 @@ export class EditRegistrationComponent implements OnInit {
         console.log('Error saving profile:', error);
       },
     })
+  }
+
+  delete(): void {
+    this.http.delete(`${this.registrationUrl}/${this.registration.id}`).subscribe({
+      next: () => {
+        this.registration = createDefaultRegistrationWithLabels();
+      },
+      error: (error) => {
+        console.error('Error deleting guest:', error);
+      }
+    });
   }
 }

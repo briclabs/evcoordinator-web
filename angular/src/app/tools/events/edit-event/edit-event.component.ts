@@ -4,7 +4,7 @@ import { ActivatedRoute } from "@angular/router";
 import { environment } from "../../../../environments/environment";
 import { createDefaultEventInfo, EventInfo } from "../../../models/event-info";
 import { FormsModule } from "@angular/forms";
-import { NgForOf } from "@angular/common";
+import { NgForOf, NgIf } from "@angular/common";
 
 @Component({
   selector: 'app-event-info',
@@ -12,11 +12,12 @@ import { NgForOf } from "@angular/common";
   imports: [
     FormsModule,
     NgForOf,
+    NgIf,
   ],
-  templateUrl: './event-info.component.html',
-  styleUrl: './event-info.component.css'
+  templateUrl: './edit-event.component.html',
+  styleUrl: './edit-event.component.css'
 })
-export class EventInfoComponent implements OnInit {
+export class EditEventComponent implements OnInit {
   eventInfo: EventInfo;
 
   eventStatusOptions: string[] = ["CURRENT", "PAST", "CANCELLED"]; // TODO - source from DB.
@@ -69,5 +70,16 @@ export class EventInfoComponent implements OnInit {
         console.log('Error saving event info:', error);
       },
     })
+  }
+
+  delete(): void {
+    this.http.delete(`${this.apiUrl}/${this.eventInfo.id}`).subscribe({
+      next: () => {
+        this.eventInfo = createDefaultEventInfo();
+      },
+      error: (error) => {
+        console.error('Error deleting event info:', error);
+      }
+    });
   }
 }

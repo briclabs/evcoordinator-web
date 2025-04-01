@@ -36,5 +36,12 @@
         <button type="button" class="btn btn-primary" (click)="eventInfo.id ? update() : create()">Submit</button>
       </div>
     </div>
+
+    <div *ngIf="eventInfo.id" class="row mt-2">
+      <div class="col-3"></div>
+      <div class="col-3 mx-2 text-center">
+        <button type="button" class="btn btn-delete" (click)="delete()">Delete</button>
+      </div>
+    </div>
   </div>
 </div>

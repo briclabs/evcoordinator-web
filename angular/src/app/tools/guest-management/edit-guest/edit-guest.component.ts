@@ -8,12 +8,15 @@ import { environment } from "../../../../environments/environment";
 import { SearchRequest } from "../../../models/search-request";
 import { createDefaultGuestWithLabels, GuestWithLabels } from "../../../models/guest-with-labels";
 import { Guest } from "../../../models/guest";
+import { EventInfo } from "../../../models/event-info";
+import { NgIf } from "@angular/common";
 
 @Component({
   selector: 'app-edit-guest',
   standalone: true,
   imports: [
     GuestFormComponent,
+    NgIf,
   ],
   templateUrl: './edit-guest.component.html',
   styleUrl: './edit-guest.component.css'
@@ -147,5 +150,16 @@ export class EditGuestComponent implements OnInit {
         console.log('Error saving guest:', error);
       },
     })
+  }
+
+  delete(): void {
+    this.http.delete(`${this.guestUrl}/${this.guest.id}`).subscribe({
+      next: () => {
+        this.guest = createDefaultGuestWithLabels();
+      },
+      error: (error) => {
+        console.error('Error deleting guest:', error);
+      }
+    });
   }
 }

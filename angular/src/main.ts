@@ -17,7 +17,7 @@ import { DonationsComponent } from "./app/donations/donations.component";
 import { RegistrationComponent } from "./app/registration/registration.component";
 import { GuidelinesComponent } from "./app/guidelines/guidelines.component";
 import { EditProfileComponent } from "./app/tools/profile-management/edit-profile/edit-profile.component";
-import { EventInfoComponent } from "./app/tools/events/event-info/event-info.component";
+import { EditEventComponent } from "./app/tools/events/edit-event/edit-event.component";
 import { CsrfInterceptor } from "./app/interceptors/csrf.interceptor";
 import { RegistrationManagementComponent } from "./app/tools/registration-management/registration-management.component";
 import { GuestManagementComponent } from "./app/tools/guest-management/guest-management.component";
@@ -44,12 +44,12 @@ bootstrapApplication(AppComponent, {
       },
       {
         path: 'tools/event-info/:id',
-        component: EventInfoComponent,
+        component: EditEventComponent,
         canActivate: [() => authGuard()],
       },
       {
         path: 'tools/event-info',
-        component: EventInfoComponent,
+        component: EditEventComponent,
         canActivate: [() => authGuard()],
       },
       {
