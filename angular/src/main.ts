@@ -24,6 +24,7 @@ import { GuestManagementComponent } from "./app/tools/guest-management/guest-man
 import {
   EditRegistrationComponent
 } from "./app/tools/registration-management/edit-registration/edit-registration.component";
+import { EditGuestComponent } from "./app/tools/guest-management/edit-guest/edit-guest.component";
 
 if (environment.production) {
   enableProdMode();
@@ -104,6 +105,16 @@ bootstrapApplication(AppComponent, {
       {
         path: 'tools/edit-registration',
         component: EditRegistrationComponent,
+        canActivate: [() => authGuard()],
+      },
+      {
+        path: 'tools/edit-guest/:id',
+        component: EditGuestComponent,
+        canActivate: [() => authGuard()],
+      },
+      {
+        path: 'tools/edit-guest',
+        component: EditGuestComponent,
         canActivate: [() => authGuard()],
       },
       { path: '', redirectTo: '/', pathMatch: 'full' },

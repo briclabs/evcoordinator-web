@@ -6,11 +6,3 @@ export interface Registration {
   signature: string;
   timeRecorded?: string;
 }
-
-export function createDefaultRegistration(): Registration {
-  return {
-    eventInfoId: 0,
-    donationPledge: 0,
-    signature: '',
-  };
-}

@@ -1,0 +1,50 @@
+<div *ngIf="registrationList && registrationList.length > 0 && guestProfileList && guestProfileList.length" class="row mb-3">
+  <div class="col-5">
+    <label for="registrationSelect" class="form-label">Registration</label>
+    <select
+      id="registrationSelect"
+      class="form-select"
+      [(ngModel)]="guest.registrationId"
+      (ngModelChange)="updateRegistration($event)"
+    >
+      <option *ngFor="let registration of registrationList" [value]="registration.id">
+        {{ registration.eventName }}: {{ registration.eventTitle }} ({{ registration.participantNameFirst }} {{ registration.participantNameLast }})
+      </option>
+    </select>
+  </div>
+  <div class="col-5">
+    <label for="guestProfileSelect" class="form-label">Guest Profile</label>
+    <select
+      id="guestProfileSelect"
+      class="form-select"
+      [(ngModel)]="guest.guestProfileId"
+      (ngModelChange)="updateGuestProfile($event)"
+    >
+      <option *ngFor="let guestProfile of guestProfileList" [value]="guestProfile.id">
+        {{ guestProfile.nameLast }}, {{ guestProfile.nameFirst }}
+      </option>
+    </select>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-1">
+  </div>
+  <div class="col-2">
+    <label for="relationshipType" class="form-label">Guest Type</label>
+    <select class="form-select form-control" id="relationshipType" [(ngModel)]="guest.relationship" required>
+      <option *ngFor="let option of relationshipTypeOptions" [ngValue]="option">{{ option }}</option>
+    </select>
+  </div>
+  <div class="col-5">
+    <label for="guestRawName" class="form-label">Guest Name</label>
+    <input type="text" id="guestRawName" class="form-control" [(ngModel)]="guest.rawGuestName" required />
+  </div>
+</div>
+
+<div class="row mt-5" *ngIf="showSubmitButton">
+  <div class="col-3"></div>
+  <div class="col-3 mx-2 text-center">
+    <button type="button" class="btn btn-primary" (click)="submitForm()">Submit</button>
+  </div>
+</div>

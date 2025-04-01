@@ -15,7 +15,7 @@ export interface Participant {
   phoneDigits: number;
   nameEmergency: string;
   phoneEmergency: number;
-  emergencyContactAssociationType: string;
+  emergencyContactRelationshipType: string;
   timeRecorded: string;
 }
 
@@ -37,7 +37,7 @@ export function createDefaultParticipant(): Participant {
     phoneDigits: 0,
     nameEmergency: '',
     phoneEmergency: 0,
-    emergencyContactAssociationType: '',
+    emergencyContactRelationshipType: '',
     timeRecorded: '',
   };
 }

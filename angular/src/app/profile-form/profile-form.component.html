@@ -76,7 +76,7 @@
     </div>
     <div class="col-3">
       <label for="relationshipEmergency" class="form-label">Emergency Contact Relationship</label>
-      <select class="form-select form-control" id="relationshipEmergency" [(ngModel)]="participant.emergencyContactAssociationType" (ngModelChange)="participantChange.emit(participant)" required>
+      <select class="form-select form-control" id="relationshipEmergency" [(ngModel)]="participant.emergencyContactRelationshipType" (ngModelChange)="participantChange.emit(participant)" required>
         <option *ngFor="let option of contactUtilityServiceService.getRelationshipEmergencyContact()" [value]="option.key">{{ option.value }}</option>
       </select>
     </div>

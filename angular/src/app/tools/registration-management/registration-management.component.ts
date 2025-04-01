@@ -15,7 +15,7 @@ import { RegistrationWithLabels } from "../../models/registration-with-labels";
   templateUrl: './registration-management.component.html',
   styleUrl: './registration-management.component.css'
 })
-export class RegistrationManagementComponent  implements OnInit {
+export class RegistrationManagementComponent implements OnInit {
   registrationSearchApiUrl = `${environment.apiUrl}/registration/search`;
 
   private resultsPerPage = 10;

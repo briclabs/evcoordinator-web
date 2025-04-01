@@ -1,9 +1,9 @@
 import { Participant } from "./participant";
-import { ParticipantAssociation } from "./participant-association";
 import { Registration } from "./registration";
+import { Guest } from "./guest";
 
 export interface RegistrationPacket {
   participant: Participant;
-  associations?: ParticipantAssociation[];
+  guests?: Guest[];
   registration: Registration;
 }

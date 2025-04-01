@@ -43,27 +43,24 @@
           <hr>
         </div>
       </div>
-      <div class="row mb-3" *ngFor="let association of participantAssociations; let i = index">
+      <div class="row mb-3" *ngFor="let guest of guests(); let i = index">
         <div class="col-1 d-flex justify-content-end align-items-end">
-          <button class="btn btn-outline-danger bi-person-fill-dash" aria-label="Remove Guest" (click)="onRemoveAssociation(i)"></button>
+          <button class="btn btn-outline-danger bi-person-fill-dash" aria-label="Remove Guest" (click)="onRemoveGuest(i)"></button>
         </div>
         <div class="col-11">
-          <app-participant-association [(associationType)]="association.association" [(associationName)]="association.rawAssociateName"></app-participant-association>
+          <guest-form [(guest)]="guests()[i]"></guest-form>
         </div>
       </div>
 
       <div class="row">
         <div class="col">
-          <button class="btn btn-outline-primary bi-person-fill-add" aria-label="Add Guest" (click)="onAddAssociation()"></button>
+          <button class="btn btn-outline-primary bi-person-fill-add" aria-label="Add Guest" (click)="onAddGuest()"></button>
         </div>
       </div>
     </div>
 
     <div *ngIf="currentStep === 3" class="step step-3">
-      <registration-form
-        [(registration)]="registration"
-        [showSubmitButton]="false">
-      </registration-form>
+      <registration-form [(registration)]="registration" [showSubmitButton]="false"></registration-form>
 
       <div class="row mt-2 mt-3">
         <div class="col-9 text-center">

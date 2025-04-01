@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { environment } from "../../environments/environment";
@@ -6,9 +6,9 @@ import { createDefaultParticipant, Participant } from "../models/participant";
 import { HttpClient, HttpResponse } from "@angular/common/http";
 import { ProfileFormComponent } from "../profile-form/profile-form.component";
 import { createDefaultEventInfo, EventInfo } from "../models/event-info";
-import { ParticipantAssociationComponent } from "../participant-association/participant-association.component";
+import { GuestFormComponent } from "../guest-form/guest-form.component";
 import { Registration } from "../models/registration";
-import { createDefaultParticipantAssociation, ParticipantAssociation } from "../models/participant-association";
+import { createDefaultGuestWithLabels, GuestWithLabels } from "../models/guest-with-labels";
 import { RegistrationPacket } from "../models/registration-packet";
 import { catchError, map, Observable, of } from "rxjs";
 import { RegistrationFormComponent } from "../registration-form/registration-form.component";
@@ -22,14 +22,14 @@ import { createDefaultRegistrationWithLabels, RegistrationWithLabels } from "../
     FormsModule,
     ProfileFormComponent,
     RegistrationFormComponent,
-    ParticipantAssociationComponent,
+    GuestFormComponent,
   ],
   templateUrl: './registration.component.html',
   styleUrls: ['./registration.component.css'],
 })
 export class RegistrationComponent implements OnInit{
   protected participant: Participant;
-  protected participantAssociations: ParticipantAssociation[];
+  protected guests = signal<GuestWithLabels[]>([]);
   protected registration: RegistrationWithLabels;
 
   protected eventInfo: EventInfo;
@@ -51,25 +51,20 @@ export class RegistrationComponent implements OnInit{
     this.eventInfo = createDefaultEventInfo();
 
     this.participant = createDefaultParticipant();
-    this.participantAssociations = [];
+    this.guests.set([]);
     this.registration = createDefaultRegistrationWithLabels();
   }
 
   async ngOnInit() {
     this.fetchLatestEventInfo();
-    this.registration.eventInfoId = this.eventInfo.id;
-    this.registration.eventTitle = this.eventInfo.eventTitle;
-    this.registration.eventName = this.eventInfo.eventName;
   }
 
-  onAddAssociation(): void {
-    this.participantAssociations.push(createDefaultParticipantAssociation());
+  onAddGuest(): void {
+    this.guests.set([...this.guests(), createDefaultGuestWithLabels()]);
   }
 
-  onRemoveAssociation(index: number): void {
-    if (index > -1 && index < this.participantAssociations.length) {
-      this.participantAssociations.splice(index, 1);
-    }
+  onRemoveGuest(index: number): void {
+    this.guests.set(this.guests().filter((_, i) => i !== index));
   }
 
   nextStep(): void {
@@ -113,6 +108,9 @@ export class RegistrationComponent implements OnInit{
     this.http.get<EventInfo>(`${this.eventInfoUrl}/latest`).subscribe({
       next: (data: EventInfo) => {
         this.eventInfo = data;
+        this.registration.eventInfoId = this.eventInfo.id;
+        this.registration.eventTitle = this.eventInfo.eventTitle;
+        this.registration.eventName = this.eventInfo.eventName;
       },
       error: (error) => {
         console.error('Error loading event info:', error);
@@ -129,9 +127,14 @@ export class RegistrationComponent implements OnInit{
       signature: this.registration.signature,
     }
 
+    const guestsToCreate = this.guests().map(guest => ({
+      rawGuestName: guest.rawGuestName,
+      relationship: guest.relationship,
+    }));
+
     const registrationPacket: RegistrationPacket = {
       participant: this.participant,
-      associations: this.participantAssociations,
+      guests: guestsToCreate,
       registration: registrationToCreate,
     }
 
