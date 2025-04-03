@@ -36,7 +36,9 @@ export class TableComponent {
       column !== 'eventInfoId' &&
       column !== 'registrationId' &&
       column !== 'guestProfileId' &&
-      column !== 'inviteeProfileId'
+      column !== 'inviteeProfileId' &&
+      column !== 'actorId' &&
+      column !== 'recipientId'
     );
   }
 

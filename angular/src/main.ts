@@ -25,6 +25,7 @@ import {
   EditRegistrationComponent
 } from "./app/pages/tools/registration-management/edit-registration/edit-registration.component";
 import { EditGuestComponent } from "./app/pages/tools/guest-management/edit-guest/edit-guest.component";
+import { EditPaymentComponent } from "./app/pages/tools/payment-management/edit-payment/edit-payment.component";
 
 if (environment.production) {
   enableProdMode();
@@ -102,6 +103,16 @@ bootstrapApplication(AppComponent, {
       {
         path: 'tools/payments',
         component: PaymentManagementComponent,
+        canActivate: [() => authGuard()],
+      },
+      {
+        path: 'tools/edit-payment/:id',
+        component: EditPaymentComponent,
+        canActivate: [() => authGuard()],
+      },
+      {
+        path: 'tools/edit-payment',
+        component: EditPaymentComponent,
         canActivate: [() => authGuard()],
       },
       // PROFILE MANAGEMENT
