@@ -95,7 +95,6 @@ export class RegistrationComponent implements OnInit{
     );
   }
 
-
   checkPreexistingProfile(): void {
     if (this.participant.nameFirst && this.participant.nameLast && this.participant.addrEmail) {
       this.preexists().subscribe((exists: boolean) => {
@@ -138,7 +137,7 @@ export class RegistrationComponent implements OnInit{
       registration: registrationToCreate,
     }
 
-    this.http.post<{ id: number }>(this.isPreexisting ? this.registrationUrl + '/preExisting' : this.registrationUrl + '/newProfile', registrationPacket).subscribe({
+    this.http.post<{ id: number }>(this.registrationUrl, registrationPacket).subscribe({
       next: (response: { id: number }) => {
         if (response && response.id) {
           this.registration.id = response.id;

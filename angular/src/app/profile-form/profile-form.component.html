@@ -20,26 +20,26 @@
   <div class="row">
     <div class="col-3">
       <label for="nameNick" class="form-label">Nickname</label>
-      <input type="text" id="nameNick" class="form-control" [(ngModel)]="participant.nameNick" (ngModelChange)="participantChange.emit(participant)" />
+      <input type="text" id="nameNick" class="form-control" [(ngModel)]="participant.nameNick" />
     </div>
     <div class="col-2">
       <label for="dateBirth" class="form-label">Date of Birth</label>
-      <input type="date" id="dateBirth" class="form-control" [(ngModel)]="participant.dob" (ngModelChange)="participantChange.emit(participant)" required />
+      <input type="date" id="dateBirth" class="form-control" [(ngModel)]="participant.dob" required />
     </div>
     <div class="col-4">
       <label for="nameSponsor" class="form-label">Name(s) of person(s) that first invited you</label>
-      <input type="text" id="nameSponsor" class="form-control" [(ngModel)]="participant.sponsor" (ngModelChange)="participantChange.emit(participant)" required />
+      <input type="text" id="nameSponsor" class="form-control" [(ngModel)]="participant.sponsor" required />
     </div>
   </div>
 
   <div class="row mt-5">
     <div class="col-5">
       <label for="addressStreet1" class="form-label">Street 1</label>
-      <input type="text" id="addressStreet1" class="form-control" [(ngModel)]="participant.addrStreet_1" (ngModelChange)="participantChange.emit(participant)" required />
+      <input type="text" id="addressStreet1" class="form-control" [(ngModel)]="participant.addrStreet_1" required />
     </div>
     <div class="col-4">
       <label for="addressStreet2" class="form-label">Street 2</label>
-      <input type="text" id="addressStreet2" class="form-control" [(ngModel)]="participant.addrStreet_2" (ngModelChange)="participantChange.emit(participant)" />
+      <input type="text" id="addressStreet2" class="form-control" [(ngModel)]="participant.addrStreet_2" />
     </div>
   </div>
 
@@ -47,36 +47,36 @@
     <div class="col-1"></div>
     <div class="col-1">
       <label for="addressZipcode" class="form-label">Zipcode</label>
-      <input type="number" id="addressZipcode" class="form-control" [(ngModel)]="participant.addrZip" (ngModelChange)="participantChange.emit(participant)" required />
+      <input type="number" id="addressZipcode" class="form-control" [(ngModel)]="participant.addrZip" required />
     </div>
     <div class="col-3">
       <label for="addressCity" class="form-label">City</label>
-      <input type="text" id="addressCity" class="form-control" [(ngModel)]="participant.addrCity" (ngModelChange)="participantChange.emit(participant)" required />
+      <input type="text" id="addressCity" class="form-control" [(ngModel)]="participant.addrCity" required />
     </div>
     <div class="col-1">
       <label for="addressState" class="form-label">State</label>
-      <select class="form-select form-control" id="addressState" [(ngModel)]="participant.addrStateAbbr" (ngModelChange)="participantChange.emit(participant)" required>
+      <select class="form-select form-control" id="addressState" [(ngModel)]="participant.addrStateAbbr" required>
         <option *ngFor="let option of contactUtilityServiceService.getStateAbbreviations()" [ngValue]="option">{{ option }}</option>
       </select>
     </div>
     <div class="col-2">
       <label for="phoneNumber" class="form-label">Phone Number</label>
-      <input type="tel" id="phoneNumber" class="form-control" [(ngModel)]="participant.phoneDigits" (ngModelChange)="participantChange.emit(participant)" required />
+      <input type="tel" id="phoneNumber" class="form-control" [(ngModel)]="participant.phoneDigits" required />
     </div>
   </div>
 
   <div class="row mt-5">
     <div class="col-4">
       <label for="nameEmergency" class="form-label">Emergency Contact Name</label>
-      <input type="text" class="form-control" id="nameEmergency" [(ngModel)]="participant.nameEmergency" (ngModelChange)="participantChange.emit(participant)" required>
+      <input type="text" class="form-control" id="nameEmergency" [(ngModel)]="participant.nameEmergency" required>
     </div>
     <div class="col-2">
       <label for="phoneEmergency" class="form-label">Emergency Contact Phone</label>
-      <input type="text" class="form-control" id="phoneEmergency" [(ngModel)]="participant.phoneEmergency" (ngModelChange)="participantChange.emit(participant)" required>
+      <input type="text" class="form-control" id="phoneEmergency" [(ngModel)]="participant.phoneEmergency" required>
     </div>
     <div class="col-3">
       <label for="relationshipEmergency" class="form-label">Emergency Contact Relationship</label>
-      <select class="form-select form-control" id="relationshipEmergency" [(ngModel)]="participant.emergencyContactRelationshipType" (ngModelChange)="participantChange.emit(participant)" required>
+      <select class="form-select form-control" id="relationshipEmergency" [(ngModel)]="participant.emergencyContactRelationshipType" required>
         <option *ngFor="let option of contactUtilityServiceService.getRelationshipEmergencyContact()" [value]="option.key">{{ option.value }}</option>
       </select>
     </div>
@@ -88,7 +88,7 @@
       <div class="d-flex align-items-center">
         <div *ngIf="isParticipantTypeDropdown" class="flex-fill">
           <label for="participantType" class="form-label">Profile Type</label>
-          <select class="form-select" id="participantType" [(ngModel)]="participant.participantType" (ngModelChange)="participantChange.emit(participant)" required>
+          <select class="form-select" id="participantType" [(ngModel)]="participant.participantType" required>
             <option *ngFor="let type of participantTypeOptions" [ngValue]="type">{{ type }}</option>
           </select>
         </div>
