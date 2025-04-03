@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { OidcSecurityService } from "angular-auth-oidc-client";
-import { NavComponent } from "./nav/nav.component";
+import { NavComponent } from "./pages/nav/nav.component";
 import { RouterOutlet } from "@angular/router";
 
 @Component({

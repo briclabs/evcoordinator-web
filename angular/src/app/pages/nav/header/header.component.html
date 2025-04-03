@@ -1,0 +1,18 @@
+<nav class="navbar navbar-expand-md bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand col-1" href="#"><img src="../../../../assets/images/logo.svg" alt="home" class="img-fluid"></a>
+    <div class="col-11">
+      <div class="navbar-nav">
+        <a class="nav-link" href="/guidelines">Guidelines</a>
+        <a class="nav-link" href="/registration">Registration</a>
+        <a class="nav-link" href="/donations">Donations</a>
+        <button class="ms-auto btn btn-outline-primary p-2 mx-3" *ngIf="!getIsAuthenticated(); else userTools" (click)="login()">Log In</button>&nbsp;
+        <ng-template #userTools>
+          <button class="navbar navbar-toggler d-inline-flex btn btn-outline-primary ms-auto" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="User Name">
+            <div class="small">{{ getUsername() }}<span class="mx-1"></span></div><span class="navbar-toggler-icon"></span>
+          </button>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</nav>

@@ -8,23 +8,23 @@ import { GatewayInterceptor } from './app/interceptors/gateway.interceptor';
 import { AuthInterceptor } from './app/interceptors/auth.interceptor';
 import { provideRouter } from "@angular/router";
 import { authGuard } from "./app/auth.guard";
-import { ProfileManagementComponent } from "./app/tools/profile-management/profile-management.component";
-import { SiteConfigComponent } from "./app/tools/site-config/site-config.component";
-import { HistoryComponent } from "./app/tools/history/history.component";
-import { PaymentsComponent } from "./app/tools/payments/payments.component";
-import { EventsComponent } from "./app/tools/events/events.component";
-import { DonationsComponent } from "./app/donations/donations.component";
-import { RegistrationComponent } from "./app/registration/registration.component";
-import { GuidelinesComponent } from "./app/guidelines/guidelines.component";
-import { EditProfileComponent } from "./app/tools/profile-management/edit-profile/edit-profile.component";
-import { EditEventComponent } from "./app/tools/events/edit-event/edit-event.component";
+import { ProfileManagementComponent } from "./app/pages/tools/profile-management/profile-management.component";
+import { SiteConfigComponent } from "./app/pages/tools/site-config/site-config.component";
+import { HistoryComponent } from "./app/pages/tools/history/history.component";
+import { PaymentManagementComponent } from "./app/pages/tools/payment-management/payment-management.component";
+import { EventManagementComponent } from "./app/pages/tools/event-management/event-management.component";
+import { DonationsComponent } from "./app/pages/public/donations/donations.component";
+import { RegistrationComponent } from "./app/pages/public/registration/registration.component";
+import { GuidelinesComponent } from "./app/pages/public/guidelines/guidelines.component";
+import { EditProfileComponent } from "./app/pages/tools/profile-management/edit-profile/edit-profile.component";
+import { EditEventComponent } from "./app/pages/tools/event-management/edit-event/edit-event.component";
 import { CsrfInterceptor } from "./app/interceptors/csrf.interceptor";
-import { RegistrationManagementComponent } from "./app/tools/registration-management/registration-management.component";
-import { GuestManagementComponent } from "./app/tools/guest-management/guest-management.component";
+import { RegistrationManagementComponent } from "./app/pages/tools/registration-management/registration-management.component";
+import { GuestManagementComponent } from "./app/pages/tools/guest-management/guest-management.component";
 import {
   EditRegistrationComponent
-} from "./app/tools/registration-management/edit-registration/edit-registration.component";
-import { EditGuestComponent } from "./app/tools/guest-management/edit-guest/edit-guest.component";
+} from "./app/pages/tools/registration-management/edit-registration/edit-registration.component";
+import { EditGuestComponent } from "./app/pages/tools/guest-management/edit-guest/edit-guest.component";
 
 if (environment.production) {
   enableProdMode();
@@ -34,12 +34,26 @@ bootstrapApplication(AppComponent, {
   providers: [
     importProvidersFrom(HttpClientModule),
     provideRouter([
+      // PUBLIC FACING
       { path: 'guidelines', component: GuidelinesComponent },
       { path: 'registration', component: RegistrationComponent },
       { path: 'donations', component: DonationsComponent },
+      // HISTORY LOG
+      {
+        path: 'tools/history',
+        component: HistoryComponent,
+        canActivate: [() => authGuard()],
+      },
+      // SITE CONFIGURATION
+      {
+        path: 'tools/configuration',
+        component: SiteConfigComponent,
+        canActivate: [() => authGuard()],
+      },
+      // EVENT MANAGEMENT
       {
         path: 'tools/events',
-        component: EventsComponent,
+        component: EventManagementComponent,
         canActivate: [() => authGuard()],
       },
       {
@@ -52,49 +66,10 @@ bootstrapApplication(AppComponent, {
         component: EditEventComponent,
         canActivate: [() => authGuard()],
       },
+      // REGISTRATION MANAGEMENT
       {
         path: 'tools/registrations',
         component: RegistrationManagementComponent,
-        canActivate: [() => authGuard()],
-      },
-      {
-        path: 'tools/guests',
-        component: GuestManagementComponent,
-        canActivate: [() => authGuard()],
-      },
-      {
-        path: 'tools/payments',
-        component: PaymentsComponent,
-        canActivate: [() => authGuard()],
-      },
-      {
-        path: 'tools/history',
-        component: HistoryComponent,
-        canActivate: [() => authGuard()],
-      },
-      {
-        path: 'tools/configuration',
-        component: SiteConfigComponent,
-        canActivate: [() => authGuard()],
-      },
-      {
-        path: 'tools/my-profile',
-        component: EditProfileComponent,
-        canActivate: [() => authGuard()],
-      },
-      {
-        path: 'tools/profile-management',
-        component: ProfileManagementComponent,
-        canActivate: [() => authGuard()],
-      },
-      {
-        path: 'tools/edit-profile/:id',
-        component: EditProfileComponent,
-        canActivate: [() => authGuard()],
-      },
-      {
-        path: 'tools/edit-profile',
-        component: EditProfileComponent,
         canActivate: [() => authGuard()],
       },
       {
@@ -107,6 +82,12 @@ bootstrapApplication(AppComponent, {
         component: EditRegistrationComponent,
         canActivate: [() => authGuard()],
       },
+      // GUEST MANAGEMENT
+      {
+        path: 'tools/guests',
+        component: GuestManagementComponent,
+        canActivate: [() => authGuard()],
+      },
       {
         path: 'tools/edit-guest/:id',
         component: EditGuestComponent,
@@ -117,6 +98,34 @@ bootstrapApplication(AppComponent, {
         component: EditGuestComponent,
         canActivate: [() => authGuard()],
       },
+      // PAYMENT MANAGEMENT
+      {
+        path: 'tools/payments',
+        component: PaymentManagementComponent,
+        canActivate: [() => authGuard()],
+      },
+      // PROFILE MANAGEMENT
+      {
+        path: 'tools/profile-management',
+        component: ProfileManagementComponent,
+        canActivate: [() => authGuard()],
+      },
+      {
+        path: 'tools/my-profile',
+        component: EditProfileComponent,
+        canActivate: [() => authGuard()],
+      },
+      {
+        path: 'tools/edit-profile/:id',
+        component: EditProfileComponent,
+        canActivate: [() => authGuard()],
+      },
+      {
+        path: 'tools/edit-profile',
+        component: EditProfileComponent,
+        canActivate: [() => authGuard()],
+      },
+      // FALLBACK
       { path: '', redirectTo: '/', pathMatch: 'full' },
       { path: '**', redirectTo: '/', pathMatch: 'full' },
     ]),
