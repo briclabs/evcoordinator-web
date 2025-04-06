@@ -21,7 +21,10 @@
       </thead>
       <tbody>
       <tr style="cursor: pointer;" *ngFor="let row of rows" (click)="onTableRowClick(row)">
-        <td *ngFor="let rawCol of filteredColumns">{{ row[rawCol] }}</td>
+        <td *ngFor="let rawCol of filteredColumns">
+          <ng-container *ngIf="isJson(row[rawCol]); else notJson"><pre>{{ formatJson(row[rawCol]) }}</pre></ng-container>
+          <ng-template #notJson>{{ row[rawCol] }}</ng-template>
+        </td>
       </tr>
       </tbody>
     </table>

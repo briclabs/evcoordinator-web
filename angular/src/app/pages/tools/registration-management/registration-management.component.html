@@ -3,6 +3,31 @@
   [rows]="rows"
   [pages]="pages"
   [currentPage]="currentPage"
+  [excludedColumns]="[
+    'id',
+    'sponsor',
+    'timeRecorded',
+    'participantId',
+    'eventInfoId',
+    'registrationId',
+    'guestProfileId',
+    'inviteeProfileId',
+    'actorId',
+    'recipientId',
+    'participantType',
+    'nameNick',
+    'addrEmail',
+    'addrStreet_1',
+    'addrStreet_2',
+    'addrCity',
+    'addrStateAbbr',
+    'addrZip',
+    'dob',
+    'nameEmergency',
+    'phoneEmergency',
+    'emergencyContactRelationshipType',
+    'participantTimeRecorded',
+    'guests']"
   (rowClick)="onRowClick($event)"
   (addRecord)="onAddRecord()"
   (search)="onSearch($event)"

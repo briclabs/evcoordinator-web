@@ -18,6 +18,19 @@ export class TableComponent {
   @Input() rows: { [key: string]: any }[] = [];
   @Input() pages: number[] = [];
   @Input() currentPage: number = 1;
+  @Input() excludedColumns: string[] = [
+    'id',
+    'sponsor',
+    'timeRecorded',
+    'participantId',
+    'eventInfoId',
+    'registrationId',
+    'guestProfileId',
+    'inviteeProfileId',
+    'actorId',
+    'recipientId'
+  ];
+
   @Output() rowClick = new EventEmitter<{ [key: string]: any }>();
   @Output() addRecord = new EventEmitter<void>();
   @Output() pageChange = new EventEmitter<number>();
@@ -28,18 +41,32 @@ export class TableComponent {
   sortAsc?: boolean;
 
   get filteredColumns(): string[] {
-    return this.columns.filter(column =>
-      column !== 'id' &&
-      column !== 'sponsor' &&
-      column !== 'timeRecorded' &&
-      column !== 'participantId' &&
-      column !== 'eventInfoId' &&
-      column !== 'registrationId' &&
-      column !== 'guestProfileId' &&
-      column !== 'inviteeProfileId' &&
-      column !== 'actorId' &&
-      column !== 'recipientId'
-    );
+    return this.columns.filter(column => !this.excludedColumns.includes(column));
+  }
+
+  isJson(value: any): boolean {
+    if (typeof value === 'object' && value !== null) {
+      return true;
+    }
+
+    if (typeof value === 'string') {
+      try {
+        return !!JSON.parse(value);
+      } catch {
+        return false;
+      }
+    }
+
+    return false;
+  }
+
+  formatJson(value: any): string {
+    try {
+      const parsed = typeof value === 'string' ? JSON.parse(value) : value;
+      return typeof parsed === 'object' && parsed !== null ? JSON.stringify(parsed, null, 2) : value;
+    } catch {
+      return value;
+    }
   }
 
   onTableRowClick(row: { [key: string]: any }): void {

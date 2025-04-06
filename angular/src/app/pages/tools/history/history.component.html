@@ -1,1 +1,19 @@
-<app-table></app-table>
+<app-table
+  [columns]="columns"
+  [rows]="rows"
+  [pages]="pages"
+  [currentPage]="currentPage"
+  [excludedColumns]="[
+    'id',
+    'sponsor',
+    'participantId',
+    'eventInfoId',
+    'registrationId',
+    'guestProfileId',
+    'inviteeProfileId',
+    'actorId',
+    'recipientId']"
+  (search)="onSearch($event)"
+  (pageChange)="onPageChange($event)"
+  (columnSort)="onColumnSort($event)"
+></app-table>
