@@ -36,7 +36,7 @@ describe('Tools Menu', () => {
     expect(linkText).toContain('Profile Management');
     expect(linkText).toContain('Registration Management');
     expect(linkText).toContain('Guest Management');
-    expect(linkText).toContain('Payment Management');
+    expect(linkText).toContain('Transaction Management');
     expect(linkText).toContain('Site Configuration');
     expect(linkText).toContain('History');
 

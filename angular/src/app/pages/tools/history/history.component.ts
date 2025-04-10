@@ -14,7 +14,7 @@ import { HistoryWithLabels } from "../../../models/history-with-labels";
   templateUrl: './history.component.html',
   styleUrls: ['./history.component.css'],
 })
-export class HistoryComponent  implements OnInit {
+export class HistoryComponent implements OnInit {
   apiUrl = `${environment.apiUrl}/history`;
 
   private resultsPerPage = 10;

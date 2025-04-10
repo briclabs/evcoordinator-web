@@ -4,19 +4,19 @@ import { environment } from "../../../../environments/environment";
 import { HttpClient } from "@angular/common/http";
 import { Router } from "@angular/router";
 import { SearchRequest } from "../../../models/search-request";
-import { PaymentWithLabels } from "../../../models/payment-with-labels";
+import { TransactionWithLabels } from "../../../models/transaction-with-labels";
 
 @Component({
-  selector: 'payments',
+  selector: 'transactions',
   standalone: true,
   imports: [
     TableComponent,
   ],
-  templateUrl: './payment-management.component.html',
-  styleUrls: ['./payment-management.component.css'],
+  templateUrl: './transaction-management.component.html',
+  styleUrls: ['./transaction-management.component.css'],
 })
-export class PaymentManagementComponent implements OnInit {
-  apiUrl = `${environment.apiUrl}/payment`;
+export class TransactionManagementComponent implements OnInit {
+  apiUrl = `${environment.apiUrl}/transactions`;
 
   private resultsPerPage = 10;
 
@@ -32,10 +32,10 @@ export class PaymentManagementComponent implements OnInit {
   constructor(private http: HttpClient, private router: Router) {}
 
   ngOnInit(): void {
-    this.fetchPayments('', this.currentPage, this.sortColumn, this.sortAsc);
+    this.fetchTransactions('', this.currentPage, this.sortColumn, this.sortAsc);
   }
 
-  fetchPayments(searchString: string, page: number, sortColumn: string, sortAsc: boolean): void {
+  fetchTransactions(searchString: string, page: number, sortColumn: string, sortAsc: boolean): void {
     let searchRequest: SearchRequest = {
       searchConfiguration: {
         exactMatch: searchString.length === 0,
@@ -52,24 +52,24 @@ export class PaymentManagementComponent implements OnInit {
           actor_id: searchString,
           actor_name_first: searchString,
           actor_name_last: searchString,
-          payment_action_type: searchString,
           recipient_id: searchString,
           recipient_name_first: searchString,
           recipient_name_last: searchString,
           amount: searchString,
-          payment_type: searchString,
+          memo: searchString,
+          transaction_type: searchString,
           instrument_type: searchString,
         }
         : {}
     };
-    this.http.post<{ list: PaymentWithLabels[], count: number }>(`${this.apiUrl}/search`, searchRequest).subscribe({
+    this.http.post<{ list: TransactionWithLabels[], count: number }>(`${this.apiUrl}/search`, searchRequest).subscribe({
       next: (data) => {
-        console.log('Payments:', data);
+        console.log('Transactions:', data);
         if (data && data.list && data.count > 0) {
-          const formattedList = data.list.map(payment => {
+          const formattedList = data.list.map(transaction => {
             return {
-              ...payment,
-              amount: '$' + payment.amount.toFixed(2)
+              ...transaction,
+              amount: '$' + transaction.amount.toFixed(2)
             };
           });
           this.columns = Object.keys(formattedList[0]);
@@ -82,33 +82,33 @@ export class PaymentManagementComponent implements OnInit {
         }
       },
       error: (error) => {
-        console.error('Error fetching payments:', error);
+        console.error('Error fetching transactions:', error);
       },
     });
   }
 
   onRowClick(row: { [key: string]: any }): void {
-    this.router.navigate([`/tools/edit-payment/${row['id']}`]);
+    this.router.navigate([`/tools/edit-transaction/${row['id']}`]);
   }
 
   onAddRecord(): void {
-    this.router.navigate([`/tools/edit-payment`]);
+    this.router.navigate([`/tools/edit-transaction`]);
   }
 
   onSearch(searchString: string): void {
     this.searchString = searchString;
     this.currentPage = 1;
-    this.fetchPayments(this.searchString, this.currentPage, this.sortColumn, this.sortAsc);
+    this.fetchTransactions(this.searchString, this.currentPage, this.sortColumn, this.sortAsc);
   }
 
   onPageChange(page: number): void {
     this.currentPage = page;
-    this.fetchPayments(this.searchString, this.currentPage, this.sortColumn, this.sortAsc);
+    this.fetchTransactions(this.searchString, this.currentPage, this.sortColumn, this.sortAsc);
   }
 
   onColumnSort(event: { column: string, sortAsc: boolean }): void {
     this.sortColumn = event.column;
     this.sortAsc = event.sortAsc;
-    this.fetchPayments(this.searchString, this.currentPage, this.sortColumn, this.sortAsc);
+    this.fetchTransactions(this.searchString, this.currentPage, this.sortColumn, this.sortAsc);
   }
 }

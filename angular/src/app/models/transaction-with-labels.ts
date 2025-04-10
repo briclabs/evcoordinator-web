@@ -1,4 +1,4 @@
-export interface PaymentWithLabels {
+export interface TransactionWithLabels {
   id?: number;
   eventInfoId: number,
   eventName: string,
@@ -6,17 +6,17 @@ export interface PaymentWithLabels {
   actorId: number,
   actorNameFirst: string,
   actorNameLast: string,
-  paymentActionType: string,
   recipientId: number,
   recipientNameFirst: string,
   recipientNameLast: string,
   amount: number,
-  paymentType: string,
+  memo?: string,
+  transactionType: string,
   instrumentType: string,
   timeRecorded?: string,
 }
 
-export function createDefaultPaymentWithLabels(): PaymentWithLabels {
+export function createDefaultTransactionWithLabels(): TransactionWithLabels {
   return {
     id: 0,
     eventInfoId: 0,
@@ -25,12 +25,12 @@ export function createDefaultPaymentWithLabels(): PaymentWithLabels {
     actorId: 0,
     actorNameFirst: '',
     actorNameLast: '',
-    paymentActionType: '',
     recipientId: 0,
     recipientNameFirst: '',
     recipientNameLast: '',
     amount: 0,
-    paymentType: '',
+    memo: '',
+    transactionType: '',
     instrumentType: '',
   };
 }

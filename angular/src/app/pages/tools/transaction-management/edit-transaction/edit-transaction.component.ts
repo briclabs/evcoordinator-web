@@ -5,25 +5,24 @@ import { HttpClient } from "@angular/common/http";
 import { ActivatedRoute } from "@angular/router";
 import { environment } from "../../../../../environments/environment";
 import { SearchRequest } from "../../../../models/search-request";
-import { createDefaultPaymentWithLabels, PaymentWithLabels } from "../../../../models/payment-with-labels";
-import { Payment } from "../../../../models/payment";
-import { CurrencyPipe, NgForOf, NgIf } from "@angular/common";
+import { createDefaultTransactionWithLabels, TransactionWithLabels } from "../../../../models/transaction-with-labels";
+import { Transaction } from "../../../../models/transaction";
 import { FormsModule } from "@angular/forms";
+import { NgForOf, NgIf } from "@angular/common";
 
 @Component({
-  selector: 'app-edit-payment',
+  selector: 'app-edit-transaction',
   standalone: true,
   imports: [
     NgForOf,
     NgIf,
     FormsModule,
-    CurrencyPipe,
   ],
-  templateUrl: './edit-payment.component.html',
-  styleUrl: './edit-payment.component.css'
+  templateUrl: './edit-transaction.component.html',
+  styleUrl: './edit-transaction.component.css'
 })
-export class EditPaymentComponent  implements OnInit {
-  protected payment: PaymentWithLabels;
+export class EditTransactionComponent implements OnInit {
+  protected transaction: TransactionWithLabels;
 
   protected eventInfoList: EventInfo[];
   protected actorList: Participant[];
@@ -33,19 +32,18 @@ export class EditPaymentComponent  implements OnInit {
   private participantSearchUrl = '';
   private eventInfoSearchUrl = '';
 
-  paymentActionTypeOptions: string[] = ["SENT", "REFUNDED"]; // TODO - source from DB.
-  paymentTypeOptions: string[] = ["EXPENSE", "INCOME"]; // TODO - source from DB.
+  transactionTypeOptions: string[] = ["INVOICE", "EXPENSE", "INCOME"]; // TODO - source from DB.
   instrumentTypeOptions: string[] = ["ELECTRONIC", "CHECK", "CASH"]; // TODO - source from DB.
 
   constructor(private http: HttpClient, private route: ActivatedRoute) {
-    this.apiUrl = environment.apiUrl + '/payment';
+    this.apiUrl = environment.apiUrl + '/transactions';
     this.participantSearchUrl = environment.apiUrl + '/participant/search';
     this.eventInfoSearchUrl = environment.apiUrl + '/event/info/search';
 
     this.eventInfoList = [];
     this.actorList = [];
     this.recipientList = [];
-    this.payment = createDefaultPaymentWithLabels();
+    this.transaction = createDefaultTransactionWithLabels();
   }
 
   async ngOnInit() {
@@ -61,10 +59,10 @@ export class EditPaymentComponent  implements OnInit {
   }
 
   fetchRegistrationById(id: number): void {
-    this.http.get<PaymentWithLabels>(`${this.apiUrl}/${id}`).subscribe({
-      next: (data: PaymentWithLabels) => {
+    this.http.get<TransactionWithLabels>(`${this.apiUrl}/${id}`).subscribe({
+      next: (data: TransactionWithLabels) => {
         if (data) {
-          this.payment = data;
+          this.transaction = data;
         }
       },
       error: (error) => {
@@ -146,61 +144,55 @@ export class EditPaymentComponent  implements OnInit {
   }
 
   create() {
-    const paymentToCreate: Payment = {
-      eventInfoId: this.payment.eventInfoId,
-      actorId: this.payment.eventInfoId,
-      paymentActionType: this.payment.paymentActionType,
-      recipientId: this.payment.recipientId,
-      amount: this.payment.amount,
-      paymentType: this.payment.paymentType,
-      instrumentType: this.payment.instrumentType,
+    const transactionToCreate: Transaction = {
+      eventInfoId: this.transaction.eventInfoId,
+      actorId: this.transaction.eventInfoId,
+      recipientId: this.transaction.recipientId,
+      amount: this.transaction.amount,
+      memo: this.transaction.memo,
+      transactionType: this.transaction.transactionType,
+      instrumentType: this.transaction.instrumentType,
     }
-    this.http.post(this.apiUrl, paymentToCreate).subscribe({
+    this.http.post(this.apiUrl, transactionToCreate).subscribe({
       next: (response) => {
-        console.log('Payment created successfully:', response);
+        console.log('Transaction created successfully:', response);
       },
       error: (error) => {
-        console.log('Error creating payment:', error);
+        console.log('Error creating transaction:', error);
       },
     })
   }
 
   update() {
-    const paymentToUpdate: Payment = {
-      id: this.payment.id,
-      eventInfoId: this.payment.eventInfoId,
-      actorId: this.payment.eventInfoId,
-      paymentActionType: this.payment.paymentActionType,
-      recipientId: this.payment.recipientId,
-      amount: this.payment.amount,
-      paymentType: this.payment.paymentType,
-      instrumentType: this.payment.instrumentType,
-      timeRecorded: this.payment.timeRecorded,
+    const transactionToUpdate: Transaction = {
+      id: this.transaction.id,
+      eventInfoId: this.transaction.eventInfoId,
+      actorId: this.transaction.eventInfoId,
+      recipientId: this.transaction.recipientId,
+      amount: this.transaction.amount,
+      memo: this.transaction.memo,
+      transactionType: this.transaction.transactionType,
+      instrumentType: this.transaction.instrumentType,
+      timeRecorded: this.transaction.timeRecorded,
     }
-    this.http.put(this.apiUrl, paymentToUpdate).subscribe({
+    this.http.put(this.apiUrl, transactionToUpdate).subscribe({
       next: (response) => {
-        console.log('Payment saved successfully:', response);
+        console.log('Transaction saved successfully:', response);
       },
       error: (error) => {
-        console.log('Error saving payment:', error);
+        console.log('Error saving transaction:', error);
       },
     })
   }
 
   delete(): void {
-    this.http.delete(`${this.apiUrl}/${this.payment.id}`).subscribe({
+    this.http.delete(`${this.apiUrl}/${this.transaction.id}`).subscribe({
       next: () => {
-        this.payment = createDefaultPaymentWithLabels();
+        this.transaction = createDefaultTransactionWithLabels();
       },
       error: (error) => {
-        console.error('Error deleting payment:', error);
+        console.error('Error deleting transaction:', error);
       }
     });
-  }
-
-  updateAmount(event: Event): void {
-    const inputElement = event.target as HTMLInputElement;
-
-    this.payment.amount = parseFloat(inputElement.value.replace(/[^0-9.]/g, '')) || 0; // Store raw numeric value
   }
 }

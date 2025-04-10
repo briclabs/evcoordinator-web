@@ -1,66 +1,65 @@
 <div class="row mt-4 ms-3">
-  <div class="col-3"></div>
+  <div class="col-1"></div>
   <div class="col-8">
     <div class="row">
-      <div class="col-1"></div>
+      <div class="col-3"></div>
       <div class="col-5">
         <label for="event" class="form-label">Event</label>
-        <select class="form-select" id="event" [(ngModel)]="payment.eventInfoId" required>
+        <select class="form-select" id="event" [(ngModel)]="transaction.eventInfoId" required>
           <option *ngFor="let event of eventInfoList" [ngValue]="event.id">({{ event.eventStatus}}) {{ event.eventName }}: <i>{{ event.eventTitle }}</i></option>
         </select>
       </div>
       <div class="col-3">
-        <label for="type" class="form-label">Type</label>
-        <select class="form-select" id="type" [(ngModel)]="payment.paymentType" required>
-          <option *ngFor="let type of paymentTypeOptions" [ngValue]="type">{{ type }}</option>
+        <label for="type" class="form-label">Transaction Type</label>
+        <select class="form-select" id="type" [(ngModel)]="transaction.transactionType" required>
+          <option *ngFor="let type of transactionTypeOptions" [ngValue]="type">{{ type }}</option>
         </select>
       </div>
     </div>
 
     <div class="row mt-4">
+      <div class="col-2"></div>
       <div class="col-3">
         <label for="actor" class="form-label">Actor</label>
-        <select class="form-select" id="actor" [(ngModel)]="payment.actorId" required>
+        <select class="form-select" id="actor" [(ngModel)]="transaction.actorId" required>
           <option *ngFor="let actor of actorList" [ngValue]="actor.id">{{ actor.nameLast }}, {{ actor.nameFirst }}</option>
         </select>
       </div>
       <div class="col-2">
-        <label for="action" class="form-label">Action</label>
-        <select class="form-select" id="action" [(ngModel)]="payment.paymentActionType" required>
-          <option *ngFor="let action of paymentActionTypeOptions" [ngValue]="action">{{ action }}</option>
-        </select>
-      </div>
-      <div class="col-2">
         <label for="amount" class="form-label">Amount</label>
-        <input type="text" id="amount" class="form-control" [value]="payment.amount | currency:'USD':'symbol':'1.2'" (input)="updateAmount($event)" required />
+        <input type="text" id="amount" class="form-control" [(ngModel)]="transaction.amount" required />
       </div>
       <div class="col-3">
         <label for="recipient" class="form-label">Recipient</label>
-        <select class="form-select" id="recipient" [(ngModel)]="payment.recipientId" required>
+        <select class="form-select" id="recipient" [(ngModel)]="transaction.recipientId" required>
           <option *ngFor="let recipient of recipientList" [ngValue]="recipient.id">{{ recipient.nameLast }}, {{ recipient.nameFirst }}</option>
         </select>
       </div>
-    </div>
-
-    <div class="row mt-4">
-      <div class="col-3"></div>
-      <div class="col-3">
+      <div class="col-2">
         <label for="instrument" class="form-label">Instrument</label>
-        <select class="form-select" id="instrument" [(ngModel)]="payment.instrumentType" required>
+        <select class="form-select" id="instrument" [(ngModel)]="transaction.instrumentType" required>
           <option *ngFor="let instrument of instrumentTypeOptions" [ngValue]="instrument">{{ instrument }}</option>
         </select>
       </div>
     </div>
 
-    <div class="row mt-5">
-      <div class="col-3"></div>
-      <div class="col-3 mx-2 text-center">
-        <button type="button" class="btn btn-primary" (click)="payment.id ? update() : create()">Submit</button>
+    <div class="row mt-4">
+      <div class="col-2"></div>
+      <div class="col-10">
+        <label for="memo" class="form-label">Memo</label>
+        <input type="text" id="memo" class="form-control" [(ngModel)]="transaction.memo" />
       </div>
     </div>
 
-    <div *ngIf="payment.id" class="row mt-2">
-      <div class="col-3"></div>
+    <div class="row mt-5">
+      <div class="col-5"></div>
+      <div class="col-3 mx-2 text-center">
+        <button type="button" class="btn btn-primary" (click)="transaction.id ? update() : create()">Submit</button>
+      </div>
+    </div>
+
+    <div *ngIf="transaction.id" class="row mt-2">
+      <div class="col-5"></div>
       <div class="col-3 mx-2 text-center">
         <button type="button" class="btn btn-delete" (click)="delete()">Delete</button>
       </div>

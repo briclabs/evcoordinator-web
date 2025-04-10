@@ -11,7 +11,7 @@ import { authGuard } from "./app/auth.guard";
 import { ProfileManagementComponent } from "./app/pages/tools/profile-management/profile-management.component";
 import { SiteConfigComponent } from "./app/pages/tools/site-config/site-config.component";
 import { HistoryComponent } from "./app/pages/tools/history/history.component";
-import { PaymentManagementComponent } from "./app/pages/tools/payment-management/payment-management.component";
+import { TransactionManagementComponent } from "./app/pages/tools/transaction-management/transaction-management.component";
 import { EventManagementComponent } from "./app/pages/tools/event-management/event-management.component";
 import { DonationsComponent } from "./app/pages/public/donations/donations.component";
 import { RegistrationComponent } from "./app/pages/public/registration/registration.component";
@@ -25,7 +25,8 @@ import {
   EditRegistrationComponent
 } from "./app/pages/tools/registration-management/edit-registration/edit-registration.component";
 import { EditGuestComponent } from "./app/pages/tools/guest-management/edit-guest/edit-guest.component";
-import { EditPaymentComponent } from "./app/pages/tools/payment-management/edit-payment/edit-payment.component";
+import { EditTransactionComponent } from "./app/pages/tools/transaction-management/edit-transaction/edit-transaction.component";
+import { EventStatisticsComponent } from "./app/pages/public/event-statistics/event-statistics.component";
 
 if (environment.production) {
   enableProdMode();
@@ -36,6 +37,7 @@ bootstrapApplication(AppComponent, {
     importProvidersFrom(HttpClientModule),
     provideRouter([
       // PUBLIC FACING
+      { path: '', component: EventStatisticsComponent },
       { path: 'guidelines', component: GuidelinesComponent },
       { path: 'registration', component: RegistrationComponent },
       { path: 'donations', component: DonationsComponent },
@@ -99,20 +101,20 @@ bootstrapApplication(AppComponent, {
         component: EditGuestComponent,
         canActivate: [() => authGuard()],
       },
-      // PAYMENT MANAGEMENT
+      // TRANSACTION MANAGEMENT
       {
-        path: 'tools/payments',
-        component: PaymentManagementComponent,
+        path: 'tools/transactions',
+        component: TransactionManagementComponent,
         canActivate: [() => authGuard()],
       },
       {
-        path: 'tools/edit-payment/:id',
-        component: EditPaymentComponent,
+        path: 'tools/edit-transaction/:id',
+        component: EditTransactionComponent,
         canActivate: [() => authGuard()],
       },
       {
-        path: 'tools/edit-payment',
-        component: EditPaymentComponent,
+        path: 'tools/edit-transaction',
+        component: EditTransactionComponent,
         canActivate: [() => authGuard()],
       },
       // PROFILE MANAGEMENT

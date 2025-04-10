@@ -1,11 +1,11 @@
-export interface Payment {
+export interface Transaction {
   id?: number;
   eventInfoId: number,
   actorId: number,
-  paymentActionType: string,
   recipientId: number,
   amount: number,
-  paymentType: string,
+  memo?: string,
+  transactionType: string,
   instrumentType: string,
   timeRecorded?: string,
 }
