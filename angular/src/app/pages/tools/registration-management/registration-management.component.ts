@@ -3,7 +3,7 @@ import { environment } from "../../../../environments/environment";
 import { HttpClient } from "@angular/common/http";
 import { Router } from "@angular/router";
 import { SearchRequest } from "../../../models/search-request";
-import { TableComponent } from "../subcomponents/table/table.component";
+import { TableComponent } from "../../subcomponents/table/table.component";
 import { RegistrationWithLabels } from "../../../models/registration-with-labels";
 
 @Component({

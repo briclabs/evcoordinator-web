@@ -8,12 +8,14 @@
         <select class="form-select" id="event" [(ngModel)]="transaction.eventInfoId" required>
           <option *ngFor="let event of eventInfoList" [ngValue]="event.id">({{ event.eventStatus}}) {{ event.eventName }}: <i>{{ event.eventTitle }}</i></option>
         </select>
+        <error-message [errorMessages]="messages" [fieldName]="'event_info_id'"/>
       </div>
       <div class="col-3">
         <label for="type" class="form-label">Transaction Type</label>
         <select class="form-select" id="type" [(ngModel)]="transaction.transactionType" required>
           <option *ngFor="let type of transactionTypeOptions" [ngValue]="type">{{ type }}</option>
         </select>
+        <error-message [errorMessages]="messages" [fieldName]="'transaction_type'"/>
       </div>
     </div>
 
@@ -24,22 +26,26 @@
         <select class="form-select" id="actor" [(ngModel)]="transaction.actorId" required>
           <option *ngFor="let actor of actorList" [ngValue]="actor.id">{{ actor.nameLast }}, {{ actor.nameFirst }}</option>
         </select>
+        <error-message [errorMessages]="messages" [fieldName]="'actor_id'"/>
       </div>
       <div class="col-2">
         <label for="amount" class="form-label">Amount</label>
         <input type="text" id="amount" class="form-control" [(ngModel)]="transaction.amount" required />
+        <error-message [errorMessages]="messages" [fieldName]="'amount'"/>
       </div>
       <div class="col-3">
         <label for="recipient" class="form-label">Recipient</label>
         <select class="form-select" id="recipient" [(ngModel)]="transaction.recipientId" required>
           <option *ngFor="let recipient of recipientList" [ngValue]="recipient.id">{{ recipient.nameLast }}, {{ recipient.nameFirst }}</option>
         </select>
+        <error-message [errorMessages]="messages" [fieldName]="'recipient_id'"/>
       </div>
       <div class="col-2">
         <label for="instrument" class="form-label">Instrument</label>
         <select class="form-select" id="instrument" [(ngModel)]="transaction.instrumentType" required>
           <option *ngFor="let instrument of instrumentTypeOptions" [ngValue]="instrument">{{ instrument }}</option>
         </select>
+        <error-message [errorMessages]="messages" [fieldName]="'instrument_type'"/>
       </div>
     </div>
 
@@ -48,6 +54,7 @@
       <div class="col-10">
         <label for="memo" class="form-label">Memo</label>
         <input type="text" id="memo" class="form-control" [(ngModel)]="transaction.memo" />
+        <error-message [errorMessages]="messages" [fieldName]="'memo'"/>
       </div>
     </div>
 

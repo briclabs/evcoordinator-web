@@ -13,6 +13,8 @@ import { RegistrationPacket } from "../../../models/registration-packet";
 import { catchError, map, Observable, of } from "rxjs";
 import { RegistrationFormComponent } from "../../forms/registration-form/registration-form.component";
 import { createDefaultRegistrationWithLabels, RegistrationWithLabels } from "../../../models/registration-with-labels";
+import { CreateResponse } from "../../../models/create-response";
+import { Router } from "@angular/router";
 
 @Component({
   selector: 'registration',
@@ -28,6 +30,10 @@ import { createDefaultRegistrationWithLabels, RegistrationWithLabels } from "../
   styleUrls: ['./registration.component.css'],
 })
 export class RegistrationComponent implements OnInit{
+  protected profileMessages: Map<string, string> = new Map<string, string>();
+  protected guestMessages: Map<string, string> = new Map<string, string>();
+  protected registrationMessages: Map<string, string> = new Map<string, string>();
+
   protected participant: Participant;
   protected guests = signal<GuestWithLabels[]>([]);
   protected registration: RegistrationWithLabels;
@@ -43,7 +49,7 @@ export class RegistrationComponent implements OnInit{
   currentStep: number = 1;
   totalSteps: number = 3;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private router: Router) {
     this.registrationUrl = environment.apiUrl + '/registrationPacket';
     this.participantUrl = environment.apiUrl + '/participant';
     this.eventInfoUrl = environment.apiUrl + '/event/info';
@@ -137,18 +143,45 @@ export class RegistrationComponent implements OnInit{
       registration: registrationToCreate,
     }
 
-    this.http.post<{ id: number }>(this.registrationUrl, registrationPacket).subscribe({
-      next: (response: { id: number }) => {
-        if (response && response.id) {
-          this.registration.id = response.id;
-          console.log('Profile created with ID:', response.id);
-        } else {
-          console.error('Invalid response: Missing id');
-        }
+    this.http.post<CreateResponse>(this.registrationUrl, registrationPacket).subscribe({
+      next: () => {
+        this.router.navigate([`/`]);
       },
-      error: err => {
-        console.error('Error creating profile:', err);
+      error: error => {
+        console.error('Error creating profile:', error);
+        this.getMessagesFromObject(error);
       }
     });
+  }
+
+  private getMessagesFromObject(error: any): void {
+    if (!(error.error && typeof error.error === 'object' && 'messages' in error.error && 'insertedId' in error.error)) {
+      console.log('Object was not of the correct type.')
+      return;
+    }
+    const createResponse: CreateResponse = error.error as CreateResponse;
+    console.log('Create Response:', createResponse);
+
+    let receivedMessages: Map<string, string> = new Map<string, string>();
+    if (createResponse.messages instanceof Map) {
+      receivedMessages = new Map<string, string>(createResponse.messages);
+    } else if (typeof createResponse.messages === 'object') {
+      receivedMessages = new Map<string, string>(Object.entries(createResponse.messages));
+    }
+
+    this.profileMessages = this.extractMessagesForSection(receivedMessages, 'PARTICIPANT.');
+    this.guestMessages = this.extractMessagesForSection(receivedMessages, 'GUESTS.');
+    this.registrationMessages = this.extractMessagesForSection(receivedMessages, 'REGISTRATION.');
+  }
+
+  private extractMessagesForSection(messages: Map<string, string>, sectionPrefix: string): Map<string, string> {
+    const filteredMessages: Map<string, string> = new Map<string, string>();
+    messages.forEach((value, key) => {
+      if (key.startsWith(sectionPrefix)) {
+        filteredMessages.set(key.replace(sectionPrefix, '').trim(), value);
+      }
+    })
+    console.log('Filtered Messages:', filteredMessages);
+    return filteredMessages;
   }
 }

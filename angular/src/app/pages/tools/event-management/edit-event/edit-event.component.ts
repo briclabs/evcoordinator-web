@@ -1,10 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { environment } from "../../../../../environments/environment";
 import { createDefaultEventInfo, EventInfo } from "../../../../models/event-info";
 import { FormsModule } from "@angular/forms";
 import { NgForOf, NgIf } from "@angular/common";
+import { CreateResponse } from "../../../../models/create-response";
+import { UpdateResponse } from "../../../../models/update-response";
+import { DeleteResponse } from "../../../../models/delete-response";
+import { ErrorMessageComponent } from "../../../subcomponents/error-message/error-message.component";
 
 @Component({
   selector: 'app-event-info',
@@ -13,18 +17,21 @@ import { NgForOf, NgIf } from "@angular/common";
     FormsModule,
     NgForOf,
     NgIf,
+    ErrorMessageComponent,
   ],
   templateUrl: './edit-event.component.html',
   styleUrl: './edit-event.component.css'
 })
 export class EditEventComponent implements OnInit {
+  protected messages: Map<string, string> = new Map<string, string>();
+
   eventInfo: EventInfo;
 
   eventStatusOptions: string[] = ["CURRENT", "PAST", "CANCELLED"]; // TODO - source from DB.
 
   private apiUrl = '';
 
-  constructor(private http: HttpClient, private route: ActivatedRoute) {
+  constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {
     this.eventInfo = createDefaultEventInfo();
   }
 
@@ -51,34 +58,33 @@ export class EditEventComponent implements OnInit {
   }
 
   create() {
-    this.http.post(this.apiUrl, this.eventInfo).subscribe({
-      next: (response) => {
-        console.log('Event info created successfully:', response);
+    this.http.post<CreateResponse>(this.apiUrl, this.eventInfo).subscribe({
+      next: (response: CreateResponse) => {
+        this.router.navigate([`/tools/event-info/${response.insertedId}`]);
       },
       error: (error) => {
-        console.log('Error creating event info:', error);
+        this.messages = CreateResponse.getMessagesFromObject(error.error);
       },
     })
   }
 
   update() {
     this.http.put(this.apiUrl, this.eventInfo).subscribe({
-      next: (response) => {
-        console.log('Event info saved successfully:', response);
+      next: () => {
       },
       error: (error) => {
-        console.log('Error saving event info:', error);
+        this.messages = UpdateResponse.getMessagesFromObject(error.error);
       },
     })
   }
 
   delete(): void {
-    this.http.delete(`${this.apiUrl}/${this.eventInfo.id}`).subscribe({
+    this.http.delete<DeleteResponse>(`${this.apiUrl}/${this.eventInfo.id}`).subscribe({
       next: () => {
-        this.eventInfo = createDefaultEventInfo();
+        this.router.navigate([`/tools/events`]);
       },
       error: (error) => {
-        console.error('Error deleting event info:', error);
+        this.messages = DeleteResponse.getMessagesFromObject(error.error);
       }
     });
   }

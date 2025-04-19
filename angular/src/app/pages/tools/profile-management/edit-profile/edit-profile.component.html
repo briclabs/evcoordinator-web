@@ -8,6 +8,7 @@
       [participantTypeOptions]="participantTypeOptions"
       [isParticipantTypeDropdown]="!isSelf"
       [isEmailAddressChangeable]="!isSelf"
+      [messages]="messages"
       (formSubmit)="participant.id > 0 ? update() : create()">
     </profile-form>
   </div>

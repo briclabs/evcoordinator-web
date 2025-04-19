@@ -4,10 +4,12 @@ import { HttpClient } from "@angular/common/http";
 import { environment } from "../../../../../environments/environment";
 import { createDefaultParticipant, Participant } from '../../../../models/participant';
 import { CommonModule } from "@angular/common";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { OidcSecurityService } from "angular-auth-oidc-client";
 import { ProfileFormComponent } from "../../../forms/profile-form/profile-form.component";
 import { Observable, of } from "rxjs";
+import { CreateResponse } from "../../../../models/create-response";
+import { UpdateResponse } from "../../../../models/update-response";
 
 @Component({
   selector: 'edit-profile',
@@ -21,6 +23,8 @@ import { Observable, of } from "rxjs";
   styleUrls: ['./edit-profile.component.css']
 })
 export class EditProfileComponent implements OnInit {
+  protected messages: Map<string, string> = new Map<string, string>();
+
   isSelf: boolean = false;
   addrEmailFromAuthenticationService: string;
 
@@ -33,7 +37,7 @@ export class EditProfileComponent implements OnInit {
 
   protected isPreexisting: boolean = false;
 
-  constructor(private http: HttpClient, private route: ActivatedRoute) {
+  constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {
     this.participant = createDefaultParticipant();
     this.addrEmailFromAuthenticationService = '';
   }
@@ -113,23 +117,22 @@ export class EditProfileComponent implements OnInit {
   }
 
   create() {
-    this.http.post(this.apiUrl, this.participant).subscribe({
-      next: (response) => {
-        console.log('Profile created successfully:', response);
+    this.http.post<CreateResponse>(this.apiUrl, this.participant).subscribe({
+      next: (response: CreateResponse) => {
+        this.router.navigate([`/tools/edit-profile/${response.insertedId}`]);
       },
       error: (error) => {
-        console.log('Error creating profile:', error);
+        this.messages = CreateResponse.getMessagesFromObject(error.error);
       },
     })
   }
 
   update() {
     this.http.put(this.apiUrl, this.participant).subscribe({
-      next: (response) => {
-        console.log('Profile saved successfully:', response);
+      next: () => {
       },
       error: (error) => {
-        console.log('Error saving profile:', error);
+        this.messages = UpdateResponse.getMessagesFromObject(error.error);
       },
     })
   }

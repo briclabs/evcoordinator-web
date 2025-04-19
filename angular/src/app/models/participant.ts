@@ -10,7 +10,7 @@ export interface Participant {
   addrStreet_2: string | null;
   addrCity: string;
   addrStateAbbr: string;
-  addrZip: number;
+  addrZip: string;
   addrEmail: string;
   phoneDigits: number;
   nameEmergency: string;
@@ -32,7 +32,7 @@ export function createDefaultParticipant(): Participant {
     addrStreet_2: null,
     addrCity: '',
     addrStateAbbr: '',
-    addrZip: 0,
+    addrZip: '',
     addrEmail: '',
     phoneDigits: 0,
     nameEmergency: '',

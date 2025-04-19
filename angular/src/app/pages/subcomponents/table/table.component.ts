@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TableControlsComponent } from "../table-controls/table-controls.component";
 import { CommonModule } from "@angular/common";
-import { TitleCasePipe } from "../../../../pipes/title-case/title-case.pipe";
+import { TitleCasePipe } from "../../../pipes/title-case/title-case.pipe";
 @Component({
   selector: 'app-table',
   standalone: true,

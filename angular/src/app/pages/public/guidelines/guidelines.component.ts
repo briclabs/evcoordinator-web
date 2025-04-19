@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
-import { ConfigurationResponse } from "../../../models/configuration-response";
+import { SiteConfiguration } from "../../../models/site-configuration";
 import * as bootstrap from 'bootstrap';
 import { NgFor } from "@angular/common";
 import { RouterModule } from "@angular/router";
@@ -36,8 +36,8 @@ export class GuidelinesComponent implements OnInit, AfterViewInit {
 
   fetchConfiguration(): void {
 
-    this.http.get<ConfigurationResponse>(this.apiEndpoint).subscribe({
-      next: (data: ConfigurationResponse) => {
+    this.http.get<SiteConfiguration>(this.apiEndpoint).subscribe({
+      next: (data: SiteConfiguration) => {
         const resolvedData = data ?? { eventGuidelines: {} };
         this.eventGuidelines = resolvedData.eventGuidelines;
 

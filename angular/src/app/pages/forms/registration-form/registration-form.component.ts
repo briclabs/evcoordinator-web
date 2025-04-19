@@ -4,11 +4,12 @@ import { CommonModule } from "@angular/common";
 import { createDefaultRegistrationWithLabels, RegistrationWithLabels } from "../../../models/registration-with-labels";
 import { Participant } from "../../../models/participant";
 import { EventInfo } from "../../../models/event-info";
+import { ErrorMessageComponent } from "../../subcomponents/error-message/error-message.component";
 
 @Component({
   selector: 'registration-form',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ErrorMessageComponent],
   templateUrl: './registration-form.component.html',
   styleUrls: ['./registration-form.component.css']
 })
@@ -19,6 +20,7 @@ export class RegistrationFormComponent {
   @Input() participantList: Participant[];
   @Input() eventInfoList: EventInfo[];
 
+  @Input() messages: Map<string, string> = new Map<string, string>();
   @Input() showSubmitButton: boolean = false;
 
   @Output() formSubmit = new EventEmitter<void>();

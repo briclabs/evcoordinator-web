@@ -2,10 +2,12 @@
   <div class="col-4">
     <label for="nameFirst" class="form-label">Legal First Name</label>
     <input type="text" id="nameFirst" class="form-control" [(ngModel)]="participant.nameFirst" (ngModelChange)="participantChange.emit(participant)" required />
+    <error-message [errorMessages]="messages" [fieldName]="'name_first'"/>
   </div>
   <div class="col-5">
     <label for="nameLast" class="form-label">Legal Last Name</label>
     <input type="text" id="nameLast" class="form-control" [(ngModel)]="participant.nameLast" (ngModelChange)="participantChange.emit(participant)" required />
+    <error-message [errorMessages]="messages" [fieldName]="'name_last'"/>
   </div>
 </div>
 <div class="row mt-2" *ngIf="isEmailAddressChangeable">
@@ -13,6 +15,7 @@
   <div class="col-5">
     <label for="addrEmail" class="form-label">Email Address</label>
     <input type="email" id="addrEmail" class="form-control" [(ngModel)]="participant.addrEmail" (ngModelChange)="participantChange.emit(participant)" required />
+    <error-message [errorMessages]="messages" [fieldName]="'addr_email'"/>
   </div>
 </div>
 
@@ -21,14 +24,17 @@
     <div class="col-3">
       <label for="nameNick" class="form-label">Nickname</label>
       <input type="text" id="nameNick" class="form-control" [(ngModel)]="participant.nameNick" />
+      <error-message [errorMessages]="messages" [fieldName]="'name_nick'"/>
     </div>
     <div class="col-2">
       <label for="dateBirth" class="form-label">Date of Birth</label>
       <input type="date" id="dateBirth" class="form-control" [(ngModel)]="participant.dob" required />
+      <error-message [errorMessages]="messages" [fieldName]="'dob'"/>
     </div>
     <div class="col-4">
       <label for="nameSponsor" class="form-label">Name(s) of person(s) that first invited you</label>
       <input type="text" id="nameSponsor" class="form-control" [(ngModel)]="participant.sponsor" required />
+      <error-message [errorMessages]="messages" [fieldName]="'sponsor'"/>
     </div>
   </div>
 
@@ -36,10 +42,12 @@
     <div class="col-5">
       <label for="addressStreet1" class="form-label">Street 1</label>
       <input type="text" id="addressStreet1" class="form-control" [(ngModel)]="participant.addrStreet_1" required />
+      <error-message [errorMessages]="messages" [fieldName]="'addr_street_1'"/>
     </div>
     <div class="col-4">
       <label for="addressStreet2" class="form-label">Street 2</label>
       <input type="text" id="addressStreet2" class="form-control" [(ngModel)]="participant.addrStreet_2" />
+      <error-message [errorMessages]="messages" [fieldName]="'addr_street_2'"/>
     </div>
   </div>
 
@@ -48,20 +56,24 @@
     <div class="col-3">
       <label for="addressCity" class="form-label">City</label>
       <input type="text" id="addressCity" class="form-control" [(ngModel)]="participant.addrCity" required />
+      <error-message [errorMessages]="messages" [fieldName]="'addr_city'"/>
     </div>
     <div class="col-1">
       <label for="addressState" class="form-label">State</label>
       <select class="form-select form-control" id="addressState" [(ngModel)]="participant.addrStateAbbr" required>
         <option *ngFor="let option of contactUtilityServiceService.getStateAbbreviations()" [ngValue]="option">{{ option }}</option>
       </select>
+      <error-message [errorMessages]="messages" [fieldName]="'addr_state_abbr'"/>
     </div>
     <div class="col-1">
       <label for="addressZipcode" class="form-label">Zipcode</label>
-      <input type="number" id="addressZipcode" class="form-control" [(ngModel)]="participant.addrZip" required />
+      <input type="text" id="addressZipcode" class="form-control" [(ngModel)]="participant.addrZip" required />
+      <error-message [errorMessages]="messages" [fieldName]="'addr_zip'"/>
     </div>
     <div class="col-2">
       <label for="phoneNumber" class="form-label">Phone Number</label>
       <input type="tel" id="phoneNumber" class="form-control" [(ngModel)]="participant.phoneDigits" required />
+      <error-message [errorMessages]="messages" [fieldName]="'phone_digits'"/>
     </div>
   </div>
 
@@ -69,16 +81,19 @@
     <div class="col-4">
       <label for="nameEmergency" class="form-label">Emergency Contact Name</label>
       <input type="text" class="form-control" id="nameEmergency" [(ngModel)]="participant.nameEmergency" required>
+      <error-message [errorMessages]="messages" [fieldName]="'name_emergency'"/>
     </div>
     <div class="col-2">
       <label for="phoneEmergency" class="form-label">Emergency Contact Phone</label>
       <input type="text" class="form-control" id="phoneEmergency" [(ngModel)]="participant.phoneEmergency" required>
+      <error-message [errorMessages]="messages" [fieldName]="'phone_emergency'"/>
     </div>
     <div class="col-3">
       <label for="relationshipEmergency" class="form-label">Emergency Contact Relationship</label>
       <select class="form-select form-control" id="relationshipEmergency" [(ngModel)]="participant.emergencyContactRelationshipType" required>
         <option *ngFor="let option of contactUtilityServiceService.getRelationshipEmergencyContact()" [value]="option.key">{{ option.value }}</option>
       </select>
+      <error-message [errorMessages]="messages" [fieldName]="'emergency_contact_relationship_type'"/>
     </div>
   </div>
 
@@ -91,6 +106,7 @@
           <select class="form-select" id="participantType" [(ngModel)]="participant.participantType" required>
             <option *ngFor="let type of participantTypeOptions" [ngValue]="type">{{ type }}</option>
           </select>
+          <error-message [errorMessages]="messages" [fieldName]="'participant_type'"/>
         </div>
       </div>
     </div>

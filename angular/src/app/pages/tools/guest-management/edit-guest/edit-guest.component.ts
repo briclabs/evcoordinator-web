@@ -3,24 +3,27 @@ import { GuestFormComponent } from "../../../forms/guest-form/guest-form.compone
 import { RegistrationWithLabels } from "../../../../models/registration-with-labels";
 import { Participant } from "../../../../models/participant";
 import { HttpClient } from "@angular/common/http";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { environment } from "../../../../../environments/environment";
 import { SearchRequest } from "../../../../models/search-request";
 import { createDefaultGuestWithLabels, GuestWithLabels } from "../../../../models/guest-with-labels";
-import { Guest } from "../../../../models/guest";
-import { NgIf } from "@angular/common";
+import { CreateResponse } from "../../../../models/create-response";
+import { UpdateResponse } from "../../../../models/update-response";
+import { DeleteResponse } from "../../../../models/delete-response";
+import { createFromGuestWithLabels } from "../../../../models/guest";
 
 @Component({
   selector: 'app-edit-guest',
   standalone: true,
   imports: [
     GuestFormComponent,
-    NgIf,
   ],
   templateUrl: './edit-guest.component.html',
   styleUrl: './edit-guest.component.css'
 })
 export class EditGuestComponent implements OnInit {
+  protected messages: Map<string, string> = new Map<string, string>();
+
   protected guest: GuestWithLabels;
 
   protected registrationList: RegistrationWithLabels[];
@@ -30,7 +33,7 @@ export class EditGuestComponent implements OnInit {
   private registrationSearchUrl = '';
   private guestProfileSearchUrl = '';
 
-  constructor(private http: HttpClient, private route: ActivatedRoute) {
+  constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {
     this.guestUrl = environment.apiUrl + '/guest';
     this.registrationSearchUrl = environment.apiUrl + '/registration/search';
     this.guestProfileSearchUrl = environment.apiUrl + '/participant/search';
@@ -114,50 +117,33 @@ export class EditGuestComponent implements OnInit {
   }
 
   create() {
-    const guestToCreate: Guest = {
-      inviteeProfileId: this.guest.inviteeProfileId,
-      registrationId: this.guest.registrationId,
-      rawGuestName: this.guest.rawGuestName,
-      guestProfileId: this.guest.guestProfileId,
-      relationship: this.guest.relationship,
-    }
-    this.http.post(this.guestUrl, guestToCreate).subscribe({
-      next: (response) => {
-        console.log('Guest created successfully:', response);
+    this.http.post<CreateResponse>(this.guestUrl, createFromGuestWithLabels(this.guest)).subscribe({
+      next: (response: CreateResponse) => {
+        this.router.navigate([`/tools/edit-guest/${response.insertedId}`]);
       },
       error: (error) => {
-        console.log('Error creating guest:', error);
+        this.messages = CreateResponse.getMessagesFromObject(error.error);
       },
     })
   }
 
   update() {
-    const guestToUpdate: Guest = {
-      id: this.guest.id,
-      inviteeProfileId: this.guest.inviteeProfileId,
-      registrationId: this.guest.registrationId,
-      rawGuestName: this.guest.rawGuestName,
-      guestProfileId: this.guest.guestProfileId,
-      relationship: this.guest.relationship,
-      timeRecorded: this.guest.timeRecorded,
-    }
-    this.http.put(this.guestUrl, guestToUpdate).subscribe({
-      next: (response) => {
-        console.log('Guest saved successfully:', response);
+    this.http.put(this.guestUrl, createFromGuestWithLabels(this.guest)).subscribe({
+      next: () => {
       },
       error: (error) => {
-        console.log('Error saving guest:', error);
+        this.messages = UpdateResponse.getMessagesFromObject(error.error);
       },
     })
   }
 
   delete(): void {
-    this.http.delete(`${this.guestUrl}/${this.guest.id}`).subscribe({
+    this.http.delete<DeleteResponse>(`${this.guestUrl}/${this.guest.id}`).subscribe({
       next: () => {
-        this.guest = createDefaultGuestWithLabels();
+        this.router.navigate([`/tools/guests`]);
       },
       error: (error) => {
-        console.error('Error deleting guest:', error);
+        this.messages = DeleteResponse.getMessagesFromObject(error.error);
       }
     });
   }

@@ -2,6 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from "../../../../environments/environment";
 import { FormsModule } from "@angular/forms";
+import { CreateResponse } from "../../../models/create-response";
+import { UpdateResponse } from "../../../models/update-response";
+import { Router } from "@angular/router";
+import { createDefaultSiteConfiguration, SiteConfiguration } from "../../../models/site-configuration";
 
 @Component({
   selector: 'site-config',
@@ -13,19 +17,17 @@ import { FormsModule } from "@angular/forms";
   styleUrls: ['./site-config.component.css'],
 })
 export class SiteConfigComponent implements OnInit {
-  charityName: string = '';
-  charityUrl: string = '';
-  eventGuidelines: string = '';
-  fundProcessorInstructions: string = '';
-  fundProcessorName: string = '';
-  fundProcessorUrl: string = '';
-  recommendedDonationAmount: number = 0;
+  protected messages: Map<string, string> = new Map<string, string>();
+
+  siteConfiguration: SiteConfiguration;
 
   isNewConfiguration: boolean = false;
 
   private apiUrl = '';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private router: Router) {
+    this.siteConfiguration = createDefaultSiteConfiguration();
+  }
 
   async ngOnInit() {
     try {
@@ -43,21 +45,12 @@ export class SiteConfigComponent implements OnInit {
 
   fetchLatestConfiguration(): void {
     this.http.get<any>(this.apiUrl + "/latest").subscribe({
-      next: (data) => {
+      next: (data: SiteConfiguration) => {
         if (data == null || Object.keys(data).length === 0) {
-          // Empty JSON, so flag as a new configuration
           this.isNewConfiguration = true;
         } else {
-          // Complete JSON, populate the fields and flag as an update
           this.isNewConfiguration = false;
-
-          this.charityName = data.charityName;
-          this.charityUrl = data.charityUrl;
-          this.eventGuidelines = JSON.stringify(data.eventGuidelines, null, 2);
-          this.fundProcessorInstructions = JSON.stringify(data.fundProcessorInstructions, null, 2);
-          this.fundProcessorName = data.fundProcessorName;
-          this.fundProcessorUrl = data.fundProcessorUrl;
-          this.recommendedDonationAmount = data.recommendedDonation;
+          this.siteConfiguration = data;
         }
       },
       error: (error) => {
@@ -67,39 +60,25 @@ export class SiteConfigComponent implements OnInit {
   }
 
   create() {
-    this.http.post(this.apiUrl, {
-      charityName: this.charityName,
-      charityUrl: this.charityUrl,
-      eventGuidelines: this.eventGuidelines,
-      fundProcessorInstructions: this.fundProcessorInstructions,
-      fundProcessorName: this.fundProcessorName,
-      fundProcessorUrl: this.fundProcessorUrl,
-      recommendedDonation: this.recommendedDonationAmount,
-    }).subscribe({
-      next: (response) => {
-        console.log('Configuration created successfully:', response);
+    this.http.post<CreateResponse>(this.apiUrl, this.siteConfiguration).subscribe({
+      next: () => {
+        this.router.navigate([`/`]);
       },
       error: (error) => {
         console.log('Error creating configuration:', error);
+        this.messages = CreateResponse.getMessagesFromObject(error.error);
       },
     })
   }
 
   update() {
-    this.http.put(this.apiUrl, {
-      charityName: this.charityName,
-      charityUrl: this.charityUrl,
-      eventGuidelines: this.eventGuidelines,
-      fundProcessorInstructions: this.fundProcessorInstructions,
-      fundProcessorName: this.fundProcessorName,
-      fundProcessorUrl: this.fundProcessorUrl,
-      recommendedDonation: this.recommendedDonationAmount,
-    }).subscribe({
-      next: (response) => {
-        console.log('Configuration saved successfully:', response);
+    this.http.put<UpdateResponse>(this.apiUrl, this.siteConfiguration).subscribe({
+      next: () => {
+        this.router.navigate([`/`]);
       },
       error: (error) => {
         console.log('Error saving configuration:', error);
+        this.messages = UpdateResponse.getMessagesFromObject(error.error);
       },
     })
   }

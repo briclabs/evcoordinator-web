@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from "@angular/forms";
-import { TableComponent } from "../subcomponents/table/table.component";
+import { TableComponent } from "../../subcomponents/table/table.component";
 import { environment } from "../../../../environments/environment";
 import { HttpClient } from "@angular/common/http";
 import { Participant } from "../../../models/participant";

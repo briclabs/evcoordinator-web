@@ -4,6 +4,7 @@ import { NgForOf, NgIf } from "@angular/common";
 import { createDefaultGuestWithLabels, GuestWithLabels } from "../../../models/guest-with-labels";
 import { Participant } from "../../../models/participant";
 import { RegistrationWithLabels } from "../../../models/registration-with-labels";
+import { ErrorMessageComponent } from "../../subcomponents/error-message/error-message.component";
 
 @Component({
   selector: 'guest-form',
@@ -13,6 +14,7 @@ import { RegistrationWithLabels } from "../../../models/registration-with-labels
     NgForOf,
     FormsModule,
     NgIf,
+    ErrorMessageComponent,
   ],
   templateUrl: './guest-form.component.html',
   styleUrl: './guest-form.component.css'
@@ -26,6 +28,7 @@ export class GuestFormComponent {
 
   relationshipTypeOptions: string[] = ["ADULT", "CHILD", "PET"]; // TODO - source from DB.
 
+  @Input() messages: Map<string, string> = new Map<string, string>();
   @Input() showSubmitButton: boolean = false;
 
   @Output() formSubmit = new EventEmitter<void>();
@@ -43,7 +46,6 @@ export class GuestFormComponent {
       this.guest.eventInfoId = selectedRegistration.eventInfoId;
       this.guest.eventName = selectedRegistration.eventName;
       this.guest.eventTitle = selectedRegistration.eventTitle;
-      this.guest.inviteeProfileId = selectedRegistration.participantId;
       this.guest.inviteeFirstName = selectedRegistration.participantNameFirst;
       this.guest.inviteeLastName = selectedRegistration.participantNameLast;
     }

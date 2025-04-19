@@ -4,13 +4,16 @@ import { HttpClient } from "@angular/common/http";
 import { environment } from "../../../../../environments/environment";
 import { Participant } from '../../../../models/participant';
 import { CommonModule } from "@angular/common";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { RegistrationFormComponent } from "../../../forms/registration-form/registration-form.component";
 import { createDefaultRegistrationWithLabels, RegistrationWithLabels } from "../../../../models/registration-with-labels";
 import { EventInfo } from "../../../../models/event-info";
-import { Registration } from "../../../../models/registration";
 import { SearchRequest } from "../../../../models/search-request";
-import { createDefaultGuestWithLabels } from "../../../../models/guest-with-labels";
+import { CreateResponse } from "../../../../models/create-response";
+import { UpdateResponse } from "../../../../models/update-response";
+import { DeleteResponse } from "../../../../models/delete-response";
+import { ProfileFormComponent } from "../../../forms/profile-form/profile-form.component";
+import { createRegistrationFromRegistrationWithLabels } from "../../../../models/registration";
 
 @Component({
   selector: 'edit-profile',
@@ -24,6 +27,8 @@ import { createDefaultGuestWithLabels } from "../../../../models/guest-with-labe
   styleUrls: ['./edit-registration.component.css']
 })
 export class EditRegistrationComponent implements OnInit {
+  protected messages: Map<string, string> = new Map<string, string>();
+
   protected registration: RegistrationWithLabels;
 
   protected eventInfoList: EventInfo[];
@@ -33,7 +38,7 @@ export class EditRegistrationComponent implements OnInit {
   private participantSearchUrl = '';
   private eventInfoSearchUrl = '';
 
-  constructor(private http: HttpClient, private route: ActivatedRoute) {
+  constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {
     this.registrationUrl = environment.apiUrl + '/registration';
     this.participantSearchUrl = environment.apiUrl + '/participant/search';
     this.eventInfoSearchUrl = environment.apiUrl + '/event/info/search';
@@ -119,48 +124,33 @@ export class EditRegistrationComponent implements OnInit {
   }
 
   create() {
-    const registrationToCreate: Registration = {
-      participantId: this.registration.participantId,
-      eventInfoId: this.registration.eventInfoId,
-      donationPledge: this.registration.donationPledge,
-      signature: this.registration.signature,
-    }
-    this.http.post(this.registrationUrl, registrationToCreate).subscribe({
-      next: (response) => {
-        console.log('Registration created successfully:', response);
+    this.http.post<CreateResponse>(this.registrationUrl, createRegistrationFromRegistrationWithLabels(this.registration)).subscribe({
+      next: (response: CreateResponse) => {
+        this.router.navigate([`/tools/edit-registration/${response.insertedId}`]);
       },
       error: (error) => {
-        console.log('Error creating registration:', error);
+        this.messages = CreateResponse.getMessagesFromObject(error.error);
       },
     })
   }
 
   update() {
-    const registrationToUpdate: Registration = {
-      id: this.registration.id,
-      participantId: this.registration.participantId,
-      eventInfoId: this.registration.eventInfoId,
-      donationPledge: this.registration.donationPledge,
-      signature: this.registration.signature,
-      timeRecorded: this.registration.timeRecorded,
-    }
-    this.http.put(this.registrationUrl, registrationToUpdate).subscribe({
-      next: (response) => {
-        console.log('Profile saved successfully:', response);
+    this.http.put(this.registrationUrl, createRegistrationFromRegistrationWithLabels(this.registration)).subscribe({
+      next: () => {
       },
       error: (error) => {
-        console.log('Error saving profile:', error);
+        this.messages = UpdateResponse.getMessagesFromObject(error.error);
       },
     })
   }
 
   delete(): void {
-    this.http.delete(`${this.registrationUrl}/${this.registration.id}`).subscribe({
+    this.http.delete<DeleteResponse>(`${this.registrationUrl}/${this.registration.id}`).subscribe({
       next: () => {
-        this.registration = createDefaultRegistrationWithLabels();
+        this.router.navigate([`/tools/registrations`]);
       },
       error: (error) => {
-        console.error('Error deleting guest:', error);
+        this.messages = DeleteResponse.getMessagesFromObject(error.error);
       }
     });
   }

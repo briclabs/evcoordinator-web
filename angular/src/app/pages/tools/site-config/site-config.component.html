@@ -6,7 +6,7 @@
         <label for="donationMinimum" class="form-label">Recommended Donation</label>
         <div class="input-group mb-3">
           <span class="input-group-text">$</span>
-          <input type="number" id="donationMinimum" class="form-control px-0" [(ngModel)]="recommendedDonationAmount">
+          <input type="number" id="donationMinimum" class="form-control px-0" [(ngModel)]="siteConfiguration.recommendedDonation">
           <span class="input-group-text">.00</span>
         </div>
       </div>
@@ -14,9 +14,9 @@
         <label for="charityInfo" class="form-label">Charity Info</label>
         <div class="input-group mb-3" id="charityINfo">
           <span class="input-group-text">Name</span>
-          <input type="text" id="charityName" class="form-control" [(ngModel)]="charityName">
+          <input type="text" id="charityName" class="form-control" [(ngModel)]="siteConfiguration.charityName">
           <span class="input-group-text">URL</span>
-          <input type="url" id="charityUrl" class="form-control" [(ngModel)]="charityUrl">
+          <input type="url" id="charityUrl" class="form-control" [(ngModel)]="siteConfiguration.charityUrl">
         </div>
       </div>
     </div>
@@ -25,14 +25,14 @@
         <label for="fundProcessor" class="form-label">Fund Processor</label>
         <div class="input-group mb-3" id="fundProcessor">
           <span class="input-group-text">Name</span>
-          <input type="text" class="form-control" [(ngModel)]="fundProcessorName">
+          <input type="text" class="form-control" [(ngModel)]="siteConfiguration.fundProcessorName">
           <span class="input-group-text">URL</span>
-          <input type="URL" class="form-control" [(ngModel)]="fundProcessorUrl">
+          <input type="URL" class="form-control" [(ngModel)]="siteConfiguration.fundProcessorUrl">
         </div>
         <label for="fundProcessorInstructions" class="form-label">Fund Processor Instructions</label>
         <div class="input-group mb-3" id="fundProcessorInstructions">
           <span class="input-group-text">JSON</span>
-          <textarea class="form-control" [(ngModel)]="fundProcessorInstructions" (input)="autoResize($event)"></textarea>
+          <textarea class="form-control" [(ngModel)]="siteConfiguration.fundProcessorInstructions" (input)="autoResize($event)"></textarea>
         </div>
       </div>
     </div>
@@ -41,7 +41,7 @@
         <label for="guidelines" class="form-label">Event Guidelines</label>
         <div class="input-group mb-3" id="guidelines">
           <span class="input-group-text">JSON</span>
-          <textarea class="form-control" [(ngModel)]="eventGuidelines" (input)="autoResize($event)"></textarea>
+          <textarea class="form-control" [(ngModel)]="siteConfiguration.eventGuidelines" (input)="autoResize($event)"></textarea>
         </div>
       </div>
     </div>

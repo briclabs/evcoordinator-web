@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { ConfigurationResponse } from "../../../models/configuration-response";
+import { SiteConfiguration } from "../../../models/site-configuration";
 import { environment } from "../../../../environments/environment";
 import { NgFor } from "@angular/common";
 
@@ -14,7 +14,7 @@ import { NgFor } from "@angular/common";
   styleUrls: ['./donations.component.css']
 })
 export class DonationsComponent implements OnInit {
-  configuration: ConfigurationResponse | null = null;
+  configuration: SiteConfiguration | null = null;
 
   private apiEndpoint = '';
 
@@ -32,8 +32,8 @@ export class DonationsComponent implements OnInit {
 
   fetchConfiguration(): void {
 
-    this.http.get<ConfigurationResponse>(this.apiEndpoint).subscribe({
-      next: (data: ConfigurationResponse) => {
+    this.http.get<SiteConfiguration>(this.apiEndpoint).subscribe({
+      next: (data: SiteConfiguration) => {
         this.configuration = data;
       },
       error: (error) => {

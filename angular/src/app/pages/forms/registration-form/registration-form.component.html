@@ -11,6 +11,7 @@
         {{ participant.nameLast }}, {{ participant.nameFirst }}
       </option>
     </select>
+    <error-message [errorMessages]="messages" [fieldName]="'participant_id'"/>
   </div>
   <div class="col-5">
     <label for="eventInfoSelect" class="form-label">Event</label>
@@ -24,6 +25,7 @@
         {{ eventInfo.eventName }}: {{ eventInfo.eventTitle }}
       </option>
     </select>
+    <error-message [errorMessages]="messages" [fieldName]="'event_info_id'"/>
   </div>
 </div>
 
@@ -38,8 +40,13 @@
       <span class="input-group-text">$</span>
       <input type="number" id="amountDonation" class="form-control px-0" [(ngModel)]="registration.donationPledge" >
     </div>
+    <error-message [errorMessages]="messages" [fieldName]="'donation_pledge'"/>
   </div>
-  <div class="col-4"><label for="signature" class="form-label">Signature</label><input type="text" id="signature" class="form-control" [(ngModel)]="registration.signature" ></div>
+  <div class="col-4">
+    <label for="signature" class="form-label">Signature</label>
+    <input type="text" id="signature" class="form-control" [(ngModel)]="registration.signature" >
+    <error-message [errorMessages]="messages" [fieldName]="'signature'"/>
+  </div>
 </div>
 
 <div class="row mt-5" *ngIf="showSubmitButton">

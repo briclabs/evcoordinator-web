@@ -31,6 +31,7 @@
         [isPreexisting]="isPreexisting"
         [isParticipantTypeDropdown]="false"
         [isEmailAddressChangeable]="true"
+        [messages]="profileMessages"
         [showSubmitButton]="false">
       </profile-form>
     </div>
@@ -48,7 +49,10 @@
           <button class="btn btn-outline-danger bi-person-fill-dash" aria-label="Remove Guest" (click)="onRemoveGuest(i)"></button>
         </div>
         <div class="col-11">
-          <guest-form [(guest)]="guests()[i]"></guest-form>
+          <guest-form
+            [(guest)]="guests()[i]"
+            [messages]="guestMessages">
+          </guest-form>
         </div>
       </div>
 
@@ -60,7 +64,11 @@
     </div>
 
     <div *ngIf="currentStep === 3" class="step step-3">
-      <registration-form [(registration)]="registration" [showSubmitButton]="false"></registration-form>
+      <registration-form
+        [(registration)]="registration"
+        [messages]="registrationMessages"
+        [showSubmitButton]="false">
+      </registration-form>
 
       <div class="row mt-2 mt-3">
         <div class="col-9 text-center">

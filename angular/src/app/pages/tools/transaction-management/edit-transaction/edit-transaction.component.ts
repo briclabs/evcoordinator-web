@@ -2,13 +2,17 @@ import { Component, OnInit } from '@angular/core';
 import { EventInfo } from "../../../../models/event-info";
 import { Participant } from "../../../../models/participant";
 import { HttpClient } from "@angular/common/http";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { environment } from "../../../../../environments/environment";
 import { SearchRequest } from "../../../../models/search-request";
 import { createDefaultTransactionWithLabels, TransactionWithLabels } from "../../../../models/transaction-with-labels";
-import { Transaction } from "../../../../models/transaction";
+import { createTransactionFromTransactionWithLabels, Transaction } from "../../../../models/transaction";
 import { FormsModule } from "@angular/forms";
 import { NgForOf, NgIf } from "@angular/common";
+import { CreateResponse } from "../../../../models/create-response";
+import { UpdateResponse } from "../../../../models/update-response";
+import { DeleteResponse } from "../../../../models/delete-response";
+import { ErrorMessageComponent } from "../../../subcomponents/error-message/error-message.component";
 
 @Component({
   selector: 'app-edit-transaction',
@@ -17,11 +21,14 @@ import { NgForOf, NgIf } from "@angular/common";
     NgForOf,
     NgIf,
     FormsModule,
+    ErrorMessageComponent,
   ],
   templateUrl: './edit-transaction.component.html',
   styleUrl: './edit-transaction.component.css'
 })
 export class EditTransactionComponent implements OnInit {
+  protected messages: Map<string, string> = new Map<string, string>();
+
   protected transaction: TransactionWithLabels;
 
   protected eventInfoList: EventInfo[];
@@ -35,7 +42,7 @@ export class EditTransactionComponent implements OnInit {
   transactionTypeOptions: string[] = ["INVOICE", "EXPENSE", "INCOME"]; // TODO - source from DB.
   instrumentTypeOptions: string[] = ["ELECTRONIC", "CHECK", "CASH"]; // TODO - source from DB.
 
-  constructor(private http: HttpClient, private route: ActivatedRoute) {
+  constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {
     this.apiUrl = environment.apiUrl + '/transactions';
     this.participantSearchUrl = environment.apiUrl + '/participant/search';
     this.eventInfoSearchUrl = environment.apiUrl + '/event/info/search';
@@ -144,54 +151,33 @@ export class EditTransactionComponent implements OnInit {
   }
 
   create() {
-    const transactionToCreate: Transaction = {
-      eventInfoId: this.transaction.eventInfoId,
-      actorId: this.transaction.eventInfoId,
-      recipientId: this.transaction.recipientId,
-      amount: this.transaction.amount,
-      memo: this.transaction.memo,
-      transactionType: this.transaction.transactionType,
-      instrumentType: this.transaction.instrumentType,
-    }
-    this.http.post(this.apiUrl, transactionToCreate).subscribe({
-      next: (response) => {
-        console.log('Transaction created successfully:', response);
+    this.http.post<CreateResponse>(this.apiUrl, createTransactionFromTransactionWithLabels(this.transaction)).subscribe({
+      next: (response: CreateResponse) => {
+        this.router.navigate([`/tools/edit-transaction/${response.insertedId}`]);
       },
       error: (error) => {
-        console.log('Error creating transaction:', error);
+        this.messages = CreateResponse.getMessagesFromObject(error.error);
       },
     })
   }
 
   update() {
-    const transactionToUpdate: Transaction = {
-      id: this.transaction.id,
-      eventInfoId: this.transaction.eventInfoId,
-      actorId: this.transaction.eventInfoId,
-      recipientId: this.transaction.recipientId,
-      amount: this.transaction.amount,
-      memo: this.transaction.memo,
-      transactionType: this.transaction.transactionType,
-      instrumentType: this.transaction.instrumentType,
-      timeRecorded: this.transaction.timeRecorded,
-    }
-    this.http.put(this.apiUrl, transactionToUpdate).subscribe({
-      next: (response) => {
-        console.log('Transaction saved successfully:', response);
+    this.http.put(this.apiUrl, createTransactionFromTransactionWithLabels(this.transaction)).subscribe({
+      next: () => {
       },
       error: (error) => {
-        console.log('Error saving transaction:', error);
+        this.messages = UpdateResponse.getMessagesFromObject(error.error);
       },
     })
   }
 
   delete(): void {
-    this.http.delete(`${this.apiUrl}/${this.transaction.id}`).subscribe({
-      next: () => {
-        this.transaction = createDefaultTransactionWithLabels();
+    this.http.delete<DeleteResponse>(`${this.apiUrl}/${this.transaction.id}`).subscribe({
+      next: (response: DeleteResponse) => {
+        this.router.navigate([`/tools/transactions`]);
       },
       error: (error) => {
-        console.error('Error deleting transaction:', error);
+        this.messages = DeleteResponse.getMessagesFromObject(error.error);
       }
     });
   }

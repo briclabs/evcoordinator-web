@@ -9,7 +9,6 @@ export interface GuestWithLabels {
   guestProfileId?: number;
   guestNameFirst?: string;
   guestNameLast?: string;
-  inviteeProfileId?: number;
   inviteeFirstName: string;
   inviteeLastName: string;
   relationship: string;

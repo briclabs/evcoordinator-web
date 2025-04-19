@@ -5,6 +5,7 @@
       [(guest)]="guest"
       [registrationList]="registrationList"
       [guestProfileList]="guestProfileList"
+      [messages]="messages"
       [showSubmitButton]="true"
       (formSubmit)="guest.id ? update() : create()">
     </guest-form>
