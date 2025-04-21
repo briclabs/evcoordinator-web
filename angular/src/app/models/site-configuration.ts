@@ -30,7 +30,10 @@ export function createDefaultSiteConfiguration(): SiteConfiguration {
     fundProcessorName: '',
     fundProcessorUrl: '',
     fundProcessorInstructions: {
-      instructions: [],
+      instructions: [
+        'bullet1',
+        'bullet2',
+      ],
       donationAddress: {
         to: '',
         co: '',
@@ -40,6 +43,15 @@ export function createDefaultSiteConfiguration(): SiteConfiguration {
         zip: '',
       }
     },
-    eventGuidelines: {}
+    eventGuidelines: {
+      'section one': [
+        'bullet1',
+        'bullet2',
+      ],
+      'section two': [
+        'bullet1',
+        'bullet2',
+      ]
+    }
   }
 }

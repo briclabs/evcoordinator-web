@@ -8,32 +8,38 @@
           <span class="input-group-text">$</span>
           <input type="number" id="donationMinimum" class="form-control px-0" [(ngModel)]="siteConfiguration.recommendedDonation">
           <span class="input-group-text">.00</span>
+          <error-message [errorMessages]="messages" [fieldName]="'recommended_donation'"/>
         </div>
       </div>
       <div class="col-8">
         <label for="charityInfo" class="form-label">Charity Info</label>
-        <div class="input-group mb-3" id="charityINfo">
+        <div class="input-group" id="charityInfo">
           <span class="input-group-text">Name</span>
           <input type="text" id="charityName" class="form-control" [(ngModel)]="siteConfiguration.charityName">
           <span class="input-group-text">URL</span>
           <input type="url" id="charityUrl" class="form-control" [(ngModel)]="siteConfiguration.charityUrl">
         </div>
+        <error-message [errorMessages]="messages" [fieldName]="'charity_name'"/>
+        <error-message [errorMessages]="messages" [fieldName]="'charity_url'"/>
       </div>
     </div>
     <div class="row mt-5">
       <div class="col-10">
         <label for="fundProcessor" class="form-label">Fund Processor</label>
-        <div class="input-group mb-3" id="fundProcessor">
+        <div class="input-group" id="fundProcessor">
           <span class="input-group-text">Name</span>
           <input type="text" class="form-control" [(ngModel)]="siteConfiguration.fundProcessorName">
           <span class="input-group-text">URL</span>
           <input type="URL" class="form-control" [(ngModel)]="siteConfiguration.fundProcessorUrl">
         </div>
-        <label for="fundProcessorInstructions" class="form-label">Fund Processor Instructions</label>
+        <error-message [errorMessages]="messages" [fieldName]="'fund_processor_name'"/>
+        <error-message [errorMessages]="messages" [fieldName]="'fund_processor_url'"/>
+        <label for="fundProcessorInstructions" class="form-label mt-3">Fund Processor Instructions</label>
         <div class="input-group mb-3" id="fundProcessorInstructions">
           <span class="input-group-text">JSON</span>
-          <textarea class="form-control" [(ngModel)]="siteConfiguration.fundProcessorInstructions" (input)="autoResize($event)"></textarea>
+          <textarea class="form-control" [(ngModel)]="stringifiedFundProcessorInstructions" (input)="updateFundProcessorInstructions($event)"></textarea>
         </div>
+        <error-message [errorMessages]="messages" [fieldName]="'fund_processor_instructions'"/>
       </div>
     </div>
     <div class="row mt-5">
@@ -41,12 +47,13 @@
         <label for="guidelines" class="form-label">Event Guidelines</label>
         <div class="input-group mb-3" id="guidelines">
           <span class="input-group-text">JSON</span>
-          <textarea class="form-control" [(ngModel)]="siteConfiguration.eventGuidelines" (input)="autoResize($event)"></textarea>
+          <textarea class="form-control" [(ngModel)]="stringifiedEventGuidelines" (input)="updateEventGuidelines($event)"></textarea>
         </div>
+        <error-message [errorMessages]="messages" [fieldName]="'event_guidelines'"/>
       </div>
     </div>
   </div>
-  <div class="row mt-5 mx-2">
+  <div class="row mt-5 mx-2 mb-3">
     <div class="col-11 text-center">
       <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmationModal">
         Update
@@ -60,7 +67,7 @@
             </div>
             <div class="mx-5 mt-3 mb-3">Ready to update this site with your changes?</div>
             <div class="modal-footer justify-content-center">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+              <button type="button" id="cancelButton" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
               <button type="button" class="btn btn-primary" (click)="isNewConfiguration ? create() : update()">Confirm</button>
             </div>
           </div>
