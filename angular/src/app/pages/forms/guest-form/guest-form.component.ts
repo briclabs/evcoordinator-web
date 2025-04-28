@@ -1,10 +1,11 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { NgForOf, NgIf } from "@angular/common";
 import { createDefaultGuestWithLabels, GuestWithLabels } from "../../../models/guest-with-labels";
 import { Participant } from "../../../models/participant";
 import { RegistrationWithLabels } from "../../../models/registration-with-labels";
 import { ErrorMessageComponent } from "../../subcomponents/error-message/error-message.component";
+import { ValidatorService } from "../../../services/validator/validator.service";
 
 @Component({
   selector: 'guest-form',
@@ -29,14 +30,43 @@ export class GuestFormComponent {
   relationshipTypeOptions: string[] = ["ADULT", "CHILD", "PET"]; // TODO - source from DB.
 
   @Input() messages: Map<string, string> = new Map<string, string>();
+  @Output() messagesChange = new EventEmitter<Map<string, string>>();
+
   @Input() showSubmitButton: boolean = false;
 
   @Output() formSubmit = new EventEmitter<void>();
+
+  validatorService: ValidatorService = inject(ValidatorService);
 
   constructor() {
     this.guest = createDefaultGuestWithLabels();
     this.registrationList = [];
     this.guestProfileList = [];
+  }
+
+  validate(event: Event): void {
+    if (event instanceof Event) {
+      const clonedMessages = new Map(this.messages);
+      const inputValue = (event.target as HTMLInputElement).value?? '';
+      const inputId = (event.target as HTMLInputElement).id;
+
+      switch (inputId) {
+        case 'registrationSelect':
+          this.validatorService.mustBeValidId(inputValue, clonedMessages, 'registration_id');
+          break;
+        case 'guestProfileSelect':
+          this.validatorService.mustBeValidOptionalId(inputValue, clonedMessages, 'guest_profile_id');
+          break;
+        case 'relationshipType':
+          this.validatorService.mustBeValidValue(inputValue, clonedMessages, 'relationship');
+          break;
+        case 'guestRawName':
+          this.validatorService.mustNotBeBlank(inputValue, clonedMessages, 'raw_guest_name');
+          break;
+      }
+      this.messages = clonedMessages;
+      this.messagesChange.emit(this.messages);
+    }
   }
 
   updateRegistration(registrationId: string): void {

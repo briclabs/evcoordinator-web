@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { ActivatedRoute, Router } from "@angular/router";
 import { environment } from "../../../../../environments/environment";
@@ -9,6 +9,7 @@ import { CreateResponse } from "../../../../models/create-response";
 import { UpdateResponse } from "../../../../models/update-response";
 import { DeleteResponse } from "../../../../models/delete-response";
 import { ErrorMessageComponent } from "../../../subcomponents/error-message/error-message.component";
+import { ValidatorService } from "../../../../services/validator/validator.service";
 
 @Component({
   selector: 'app-event-info',
@@ -31,6 +32,8 @@ export class EditEventComponent implements OnInit {
 
   private apiUrl = '';
 
+  validatorService: ValidatorService = inject(ValidatorService);
+
   constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {
     this.eventInfo = createDefaultEventInfo();
   }
@@ -44,6 +47,50 @@ export class EditEventComponent implements OnInit {
         this.fetchEventInfoById(parseInt(id, 10));
       }
     });
+  }
+
+  validate(event: Event): void {
+    if (event instanceof Event) {
+      const clonedMessages = new Map(this.messages);
+      const inputValue = (event.target as HTMLInputElement).value?? '';
+      const inputId = (event.target as HTMLInputElement).id;
+
+      switch (inputId) {
+        case 'eventName':
+          this.validatorService.mustNotBeBlank(inputValue, clonedMessages, 'event_name');
+          break;
+        case 'eventTitle':
+          this.validatorService.mustNotBeBlank(inputValue, clonedMessages, 'event_title');
+          break;
+        case 'dateStart':
+          this.validatorService.mustBeValidValue(inputValue, clonedMessages, 'date_start');
+          this.validatorService.mustBeBeforeEnd(inputValue, this.eventInfo.dateEnd, clonedMessages, 'date_start');
+          break;
+        case 'dateEnd':
+          this.validatorService.mustBeValidValue(inputValue, clonedMessages, 'date_end');
+          this.validatorService.mustBeBeforeEnd(this.eventInfo.dateStart, inputValue, clonedMessages, 'date_start');
+          if (this.eventInfo.eventStatus.includes('CURRENT')) {
+            this.validatorService.mustBeNowOrFuture(inputValue, clonedMessages, 'date_end');
+          }
+          if (this.eventInfo.eventStatus.includes('PAST')) {
+            this.validatorService.mustBePast(inputValue, clonedMessages, 'date_end');
+          }
+          break;
+        case 'eventStatus':
+          this.validatorService.mustBeValidValue(inputValue, clonedMessages, 'event_status');
+          if (inputValue.includes('CURRENT')) {
+            this.validatorService.mustBeNowOrFuture(this.eventInfo.dateEnd, clonedMessages, 'date_end');
+          }
+          if (inputValue.includes('PAST')) {
+            this.validatorService.mustBePast(this.eventInfo.dateEnd, clonedMessages, 'date_end');
+          }
+          if (inputValue.includes('CANCELLED')) {
+            clonedMessages.delete('date_end');
+          }
+          break;
+      }
+      this.messages = clonedMessages;
+    }
   }
 
   fetchEventInfoById(id: number): void {

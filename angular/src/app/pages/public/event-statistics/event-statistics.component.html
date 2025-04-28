@@ -16,19 +16,19 @@
         <div class="col-4">
           <h5>{{ statistics.unregisteredGuestCount + statistics.registeredAttendeesCount }} Attendees</h5>
           <div class="form-label">{{ statistics.registeredAttendeesCount }} Registered Attendees</div>
-          <div class="form-label">{{ statistics.unregisteredGuestCount }} Unregistered Guests </div>
+          <div class="form-label">{{ statistics.unregisteredGuestCount || 0 }} Unregistered Guests </div>
         </div>
 
         <div class="col-4">
-          <h5>${{ statistics.totalInvoiced }} Expenses</h5>
+          <h5>${{ statistics.totalInvoiced || 0}} Expenses</h5>
           <div *ngFor="let invoice of statistics.invoices">
             <div><label class="form-label">{{ invoice.memo }}</label>: ${{ invoice.amount }}</div>
           </div>
         </div>
 
         <div class="col-4">
-          <h5>${{ statistics.totalIncome }} Funds Raised</h5>
-          <div>${{ statistics.totalPledged }} Pledged ({{ statistics.percentagePledgedReceived }}% received).</div>
+          <h5>${{ statistics.totalIncome || 0 }} Funds Raised</h5>
+          <div>${{ statistics.totalPledged || 0 }} Pledged ({{ statistics.percentagePledgedReceived || 0 }}% received).</div>
           <div class="progress">
             <div
               class="progress-bar"
@@ -53,7 +53,7 @@
             </div>
           </div>
           <ng-template #surplus>
-            <div>${{ statistics.totalIncome }} Received (${{ statistics.totalIncome - statistics.totalInvoiced }} raised for charity).</div>
+            <div>${{ statistics.totalIncome || 0}} Received (${{ statistics.totalIncome - statistics.totalInvoiced }} raised for charity).</div>
             <div class="progress">
               <div
                 class="progress-bar"

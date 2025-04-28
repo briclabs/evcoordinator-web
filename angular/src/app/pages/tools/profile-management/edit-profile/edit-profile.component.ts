@@ -10,6 +10,7 @@ import { ProfileFormComponent } from "../../../forms/profile-form/profile-form.c
 import { Observable, of } from "rxjs";
 import { CreateResponse } from "../../../../models/create-response";
 import { UpdateResponse } from "../../../../models/update-response";
+import { ErrorMessageComponent } from "../../../subcomponents/error-message/error-message.component";
 
 @Component({
   selector: 'edit-profile',
@@ -18,6 +19,7 @@ import { UpdateResponse } from "../../../../models/update-response";
     CommonModule,
     FormsModule,
     ProfileFormComponent,
+    ErrorMessageComponent,
   ],
   templateUrl: './edit-profile.component.html',
   styleUrls: ['./edit-profile.component.css']

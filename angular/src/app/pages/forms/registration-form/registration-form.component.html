@@ -6,6 +6,7 @@
       class="form-select"
       [(ngModel)]="registration.participantId"
       (ngModelChange)="updateParticipant($event)"
+      (input)="validate($event)"
     >
       <option *ngFor="let participant of participantList" [value]="participant.id">
         {{ participant.nameLast }}, {{ participant.nameFirst }}
@@ -20,6 +21,7 @@
       class="form-select"
       [(ngModel)]="registration.eventInfoId"
       (ngModelChange)="updateEventInfo($event)"
+      (input)="validate($event)"
     >
       <option *ngFor="let eventInfo of eventInfoList" [value]="eventInfo.id">
         {{ eventInfo.eventName }}: {{ eventInfo.eventTitle }}
@@ -38,13 +40,13 @@
     <label for="amountDonation" class="form-label">Donation</label>
     <div class="input-group">
       <span class="input-group-text">$</span>
-      <input type="number" id="amountDonation" class="form-control px-0" [(ngModel)]="registration.donationPledge" >
+      <input type="number" id="amountDonation" class="form-control px-0" [(ngModel)]="registration.donationPledge" (input)="validate($event)" >
     </div>
     <error-message [errorMessages]="messages" [fieldName]="'donation_pledge'"/>
   </div>
   <div class="col-4">
     <label for="signature" class="form-label">Signature</label>
-    <input type="text" id="signature" class="form-control" [(ngModel)]="registration.signature" >
+    <input type="text" id="signature" class="form-control" [(ngModel)]="registration.signature" (input)="validate($event)" >
     <error-message [errorMessages]="messages" [fieldName]="'signature'"/>
   </div>
 </div>
@@ -52,6 +54,6 @@
 <div class="row mt-5" *ngIf="showSubmitButton">
   <div class="col-3"></div>
   <div class="col-3 mx-2 text-center">
-    <button type="button" class="btn btn-primary" (click)="submitForm()">Submit</button>
+    <button type="button" class="btn btn-primary" (click)="submitForm()" [disabled]="!messages || messages.size > 0">Submit</button>
   </div>
 </div>

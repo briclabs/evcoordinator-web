@@ -1,12 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from "../../../../environments/environment";
 import { FormsModule } from "@angular/forms";
 import { CreateResponse } from "../../../models/create-response";
 import { UpdateResponse } from "../../../models/update-response";
 import { Router } from "@angular/router";
-import { createDefaultSiteConfiguration, SiteConfiguration } from "../../../models/site-configuration";
+import {
+  createDefaultSiteConfiguration,
+  FundProcessorInstructions,
+  SiteConfiguration,
+  isValidFundProcessorInstructionsObject,
+  isValidEventGuidelinesObject,
+} from "../../../models/site-configuration";
 import { ErrorMessageComponent } from "../../subcomponents/error-message/error-message.component";
+import { ValidatorService } from "../../../services/validator/validator.service";
 
 @Component({
   selector: 'site-config',
@@ -29,6 +36,8 @@ export class SiteConfigComponent implements OnInit {
 
   private apiUrl = '';
 
+  validatorService: ValidatorService = inject(ValidatorService);
+
   constructor(private http: HttpClient, private router: Router) {
     this.siteConfiguration = createDefaultSiteConfiguration();
     this.stringifiedFundProcessorInstructions = JSON.stringify(this.siteConfiguration.fundProcessorInstructions, null, 4);
@@ -47,6 +56,47 @@ export class SiteConfigComponent implements OnInit {
       }, 0);
     } catch (error) {
       console.error('Error loading configuration:', error);
+    }
+  }
+
+  validate(event: Event): void {
+    if (event instanceof Event) {
+      const clonedMessages = new Map(this.messages);
+      const inputValue = (event.target as HTMLInputElement).value?? '';
+      const inputId = (event.target as HTMLInputElement).id;
+
+      switch (inputId) {
+        case 'donationMinimum':
+          this.validatorService.mustBePositiveNumber(inputValue, clonedMessages, 'recommended_donation');
+          break;
+        case 'charityName':
+          this.validatorService.mustNotBeBlank(inputValue, clonedMessages, 'charity_name');
+          break;
+        case 'charityUrl':
+          this.validatorService.mustBeValidUrl(inputValue, clonedMessages, 'charity_url');
+          break;
+        case 'fundProcessorName':
+          this.validatorService.mustNotBeBlank(inputValue, clonedMessages, 'fund_processor_name');
+          break;
+        case 'fundProcessorUrl':
+          this.validatorService.mustBeValidUrl(inputValue, clonedMessages, 'fund_processor_url');
+          break;
+        case 'fundProcessorInstructions':
+          if (isValidFundProcessorInstructionsObject(JSON.parse(this.stringifiedFundProcessorInstructions) as FundProcessorInstructions)) {
+            clonedMessages.delete('fund_processor_instructions');
+          } else {
+            clonedMessages.set('fund_processor_instructions', 'Must be a valid Fund Processor Instructions JSON object.');
+          }
+          break;
+        case 'eventGuidelines':
+          if (isValidEventGuidelinesObject(JSON.parse(this.stringifiedEventGuidelines) as { [key: string]: string[] })) {
+            clonedMessages.delete('event_guidelines');
+          } else {
+            clonedMessages.set('event_guidelines', 'Must be a valid Event Guidelines JSON object.');
+          }
+          break;
+      }
+      this.messages = clonedMessages;
     }
   }
 
@@ -103,9 +153,7 @@ export class SiteConfigComponent implements OnInit {
     try {
       this.siteConfiguration.fundProcessorInstructions = JSON.parse(textarea.value);
       this.stringifiedFundProcessorInstructions = JSON.stringify(this.siteConfiguration.fundProcessorInstructions, null, 4);
-      const clonedMessages = new Map(this.messages);
-      clonedMessages.delete('fund_processor_instructions');
-      this.messages = clonedMessages;
+      this.validate(event);
     } catch (error) {
       const clonedMessages = new Map(this.messages);
       clonedMessages.set('fund_processor_instructions', 'Invalid JSON.');
@@ -119,9 +167,7 @@ export class SiteConfigComponent implements OnInit {
     try {
       this.siteConfiguration.eventGuidelines = JSON.parse(textarea.value);
       this.stringifiedEventGuidelines = JSON.stringify(this.siteConfiguration.eventGuidelines, null, 4);
-      const clonedMessages = new Map(this.messages);
-      clonedMessages.delete('event_guidelines');
-      this.messages = clonedMessages;
+      this.validate(event);
     } catch (error) {
       const clonedMessages = new Map(this.messages);
       clonedMessages.set('event_guidelines', 'Invalid JSON.');

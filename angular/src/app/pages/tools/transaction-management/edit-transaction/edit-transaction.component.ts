@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { EventInfo } from "../../../../models/event-info";
 import { Participant } from "../../../../models/participant";
 import { HttpClient } from "@angular/common/http";
@@ -6,13 +6,14 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { environment } from "../../../../../environments/environment";
 import { SearchRequest } from "../../../../models/search-request";
 import { createDefaultTransactionWithLabels, TransactionWithLabels } from "../../../../models/transaction-with-labels";
-import { createTransactionFromTransactionWithLabels, Transaction } from "../../../../models/transaction";
+import { createTransactionFromTransactionWithLabels } from "../../../../models/transaction";
 import { FormsModule } from "@angular/forms";
 import { NgForOf, NgIf } from "@angular/common";
 import { CreateResponse } from "../../../../models/create-response";
 import { UpdateResponse } from "../../../../models/update-response";
 import { DeleteResponse } from "../../../../models/delete-response";
 import { ErrorMessageComponent } from "../../../subcomponents/error-message/error-message.component";
+import { ValidatorService } from "../../../../services/validator/validator.service";
 
 @Component({
   selector: 'app-edit-transaction',
@@ -42,6 +43,8 @@ export class EditTransactionComponent implements OnInit {
   transactionTypeOptions: string[] = ["INVOICE", "EXPENSE", "INCOME"]; // TODO - source from DB.
   instrumentTypeOptions: string[] = ["ELECTRONIC", "CHECK", "CASH"]; // TODO - source from DB.
 
+  validatorService: ValidatorService = inject(ValidatorService);
+
   constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {
     this.apiUrl = environment.apiUrl + '/transactions';
     this.participantSearchUrl = environment.apiUrl + '/participant/search';
@@ -63,6 +66,39 @@ export class EditTransactionComponent implements OnInit {
         this.fetchRegistrationById(parseInt(id, 10));
       }
     });
+  }
+
+  validate(event: Event): void {
+    if (event instanceof InputEvent) {
+      const clonedMessages = new Map(this.messages);
+      const inputValue = (event.target as HTMLInputElement).value?? '';
+      const inputId = (event.target as HTMLInputElement).id;
+
+      switch (inputId) {
+        case 'event':
+          this.validatorService.mustBeValidId(inputValue, clonedMessages, 'event_info_id');
+          break;
+        case 'type':
+          this.validatorService.mustBeValidValue(inputValue, clonedMessages, 'transaction_type');
+          break;
+        case 'actor':
+          this.validatorService.mustBeValidId(inputValue, clonedMessages, 'actor_id');
+          break;
+        case 'amount':
+          this.validatorService.mustBePositiveNumber(inputValue, clonedMessages, 'amount');
+          break;
+        case 'recipient':
+          this.validatorService.mustBeValidId(inputValue, clonedMessages, 'recipient_id');
+          break;
+        case 'instrument':
+          this.validatorService.mustBeValidValue(inputValue, clonedMessages, 'instrument_type');
+          break;
+        case 'memo':
+          this.validatorService.mustBeEmptyOrNotBeBlank(inputValue, clonedMessages, 'memo');
+          break;
+      }
+      this.messages = clonedMessages;
+    }
   }
 
   fetchRegistrationById(id: number): void {

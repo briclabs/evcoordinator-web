@@ -6,13 +6,20 @@
       [participantList]="participantList"
       [eventInfoList]="eventInfoList"
       [showSubmitButton]="true"
-      [messages]="messages"
+      [(messages)]="messages"
       (formSubmit)="registration.id ? update() : create()">
     </registration-form>
-    <div class="row mt-2">
-      <div class="col-3"></div>
-      <div class="col-3 mx-2 text-center">
-        <button type="button" class="btn btn-delete" (click)="delete()">Delete</button>
+    @if (registration.id) {
+      <div class="row mt-2">
+        <div class="col-3"></div>
+        <div class="col-3 mx-2 text-center">
+          <button type="button" class="btn btn-delete" (click)="delete()" [disabled]="!messages || messages.size > 0">Delete</button>
+        </div>
+      </div>
+    }
+    <div class="row">
+      <div class="col-9 mx-2 text-center">
+        <error-message class="text-center" [errorMessages]="messages" [fieldName]="'GENERAL_MESSAGE'"/>
       </div>
     </div>
   </div>

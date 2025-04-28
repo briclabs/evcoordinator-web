@@ -4,12 +4,12 @@
       <div class="row">
       <div class="col-4">
         <label for="eventName" class="form-label">Event Name</label>
-        <input type="text" id="eventName" class="form-control" [(ngModel)]="eventInfo.eventName" required />
+        <input type="text" id="eventName" class="form-control" [(ngModel)]="eventInfo.eventName" (input)="validate($event)" required />
         <error-message [errorMessages]="messages" [fieldName]="'event_name'"/>
       </div>
       <div class="col-5">
         <label for="eventTitle" class="form-label">Event Title</label>
-        <input type="text" id="eventTitle" class="form-control" [(ngModel)]="eventInfo.eventTitle" required />
+        <input type="text" id="eventTitle" class="form-control" [(ngModel)]="eventInfo.eventTitle" (input)="validate($event)" required />
         <error-message [errorMessages]="messages" [fieldName]="'event_title'"/>
       </div>
     </div>
@@ -18,17 +18,17 @@
       <div class="col-1"></div>
       <div class="col-2">
         <label for="dateStart" class="form-label">Date Start</label>
-        <input type="date" id="dateStart" class="form-control" [(ngModel)]="eventInfo.dateStart" required />
+        <input type="date" id="dateStart" class="form-control" [(ngModel)]="eventInfo.dateStart" (input)="validate($event)" required />
         <error-message [errorMessages]="messages" [fieldName]="'date_start'"/>
       </div>
       <div class="col-2">
         <label for="dateEnd" class="form-label">Date End</label>
-        <input type="date" id="dateEnd" class="form-control" [(ngModel)]="eventInfo.dateEnd" required />
+        <input type="date" id="dateEnd" class="form-control" [(ngModel)]="eventInfo.dateEnd" (input)="validate($event)" required />
         <error-message [errorMessages]="messages" [fieldName]="'date_end'"/>
       </div>
       <div class="col-3">
         <label for="eventStatus" class="form-label">Event Status</label>
-        <select class="form-select" id="eventStatus" [(ngModel)]="eventInfo.eventStatus" required>
+        <select class="form-select" id="eventStatus" [(ngModel)]="eventInfo.eventStatus" (input)="validate($event)" required>
           <option *ngFor="let status of eventStatusOptions" [ngValue]="status">{{ status }}</option>
         </select>
         <error-message [errorMessages]="messages" [fieldName]="'event_status'"/>
@@ -38,7 +38,7 @@
     <div class="row mt-5">
       <div class="col-3"></div>
       <div class="col-3 mx-2 text-center">
-        <button type="button" class="btn btn-primary" (click)="eventInfo.id ? update() : create()">Submit</button>
+        <button type="button" class="btn btn-primary" (click)="eventInfo.id ? update() : create()" [disabled]="!messages || messages.size > 0">Submit</button>
       </div>
     </div>
 
@@ -46,6 +46,12 @@
       <div class="col-3"></div>
       <div class="col-3 mx-2 text-center">
         <button type="button" class="btn btn-delete" (click)="delete()">Delete</button>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-9 mx-2 text-center">
+        <error-message class="text-center" [errorMessages]="messages" [fieldName]="'GENERAL_MESSAGE'"/>
       </div>
     </div>
   </div>

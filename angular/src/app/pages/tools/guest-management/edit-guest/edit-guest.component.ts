@@ -11,12 +11,14 @@ import { CreateResponse } from "../../../../models/create-response";
 import { UpdateResponse } from "../../../../models/update-response";
 import { DeleteResponse } from "../../../../models/delete-response";
 import { createFromGuestWithLabels } from "../../../../models/guest";
+import { ErrorMessageComponent } from "../../../subcomponents/error-message/error-message.component";
 
 @Component({
   selector: 'app-edit-guest',
   standalone: true,
   imports: [
     GuestFormComponent,
+    ErrorMessageComponent,
   ],
   templateUrl: './edit-guest.component.html',
   styleUrl: './edit-guest.component.css'

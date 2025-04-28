@@ -31,33 +31,35 @@
         [isPreexisting]="isPreexisting"
         [isParticipantTypeDropdown]="false"
         [isEmailAddressChangeable]="true"
-        [messages]="profileMessages"
+        [(messages)]="profileMessages"
         [showSubmitButton]="false">
       </profile-form>
     </div>
 
     <div *ngIf="currentStep === 2" class="step step-2">
       <div class="row">
-        <div class="col-8">
+        <div class="col-9">
           <label class="form-label col d-flex justify-content-center align-items-center">Please note any guests that will be accompanying you. Adult guests should still submit their own registration.</label>
           <br>
           <hr>
         </div>
       </div>
-      <div class="row mb-3" *ngFor="let guest of guests(); let i = index">
-        <div class="col-1 d-flex justify-content-end align-items-end">
-          <button class="btn btn-outline-danger bi-person-fill-dash" aria-label="Remove Guest" (click)="onRemoveGuest(i)"></button>
+      @for (guest of guestsWithMessages(); track guest; let i = $index) {
+        <div class="row mb-3">
+          <div class="col-1 d-flex justify-content-end align-items-start mt-4">
+            <button class="btn btn-outline-danger bi-person-fill-dash ms-auto" aria-label="Remove Guest" (click)="onRemoveGuest(i)"></button>
+          </div>
+          <div class="col-11">
+            <guest-form
+              [(guest)]="guestsWithMessages()[i]"
+              [(messages)]="guestsWithMessages()[i].messages">
+            </guest-form>
+          </div>
         </div>
-        <div class="col-11">
-          <guest-form
-            [(guest)]="guests()[i]"
-            [messages]="guestMessages">
-          </guest-form>
-        </div>
-      </div>
+      }
 
       <div class="row">
-        <div class="col">
+        <div class="col-1 d-flex justify-content-end align-items-start mt-4">
           <button class="btn btn-outline-primary bi-person-fill-add" aria-label="Add Guest" (click)="onAddGuest()"></button>
         </div>
       </div>
@@ -66,13 +68,24 @@
     <div *ngIf="currentStep === 3" class="step step-3">
       <registration-form
         [(registration)]="registration"
-        [messages]="registrationMessages"
+        [(messages)]="registrationMessages"
         [showSubmitButton]="false">
       </registration-form>
 
       <div class="row mt-2 mt-3">
         <div class="col-9 text-center">
-          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmationModal">
+          @if (this.hasMessages()) {
+            <div class="alert alert-danger" role="alert">
+              Please resolve issues before continuing.
+            </div>
+          }
+          <div class="mb-3">
+            <error-message class="text-center" [errorMessages]="generalMessages" [fieldName]="'GENERAL_MESSAGE'"/>
+            <error-message class="text-center" [errorMessages]="generalMessages" [fieldName]="'PARTICIPANT'"/>
+            <error-message class="text-center" [errorMessages]="generalMessages" [fieldName]="'GUESTS'"/>
+            <error-message class="text-center" [errorMessages]="generalMessages" [fieldName]="'REGISTRATION'"/>
+          </div>
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmationModal" [disabled]="this.hasMessages()">
             Submit Registration
           </button>
           <div class="modal fade" id="confirmationModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
@@ -86,8 +99,8 @@
                   I agree to abide by the Guidelines, and,<br>I understand submission of my registration is a promise<br>to contribute the amount I specified in my registration.
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                  <button type="button" class="btn btn-primary" (click)="submitRegistration()">Submit</button>
+                  <button type="button" id="cancel" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                  <button type="button" id="submit" class="btn btn-primary" (click)="submitRegistration()">Submit</button>
                 </div>
               </div>
             </div>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output } from '@angular/core';
 import { FormsModule } from "@angular/forms";
 import { HttpClient } from "@angular/common/http";
 import { environment } from "../../../../../environments/environment";
@@ -12,8 +12,8 @@ import { SearchRequest } from "../../../../models/search-request";
 import { CreateResponse } from "../../../../models/create-response";
 import { UpdateResponse } from "../../../../models/update-response";
 import { DeleteResponse } from "../../../../models/delete-response";
-import { ProfileFormComponent } from "../../../forms/profile-form/profile-form.component";
 import { createRegistrationFromRegistrationWithLabels } from "../../../../models/registration";
+import { ErrorMessageComponent } from "../../../subcomponents/error-message/error-message.component";
 
 @Component({
   selector: 'edit-profile',
@@ -22,6 +22,7 @@ import { createRegistrationFromRegistrationWithLabels } from "../../../../models
     CommonModule,
     FormsModule,
     RegistrationFormComponent,
+    ErrorMessageComponent,
   ],
   templateUrl: './edit-registration.component.html',
   styleUrls: ['./edit-registration.component.css']
