@@ -34,7 +34,7 @@ export class SiteConfigComponent implements OnInit {
 
   isNewConfiguration: boolean = false;
 
-  private apiUrl = '';
+  private apiUrl = `${environment.apiUrl}/configuration`;
 
   validatorService: ValidatorService = inject(ValidatorService);
 
@@ -46,8 +46,6 @@ export class SiteConfigComponent implements OnInit {
 
   async ngOnInit() {
     try {
-      this.apiUrl = environment.apiUrl + '/configuration';
-
       this.fetchLatestConfiguration();
       this.adjustTextAreaSizes();
 

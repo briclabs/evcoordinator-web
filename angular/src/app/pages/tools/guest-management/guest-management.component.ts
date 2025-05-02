@@ -16,7 +16,7 @@ import { RegistrationWithLabels } from "../../../models/registration-with-labels
   styleUrl: './guest-management.component.css'
 })
 export class GuestManagementComponent implements OnInit {
-  guestSearchApiUrl = `${environment.apiUrl}/guest/search`;
+  private guestSearchApiUrl = `${environment.apiUrl}/guest/search`;
 
   private resultsPerPage = 10;
 

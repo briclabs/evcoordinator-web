@@ -49,20 +49,15 @@ export class RegistrationComponent implements OnInit{
 
   protected isPreexisting: boolean = false;
 
-  private registrationUrl = '';
-  private participantUrl = '';
-  private eventInfoUrl = '';
+  private registrationUrl = `${environment.apiUrl}/registrationPacket`;
+  private participantUrl = `${environment.apiUrl}/participant`;
+  private eventInfoUrl = `${environment.apiUrl}/event/info`;
 
   currentStep: number = 1;
   totalSteps: number = 3;
 
   constructor(private http: HttpClient, private router: Router) {
-    this.registrationUrl = environment.apiUrl + '/registrationPacket';
-    this.participantUrl = environment.apiUrl + '/participant';
-    this.eventInfoUrl = environment.apiUrl + '/event/info';
-
     this.eventInfo = createDefaultEventInfo();
-
     this.participant = createDefaultParticipant();
     this.guestsWithMessages.set([]);
     this.registration = createDefaultRegistrationWithLabels();

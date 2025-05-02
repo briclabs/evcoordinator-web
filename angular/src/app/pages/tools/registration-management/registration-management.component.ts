@@ -16,7 +16,7 @@ import { RegistrationWithLabels } from "../../../models/registration-with-labels
   styleUrl: './registration-management.component.css'
 })
 export class RegistrationManagementComponent implements OnInit {
-  registrationSearchApiUrl = `${environment.apiUrl}/registration/search`;
+  private registrationSearchApiUrl = `${environment.apiUrl}/registration/search`;
 
   private resultsPerPage = 10;
 

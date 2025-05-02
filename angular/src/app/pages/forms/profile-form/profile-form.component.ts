@@ -1,10 +1,10 @@
 import { Component, Input, Output, EventEmitter, inject } from '@angular/core';
 import { FormsModule } from "@angular/forms";
 import { CommonModule } from "@angular/common";
-import { ContactUtilityServiceService } from "../../../services/contact-utility-service/contact-utility-service.service";
 import { createDefaultParticipant, Participant } from "../../../models/participant";
 import { ErrorMessageComponent } from "../../subcomponents/error-message/error-message.component";
 import { ValidatorService } from "../../../services/validator/validator.service";
+import { StaticLookupService } from "../../../services/static-lookup/static-lookup.service";
 
 @Component({
   selector: 'profile-form',
@@ -29,12 +29,32 @@ export class ProfileFormComponent {
 
   @Output() formSubmit = new EventEmitter<void>();
 
-  contactUtilityServiceService: ContactUtilityServiceService = inject(ContactUtilityServiceService);
+  private staticLookupService: StaticLookupService = inject(StaticLookupService);
+  stateAbbreviations: string[] = [];
+  emergencyContactRelationshipType: string[] = [];
 
   validatorService: ValidatorService = inject(ValidatorService);
 
   constructor() {
     this.participant = createDefaultParticipant();
+
+    this.staticLookupService.usStateAbbreviations().subscribe({
+      next: (data: string[]) => {
+        this.stateAbbreviations = data;
+      },
+      error: (error: any) => {
+        console.error('Error fetching state abbreviations:', error);
+      }
+    });
+
+    this.staticLookupService.emergencyContactRelationshipType().subscribe({
+      next: (data: string[]) => {
+        this.emergencyContactRelationshipType = data;
+      },
+      error: (error: any) => {
+        console.error('Error fetching emergency contact relationship types:', error);
+      }
+    });
   }
 
   validate(event: Event): void {

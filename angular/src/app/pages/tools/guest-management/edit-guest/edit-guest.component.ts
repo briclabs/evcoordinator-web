@@ -31,15 +31,11 @@ export class EditGuestComponent implements OnInit {
   protected registrationList: RegistrationWithLabels[];
   protected guestProfileList: Participant[];
 
-  private guestUrl = '';
-  private registrationSearchUrl = '';
-  private guestProfileSearchUrl = '';
+  private guestUrl = `${environment.apiUrl}/guest`;
+  private registrationSearchUrl = `${environment.apiUrl}/registration/search`;
+  private guestProfileSearchUrl = `${environment.apiUrl}/participant/search`;
 
   constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {
-    this.guestUrl = environment.apiUrl + '/guest';
-    this.registrationSearchUrl = environment.apiUrl + '/registration/search';
-    this.guestProfileSearchUrl = environment.apiUrl + '/participant/search';
-
     this.registrationList = [];
     this.guestProfileList = [];
     this.guest = createDefaultGuestWithLabels();

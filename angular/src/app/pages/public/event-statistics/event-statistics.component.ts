@@ -14,7 +14,7 @@ import { CommonModule } from "@angular/common";
   styleUrl: './event-statistics.component.css'
 })
 export class EventStatisticsComponent {
-  apiUrl = `${environment.apiUrl}/statistics`;
+  private apiUrl = `${environment.apiUrl}/statistics`;
 
   statistics: EventStatistics = createDefaultEventStatistics();
 

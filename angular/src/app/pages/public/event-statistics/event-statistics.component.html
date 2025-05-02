@@ -15,7 +15,7 @@
 
         <div class="col-4">
           <h5>{{ statistics.unregisteredGuestCount + statistics.registeredAttendeesCount }} Attendees</h5>
-          <div class="form-label">{{ statistics.registeredAttendeesCount }} Registered Attendees</div>
+          <div class="form-label">{{ statistics.registeredAttendeesCount || 0 }} Registered Attendees</div>
           <div class="form-label">{{ statistics.unregisteredGuestCount || 0 }} Unregistered Guests </div>
         </div>
 
@@ -28,7 +28,7 @@
 
         <div class="col-4">
           <h5>${{ statistics.totalIncome || 0 }} Funds Raised</h5>
-          <div>${{ statistics.totalPledged || 0 }} Pledged ({{ statistics.percentagePledgedReceived || 0 }}% received).</div>
+          <div>${{ statistics.totalPledged || 0 }} Pledged ({{ statistics.percentagePledgedReceived | number:'1.2-2' || 0 }}% received).</div>
           <div class="progress">
             <div
               class="progress-bar"
@@ -40,7 +40,7 @@
             </div>
           </div>
           <div *ngIf="statistics.totalIncome < statistics.totalInvoiced; else surplus">
-            <div>${{ statistics.totalIncome }} Received (${{ statistics.totalInvoiced - statistics.totalIncome }} more required).</div>
+            <div>${{ statistics.totalIncome || 0 }} Received (${{ statistics.totalInvoiced - statistics.totalIncome }} more required).</div>
             <div class="progress">
               <div
                 class="progress-bar"

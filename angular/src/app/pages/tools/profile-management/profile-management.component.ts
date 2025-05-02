@@ -19,7 +19,7 @@ import { SearchRequest } from "../../../models/search-request";
   styleUrls: ['./profile-management.component.css']
 })
 export class ProfileManagementComponent implements OnInit {
-  apiUrl = `${environment.apiUrl}/participant/search`;
+  private apiUrl = `${environment.apiUrl}/participant/search`;
   private authenticationService = inject(OidcSecurityService);
 
   private resultsPerPage = 10;

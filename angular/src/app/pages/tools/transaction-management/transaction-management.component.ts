@@ -16,7 +16,7 @@ import { TransactionWithLabels } from "../../../models/transaction-with-labels";
   styleUrls: ['./transaction-management.component.css'],
 })
 export class TransactionManagementComponent implements OnInit {
-  apiUrl = `${environment.apiUrl}/transactions`;
+  private apiUrl = `${environment.apiUrl}/transactions`;
 
   private resultsPerPage = 10;
 

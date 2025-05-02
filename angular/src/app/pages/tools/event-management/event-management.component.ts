@@ -16,7 +16,7 @@ import { EventInfo } from "../../../models/event-info";
   styleUrls: ['./event-management.component.css'],
 })
 export class EventManagementComponent implements OnInit {
-  apiUrl = `${environment.apiUrl}/event/info/search`;
+  private apiUrl = `${environment.apiUrl}/event/info/search`;
 
   private resultsPerPage = 10;
 

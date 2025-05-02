@@ -16,14 +16,12 @@ import { NgFor } from "@angular/common";
 export class DonationsComponent implements OnInit {
   configuration: SiteConfiguration | null = null;
 
-  private apiEndpoint = '';
+  private apiEndpoint = `${environment.apiUrl}/configuration/latest`;
 
   constructor(private http: HttpClient) { }
 
   async ngOnInit() {
     try {
-      this.apiEndpoint = environment.apiUrl + '/configuration/latest';
-
       this.fetchConfiguration();
     } catch (error) {
       console.error('Error loading app configuration:', error);
@@ -31,7 +29,6 @@ export class DonationsComponent implements OnInit {
   }
 
   fetchConfiguration(): void {
-
     this.http.get<SiteConfiguration>(this.apiEndpoint).subscribe({
       next: (data: SiteConfiguration) => {
         this.configuration = data;

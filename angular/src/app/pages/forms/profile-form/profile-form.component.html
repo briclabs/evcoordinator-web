@@ -61,7 +61,7 @@
     <div class="col-1">
       <label for="addressState" class="form-label">State</label>
       <select class="form-select form-control" id="addressState" [(ngModel)]="participant.addrStateAbbr" (input)="validate($event)" required>
-        <option *ngFor="let option of contactUtilityServiceService.getStateAbbreviations()" [ngValue]="option">{{ option }}</option>
+        <option *ngFor="let option of stateAbbreviations" [ngValue]="option">{{ option }}</option>
       </select>
       <error-message [errorMessages]="messages" [fieldName]="'addr_state_abbr'"/>
     </div>
@@ -91,7 +91,7 @@
     <div class="col-3">
       <label for="relationshipEmergency" class="form-label">Emergency Contact Relationship</label>
       <select class="form-select form-control" id="relationshipEmergency" [(ngModel)]="participant.emergencyContactRelationshipType" (input)="validate($event)" required>
-        <option *ngFor="let option of contactUtilityServiceService.getRelationshipEmergencyContact()" [value]="option.key">{{ option.value }}</option>
+        <option *ngFor="let option of emergencyContactRelationshipType" [ngValue]="option">{{ option }}</option>
       </select>
       <error-message [errorMessages]="messages" [fieldName]="'emergency_contact_relationship_type'"/>
     </div>

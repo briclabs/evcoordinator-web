@@ -11,6 +11,7 @@ import { Observable, of } from "rxjs";
 import { CreateResponse } from "../../../../models/create-response";
 import { UpdateResponse } from "../../../../models/update-response";
 import { ErrorMessageComponent } from "../../../subcomponents/error-message/error-message.component";
+import { StaticLookupService } from "../../../../services/static-lookup/static-lookup.service";
 
 @Component({
   selector: 'edit-profile',
@@ -32,20 +33,30 @@ export class EditProfileComponent implements OnInit {
 
   protected participant: Participant;
 
-  participantTypeOptions: string[] = ["VENDOR", "VENUE", "ATTENDEE"]; // TODO - source from DB.
+  participantTypeOptions: string[] = [];
 
-  private apiUrl = '';
+  private apiUrl = `${environment.apiUrl}/participant`;
   private authenticationService = inject(OidcSecurityService);
 
   protected isPreexisting: boolean = false;
 
+  private staticLookupService: StaticLookupService = inject(StaticLookupService);
+
   constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {
     this.participant = createDefaultParticipant();
     this.addrEmailFromAuthenticationService = '';
+
+    this.staticLookupService.participantType().subscribe({
+      next: (data: string[]) => {
+        this.participantTypeOptions = data;
+      },
+      error: (error: any) => {
+        console.error('Error fetching participant types:', error);
+      }
+    });
   }
 
   async ngOnInit() {
-    this.apiUrl = environment.apiUrl + '/participant';
     const currentUrl = this.route.snapshot.url.map(segment => segment.path).join('/');
 
     this.route.paramMap.subscribe(params => {

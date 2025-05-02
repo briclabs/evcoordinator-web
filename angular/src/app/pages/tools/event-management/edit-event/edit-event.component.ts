@@ -10,6 +10,7 @@ import { UpdateResponse } from "../../../../models/update-response";
 import { DeleteResponse } from "../../../../models/delete-response";
 import { ErrorMessageComponent } from "../../../subcomponents/error-message/error-message.component";
 import { ValidatorService } from "../../../../services/validator/validator.service";
+import { StaticLookupService } from "../../../../services/static-lookup/static-lookup.service";
 
 @Component({
   selector: 'app-event-info',
@@ -28,18 +29,28 @@ export class EditEventComponent implements OnInit {
 
   eventInfo: EventInfo;
 
-  eventStatusOptions: string[] = ["CURRENT", "PAST", "CANCELLED"]; // TODO - source from DB.
+  eventStatusOptions: string[] = [];
 
-  private apiUrl = '';
+  private apiUrl = `${environment.apiUrl}/event/info`;
 
   validatorService: ValidatorService = inject(ValidatorService);
 
+  private staticLookupService: StaticLookupService = inject(StaticLookupService);
+
   constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {
     this.eventInfo = createDefaultEventInfo();
+
+    this.staticLookupService.eventStatus().subscribe({
+      next: (data: string[]) => {
+        this.eventStatusOptions = data;
+      },
+      error: (error: any) => {
+        console.error('Error fetching event statuses:', error);
+      }
+    });
   }
 
   async ngOnInit() {
-    this.apiUrl = environment.apiUrl + '/event/info';
 
     this.route.paramMap.subscribe(params => {
       const id = params.get('id');

@@ -14,6 +14,7 @@ import { UpdateResponse } from "../../../../models/update-response";
 import { DeleteResponse } from "../../../../models/delete-response";
 import { ErrorMessageComponent } from "../../../subcomponents/error-message/error-message.component";
 import { ValidatorService } from "../../../../services/validator/validator.service";
+import { StaticLookupService } from "../../../../services/static-lookup/static-lookup.service";
 
 @Component({
   selector: 'app-edit-transaction',
@@ -36,24 +37,40 @@ export class EditTransactionComponent implements OnInit {
   protected actorList: Participant[];
   protected recipientList: Participant[];
 
-  private apiUrl = '';
-  private participantSearchUrl = '';
-  private eventInfoSearchUrl = '';
+  private apiUrl = `${environment.apiUrl}/transactions`;
+  private participantSearchUrl = `${environment.apiUrl}/participant/search`;
+  private eventInfoSearchUrl = `${environment.apiUrl}/event/info/search`;
 
-  transactionTypeOptions: string[] = ["INVOICE", "EXPENSE", "INCOME"]; // TODO - source from DB.
-  instrumentTypeOptions: string[] = ["ELECTRONIC", "CHECK", "CASH"]; // TODO - source from DB.
+  transactionTypeOptions: string[] = [];
+  instrumentTypeOptions: string[] = [];
 
   validatorService: ValidatorService = inject(ValidatorService);
 
-  constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {
-    this.apiUrl = environment.apiUrl + '/transactions';
-    this.participantSearchUrl = environment.apiUrl + '/participant/search';
-    this.eventInfoSearchUrl = environment.apiUrl + '/event/info/search';
+  private staticLookupService: StaticLookupService = inject(StaticLookupService);
 
+  constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {
     this.eventInfoList = [];
     this.actorList = [];
     this.recipientList = [];
     this.transaction = createDefaultTransactionWithLabels();
+
+    this.staticLookupService.transactionType().subscribe({
+      next: (data: string[]) => {
+        this.transactionTypeOptions = data;
+      },
+      error: (error: any) => {
+        console.error('Error fetching transaction types:', error);
+      }
+    });
+
+    this.staticLookupService.transactionInstrument().subscribe({
+      next: (data: string[]) => {
+        this.instrumentTypeOptions = data;
+      },
+      error: (error: any) => {
+        console.error('Error fetching instrument types:', error);
+      }
+    });
   }
 
   async ngOnInit() {

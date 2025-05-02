@@ -20,14 +20,12 @@ export class GuidelinesComponent implements OnInit, AfterViewInit {
 
   eventGuidelines: { [category: string]: string[] } = {};
 
-  private apiEndpoint = '';
+  private apiEndpoint = `${environment.apiUrl}/configuration/latest`;
 
   constructor(private http: HttpClient) { }
 
   ngOnInit() {
     try {
-      this.apiEndpoint = environment.apiUrl + '/configuration/latest';
-
       this.fetchConfiguration();
     } catch (error) {
       console.error('Error loading app configuration:', error);
@@ -57,7 +55,6 @@ export class GuidelinesComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    // Initialize Scrollspy after the view has loaded
     const scrollElement = document.querySelector('.scrollspy-guidelines');
     if (scrollElement) {
       new bootstrap.ScrollSpy(scrollElement, {

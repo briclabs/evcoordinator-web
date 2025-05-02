@@ -6,6 +6,7 @@ import { Participant } from "../../../models/participant";
 import { RegistrationWithLabels } from "../../../models/registration-with-labels";
 import { ErrorMessageComponent } from "../../subcomponents/error-message/error-message.component";
 import { ValidatorService } from "../../../services/validator/validator.service";
+import { StaticLookupService } from "../../../services/static-lookup/static-lookup.service";
 
 @Component({
   selector: 'guest-form',
@@ -27,7 +28,7 @@ export class GuestFormComponent {
   @Input() registrationList: RegistrationWithLabels[];
   @Input() guestProfileList: Participant[];
 
-  relationshipTypeOptions: string[] = ["ADULT", "CHILD", "PET"]; // TODO - source from DB.
+  relationshipTypeOptions: string[] = [];
 
   @Input() messages: Map<string, string> = new Map<string, string>();
   @Output() messagesChange = new EventEmitter<Map<string, string>>();
@@ -38,10 +39,21 @@ export class GuestFormComponent {
 
   validatorService: ValidatorService = inject(ValidatorService);
 
+  private staticLookupService: StaticLookupService = inject(StaticLookupService);
+
   constructor() {
     this.guest = createDefaultGuestWithLabels();
     this.registrationList = [];
     this.guestProfileList = [];
+
+    this.staticLookupService.guestRelationshipType().subscribe({
+      next: (data: string[]) => {
+        this.relationshipTypeOptions = data;
+      },
+      error: (error: any) => {
+        console.error('Error fetching relationship types:', error);
+      }
+    });
   }
 
   validate(event: Event): void {
