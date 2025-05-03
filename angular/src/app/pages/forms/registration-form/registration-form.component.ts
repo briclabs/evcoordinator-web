@@ -23,7 +23,7 @@ export class RegistrationFormComponent {
 
   @Input() messages: Map<string, string> = new Map<string, string>();
   @Output() messagesChange = new EventEmitter<Map<string, string>>();
-  
+
   @Input() showSubmitButton: boolean = false;
 
   @Output() formSubmit = new EventEmitter<void>();
@@ -65,8 +65,8 @@ export class RegistrationFormComponent {
     const selectedParticipant: Participant | undefined = this.participantList.find((participant: Participant) => participant.id === Number.parseInt(participantId, 10));
     if (selectedParticipant) {
       this.registration.participantId = selectedParticipant.id;
-      this.registration.participantNameFirst = selectedParticipant.nameFirst;
-      this.registration.participantNameLast = selectedParticipant.nameLast;
+      this.registration.nameFirst = selectedParticipant.nameFirst;
+      this.registration.nameLast = selectedParticipant.nameLast;
     }
   }
 

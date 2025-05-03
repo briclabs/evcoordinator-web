@@ -9,7 +9,7 @@
       (input)="validate($event)"
     >
       <option *ngFor="let registration of registrationList" [value]="registration.id">
-        {{ registration.eventName }}: {{ registration.eventTitle }} ({{ registration.participantNameFirst }} {{ registration.participantNameLast }})
+        {{ registration.eventName }}: {{ registration.eventTitle }} ({{ registration.nameFirst }} {{ registration.nameLast }})
       </option>
     </select>
     <error-message [errorMessages]="messages" [fieldName]="'registration_id'"/>

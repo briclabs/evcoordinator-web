@@ -88,8 +88,8 @@ export class GuestFormComponent {
       this.guest.eventInfoId = selectedRegistration.eventInfoId;
       this.guest.eventName = selectedRegistration.eventName;
       this.guest.eventTitle = selectedRegistration.eventTitle;
-      this.guest.inviteeFirstName = selectedRegistration.participantNameFirst;
-      this.guest.inviteeLastName = selectedRegistration.participantNameLast;
+      this.guest.inviteeFirstName = selectedRegistration.nameFirst;
+      this.guest.inviteeLastName = selectedRegistration.nameLast;
     }
   }
 
