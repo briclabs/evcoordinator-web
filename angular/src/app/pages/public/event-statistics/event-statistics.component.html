@@ -1,54 +1,30 @@
-<div class="row mt-4 ms-3">
-  @if (statisticsTarget === 'latest') {
-    <div class="row">
-      <div class="col-2"></div>
-        <div class="col-8 d-flex justify-content-center align-items-center flex-column">
-          <span>Upcoming Event:</span>
-        <h1>{{ statistics.eventName }}: <i>{{ statistics.eventTitle }}</i></h1>
-        <div><b>{{ statistics.dateStart }}</b> to <b>{{ statistics.dateEnd }}</b></div>
-      </div>
-    </div>
-  }
-
-  <div class="row mt-4">
-    <div class="col-2"></div>
-    <div class="col-8">
+@if (statistics.eventId > 0) {
+  <div class="row mt-4 ms-3">
+    @if (statisticsTarget === 'latest') {
       <div class="row">
-
-        <div class="col-4 text-center">
-          <h5>{{ statistics.unregisteredGuestCount + statistics.registeredAttendeesCount }} Attendees</h5>
-          <div class="form-label">{{ statistics.registeredAttendeesCount || 0 }} Registered Attendees</div>
-          <div class="form-label">{{ statistics.unregisteredGuestCount || 0 }} Unregistered Guests </div>
+        <div class="col-2"></div>
+          <div class="col-8 d-flex justify-content-center align-items-center flex-column">
+            <span>Upcoming Event:</span>
+          <h1>{{ statistics.eventName }}: <i>{{ statistics.eventTitle }}</i></h1>
+          <div><b>{{ statistics.dateStart }}</b> to <b>{{ statistics.dateEnd }}</b></div>
         </div>
+      </div>
+    }
 
-        <div class="col-4 text-center">
-          <h5>${{ statistics.totalIncome || 0 }} Funds Raised</h5>
-          <div>${{ statistics.totalPledged || 0 }} Pledged ({{ statistics.percentagePledgedReceived | number:'1.2-2' || 0 }}% received).</div>
-          <div class="progress">
-            <div
-              class="progress-bar"
-              role="progressbar"
-              [ngStyle]="{'width': statistics.percentagePledgedReceived + '%'}"
-              [attr.aria-valuenow]="statistics.percentagePledgedReceived"
-              aria-valuemin="0"
-              aria-valuemax="100">
-            </div>
+    <div class="row mt-4">
+      <div class="col-2"></div>
+      <div class="col-8">
+        <div class="row">
+
+          <div class="col-4 text-center">
+            <h5>{{ statistics.unregisteredGuestCount + statistics.registeredAttendeesCount }} Attendees</h5>
+            <div class="form-label">{{ statistics.registeredAttendeesCount || 0 }} Registered Attendees</div>
+            <div class="form-label">{{ statistics.unregisteredGuestCount || 0 }} Unregistered Guests </div>
           </div>
-          <div *ngIf="statistics.totalIncome < statistics.totalInvoiced; else surplus">
-            <div>${{ statistics.totalIncome || 0 }} Received (${{ statistics.totalInvoiced - statistics.totalIncome }} more required).</div>
-            <div class="progress">
-              <div
-                class="progress-bar"
-                role="progressbar"
-                [ngStyle]="{'width': statistics.totalExpenses}"
-                [attr.aria-valuenow]="statistics.totalIncome"
-                aria-valuemin="0"
-                aria-valuemax="100">
-              </div>
-            </div>
-          </div>
-          <ng-template #surplus>
-            <div>${{ statistics.totalIncome || 0}} Received (${{ statistics.totalIncome - statistics.totalInvoiced }} raised for charity).</div>
+
+          <div class="col-4 text-center">
+            <h5>${{ statistics.totalIncome || 0 }} Funds Raised</h5>
+            <div>${{ statistics.totalPledged || 0 }} Pledged ({{ statistics.percentagePledgedReceived | number:'1.2-2' || 0 }}% received).</div>
             <div class="progress">
               <div
                 class="progress-bar"
@@ -57,20 +33,55 @@
                 [attr.aria-valuenow]="statistics.percentagePledgedReceived"
                 aria-valuemin="0"
                 aria-valuemax="100">
-                {{ statistics.percentagePledgedReceived }}%
               </div>
             </div>
-          </ng-template>
-        </div>
-
-        <div class="col-4 text-center">
-          <h5>${{ statistics.totalInvoiced || 0}} Expenses</h5>
-          <div *ngFor="let invoice of statistics.invoices">
-            <div><label class="form-label">{{ invoice.memo }}</label>: ${{ invoice.amount }}</div>
+            <div *ngIf="statistics.totalIncome < statistics.totalInvoiced; else surplus">
+              <div>${{ statistics.totalIncome || 0 }} Received (${{ statistics.totalInvoiced - statistics.totalIncome }} more required).</div>
+              <div class="progress">
+                <div
+                  class="progress-bar"
+                  role="progressbar"
+                  [ngStyle]="{'width': statistics.totalExpenses}"
+                  [attr.aria-valuenow]="statistics.totalIncome"
+                  aria-valuemin="0"
+                  aria-valuemax="100">
+                </div>
+              </div>
+            </div>
+            <ng-template #surplus>
+              <div>${{ statistics.totalIncome || 0}} Received (${{ statistics.totalIncome - statistics.totalInvoiced }} raised for charity).</div>
+              <div class="progress">
+                <div
+                  class="progress-bar"
+                  role="progressbar"
+                  [ngStyle]="{'width': statistics.percentagePledgedReceived + '%'}"
+                  [attr.aria-valuenow]="statistics.percentagePledgedReceived"
+                  aria-valuemin="0"
+                  aria-valuemax="100">
+                  {{ statistics.percentagePledgedReceived }}%
+                </div>
+              </div>
+            </ng-template>
           </div>
-        </div>
 
+          <div class="col-4 text-center">
+            <h5>${{ statistics.totalInvoiced || 0}} Expenses</h5>
+            <div *ngFor="let invoice of statistics.invoices">
+              <div><label class="form-label">{{ invoice.memo }}</label>: ${{ invoice.amount }}</div>
+            </div>
+          </div>
+
+        </div>
       </div>
     </div>
   </div>
-</div>
+} @else {
+  <div class="row mt-4 ms-3">
+    <div class="row">
+      <div class="col-2"></div>
+      <div class="col-8 d-flex justify-content-center align-items-center flex-column">
+        No upcoming events at this time. Check back soon!
+      </div>
+    </div>
+  </div>
+}
