@@ -11,6 +11,7 @@ import { DeleteResponse } from "../../../../models/delete-response";
 import { ErrorMessageComponent } from "../../../subcomponents/error-message/error-message.component";
 import { ValidatorService } from "../../../../services/validator/validator.service";
 import { StaticLookupService } from "../../../../services/static-lookup/static-lookup.service";
+import { EventStatisticsComponent } from "../../../public/event-statistics/event-statistics.component";
 
 @Component({
   selector: 'app-event-info',
@@ -20,6 +21,7 @@ import { StaticLookupService } from "../../../../services/static-lookup/static-l
     NgForOf,
     NgIf,
     ErrorMessageComponent,
+    EventStatisticsComponent,
   ],
   templateUrl: './edit-event.component.html',
   styleUrl: './edit-event.component.css'
