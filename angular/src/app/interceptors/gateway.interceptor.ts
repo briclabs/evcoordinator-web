@@ -8,7 +8,7 @@ export class GatewayInterceptor implements HttpInterceptor {
   constructor() {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    if (req.url.startsWith('/assets')) {
+    if (req.url.startsWith('/assets') || req.url.includes('/application/o/')) {
       return next.handle(req);
     }
 
