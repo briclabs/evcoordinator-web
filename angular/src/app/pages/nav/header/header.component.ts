@@ -1,6 +1,6 @@
-import { Component, inject, Signal } from '@angular/core';
+import { Component, HostListener, inject, OnInit, Signal } from '@angular/core';
 import { AuthenticatedResult, OidcSecurityService, UserDataResult } from "angular-auth-oidc-client";
-import { NgIf } from "@angular/common";
+import { NgClass, NgIf } from "@angular/common";
 
 @Component({
   selector: 'evc-header',
@@ -8,13 +8,24 @@ import { NgIf } from "@angular/common";
   standalone: true,
   imports: [
     NgIf,
+    NgClass,
   ],
   styleUrls: ['./header.component.css'],
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit {
   private readonly authenticationService: OidcSecurityService = inject(OidcSecurityService);
   protected readonly authenticated: Signal<AuthenticatedResult> = this.authenticationService.authenticated;
   private readonly userData: Signal<UserDataResult> = this.authenticationService.userData;
+  protected isSmallScreen: boolean = false;
+
+  ngOnInit(): void {
+    this.checkScreenSize();
+  }
+
+  @HostListener('window:resize', [])
+  onResize() {
+    this.checkScreenSize();
+  }
 
   login(): void {
     this.authenticationService.authorize();
@@ -26,5 +37,9 @@ export class HeaderComponent {
 
   getIsAuthenticated(): boolean {
     return this.authenticated().isAuthenticated;
+  }
+
+  private checkScreenSize() {
+    this.isSmallScreen = window.innerWidth < 768;
   }
 }
