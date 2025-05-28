@@ -1,19 +1,12 @@
-<div class="row mt-4 ms-3">
-  <div class="col-2">
-    <div id="guidelines-list" class="list-group position-fixed">
-      <a *ngFor="let category of getKeys(eventGuidelines)" class="list-group-item list-group-item-action" [routerLink]="[]" [fragment]="formatId(category)" (click)="scrollTo($event, category)">
-        {{ category }}</a>
-    </div>
-  </div>
-  <div class="col-8">
-    <div data-bs-spy="scroll" data-bs-target="#guidelines-list" data-bs-smooth-scroll="true" class="scrollspy-guidelines" tabindex="0">
-      <div *ngFor="let category of getKeys(eventGuidelines)">
-        <h4 [id]="formatId(category)" style="margin-top: -0.125em;">{{ category }}</h4>
-        <hr />
-        <ul>
-          <li *ngFor="let item of eventGuidelines[category]">{{ item }}</li>
-        </ul>
-      </div>
+<div class="row mt-4">
+  <div class="col-md-2"></div>
+  <div class="col-md-8">
+    <div *ngFor="let category of getKeys(eventGuidelines)">
+      <h4 [id]="formatId(category)" style="margin-top: -0.125em;">{{ category }}</h4>
+      <hr />
+      <ul>
+        <li *ngFor="let item of eventGuidelines[category]">{{ item }}</li>
+      </ul>
     </div>
   </div>
 </div>

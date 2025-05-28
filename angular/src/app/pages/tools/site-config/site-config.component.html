@@ -1,76 +1,81 @@
-<div class="row mt-4 ms-3">
-  <div class="col-2"></div>
-  <div class="col-9">
-    <div class="row">
-      <div class="col-2">
-        <label for="donationMinimum" class="form-label">Recommended Donation</label>
-        <div class="input-group mb-3">
-          <span class="input-group-text">$</span>
-          <input type="number" id="donationMinimum" class="form-control px-0" [(ngModel)]="siteConfiguration.recommendedDonation" (input)="validate($event)">
-          <span class="input-group-text">.00</span>
-          <error-message [errorMessages]="messages" [fieldName]="'recommended_donation'"/>
-        </div>
-      </div>
-      <div class="col-8">
-        <label for="charityInfo" class="form-label">Charity Info</label>
-        <div class="input-group" id="charityInfo">
-          <span class="input-group-text">Name</span>
-          <input type="text" id="charityName" class="form-control" [(ngModel)]="siteConfiguration.charityName" (input)="validate($event)">
-          <span class="input-group-text">URL</span>
-          <input type="url" id="charityUrl" class="form-control" [(ngModel)]="siteConfiguration.charityUrl" (input)="validate($event)">
-        </div>
-        <error-message [errorMessages]="messages" [fieldName]="'charity_name'"/>
-        <error-message [errorMessages]="messages" [fieldName]="'charity_url'"/>
-      </div>
-    </div>
-    <div class="row mt-5">
-      <div class="col-10">
-        <label for="fundProcessor" class="form-label">Fund Processor</label>
-        <div class="input-group" id="fundProcessor">
-          <span class="input-group-text">Name</span>
-          <input type="text" id="fundProcessorName" class="form-control" [(ngModel)]="siteConfiguration.fundProcessorName" (input)="validate($event)">
-          <span class="input-group-text">URL</span>
-          <input type="URL" id="fundProcessorUrl" class="form-control" [(ngModel)]="siteConfiguration.fundProcessorUrl" (input)="validate($event)">
-        </div>
-        <error-message [errorMessages]="messages" [fieldName]="'fund_processor_name'"/>
-        <error-message [errorMessages]="messages" [fieldName]="'fund_processor_url'"/>
-        <label for="fundProcessorInstructions" class="form-label mt-3">Fund Processor Instructions</label>
-        <div class="input-group mb-3" id="fundProcessorInstructions">
-          <span class="input-group-text">JSON</span>
-          <textarea id="fundProcessorInstructions" class="form-control" [(ngModel)]="stringifiedFundProcessorInstructions" (input)="updateFundProcessorInstructions($event);"></textarea>
-        </div>
-        <error-message [errorMessages]="messages" [fieldName]="'fund_processor_instructions'"/>
-      </div>
-    </div>
-    <div class="row mt-5">
-      <div class="col-10">
-        <label for="guidelines" class="form-label">Event Guidelines</label>
-        <div class="input-group mb-3" id="guidelines">
-          <span class="input-group-text">JSON</span>
-          <textarea id="eventGuidelines" class="form-control" [(ngModel)]="stringifiedEventGuidelines" (input)="updateEventGuidelines($event);"></textarea>
-        </div>
-        <error-message [errorMessages]="messages" [fieldName]="'event_guidelines'"/>
-      </div>
+<div class="row mt-4 mb-3">
+  <div class="col-md-1 col-2"></div>
+  <div class="col-md-2 col-8">
+    <label for="donationMinimum" class="form-label">Recommended Donation</label>
+    <div class="input-group">
+      <span class="input-group-text">$</span>
+      <input type="number" id="donationMinimum" class="form-control px-0" [(ngModel)]="siteConfiguration.recommendedDonation" (input)="validate($event)">
+      <span class="input-group-text">.00</span>
+      <error-message [errorMessages]="messages" [fieldName]="'recommended_donation'"/>
     </div>
   </div>
-  <div class="row mt-5 mx-2 mb-3">
-    <div class="col-11 text-center">
-      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmationModal">
-        Update
-      </button>
-      <error-message class="text-center" [errorMessages]="messages" [fieldName]="'GENERAL_MESSAGE'"/>
-      <div class="modal fade" id="confirmationModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h1 class="modal-title fs-5" id="confirmationModalLabel">Confirm Update</h1>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cancel"></button>
-            </div>
-            <div class="mx-5 mt-3 mb-3">Ready to update this site with your changes?</div>
-            <div class="modal-footer justify-content-center">
-              <button type="button" id="cancelButton" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-              <button type="button" class="btn btn-primary" (click)="isNewConfiguration ? create() : update()">Confirm</button>
-            </div>
+  <div class="col-md-4">
+    <label for="charityName" class="form-label">Charity Name</label>
+    <input type="text" id="charityName" class="form-control" [(ngModel)]="siteConfiguration.charityName" (input)="validate($event)">
+    <error-message [errorMessages]="messages" [fieldName]="'charity_name'"/>
+  </div>
+  <div class="col-md-4">
+    <label for="charityUrl" class="form-label">Charity Url</label>
+    <input type="url" id="charityUrl" class="form-control" [(ngModel)]="siteConfiguration.charityUrl" (input)="validate($event)">
+    <error-message [errorMessages]="messages" [fieldName]="'charity_url'"/>
+  </div>
+</div>
+
+<div class="row mt-5">
+  <div class="col-md-1 col-2"></div>
+  <div class="col-md-5">
+    <label for="fundProcessor" class="form-label">Fund Processor Name</label>
+    <input type="text" id="fundProcessorName" class="form-control" [(ngModel)]="siteConfiguration.fundProcessorName" (input)="validate($event)">
+    <error-message [errorMessages]="messages" [fieldName]="'fund_processor_name'"/>
+  </div>
+  <div class="col-md-5">
+    <label for="fundProcessor" class="form-label">Fund Processor URL</label>
+    <input type="URL" id="fundProcessorUrl" class="form-control" [(ngModel)]="siteConfiguration.fundProcessorUrl" (input)="validate($event)">
+    <error-message [errorMessages]="messages" [fieldName]="'fund_processor_url'"/>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-1 col-2"></div>
+  <div class="col-md-10">
+    <label for="fundProcessorInstructions" class="form-label mt-md-3">Fund Processor Instructions</label>
+    <div class="input-group mb-3" id="fundProcessorInstructions">
+      <span class="input-group-text">JSON</span>
+      <textarea id="fundProcessorInstructions" class="form-control" [(ngModel)]="stringifiedFundProcessorInstructions" (input)="updateFundProcessorInstructions($event);"></textarea>
+    </div>
+    <error-message [errorMessages]="messages" [fieldName]="'fund_processor_instructions'"/>
+  </div>
+</div>
+
+<div class="row mt-5">
+  <div class="col-md-1"></div>
+  <div class="col-md-10">
+    <label for="guidelines" class="form-label">Event Guidelines</label>
+    <div class="input-group mb-3" id="guidelines">
+      <span class="input-group-text">JSON</span>
+      <textarea id="eventGuidelines" class="form-control" [(ngModel)]="stringifiedEventGuidelines" (input)="updateEventGuidelines($event);"></textarea>
+    </div>
+    <error-message [errorMessages]="messages" [fieldName]="'event_guidelines'"/>
+  </div>
+</div>
+
+<div class="row mt-5 mx-2 mb-3">
+  <div class="col-md-1"></div>
+  <div class="col-md-10 text-center">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmationModal">
+      Update
+    </button>
+    <error-message class="text-center" [errorMessages]="messages" [fieldName]="'GENERAL_MESSAGE'"/>
+    <div class="modal fade" id="confirmationModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="confirmationModalLabel">Confirm Update</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cancel"></button>
+          </div>
+          <div class="mx-5 mt-3 mb-3">Ready to update this site with your changes?</div>
+          <div class="modal-footer justify-content-center">
+            <button type="button" id="cancelButton" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-primary" (click)="isNewConfiguration ? create() : update()">Confirm</button>
           </div>
         </div>
       </div>

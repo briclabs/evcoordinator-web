@@ -1,19 +1,19 @@
-<div class="row justify-content-center">
-    <a class="navbar-brand col-md-1 col-2" href="#"><img src="../../../../assets/images/logo.svg" alt="home" class="img-fluid"></a>
-    <div class="col-md-9 col-12 d-flex align-items-center" [ngClass]="{'justify-content-center': isSmallScreen, 'justify-content-start': !isSmallScreen}">
-        <a class="nav-link px-2" href="/guidelines">Guidelines</a>
-        <a class="nav-link px-2" href="/registration">Registration</a>
-        <a class="nav-link px-2" href="/donations">Donations</a>
-    </div>
-    <div class="col-md-2 col-12 d-flex align-items-center" [ngClass]="{'justify-content-center': isSmallScreen, 'justify-content-end': !isSmallScreen}">
-      <button class="btn btn-outline-primary p-2" *ngIf="!getIsAuthenticated(); else userTools" (click)="login()">Log In</button>&nbsp;
+<div class="row justify-content-center fixed-top bg-white" style="width: 100vw; --bs-gutter-x: 0;">
+  <a class="navbar-brand col-md-1 col-2" href="#"><img src="../../../../assets/images/logo.svg" alt="home" class="img-fluid"></a>
+  <div class="col-md-8 col-12 d-flex align-items-center" [ngClass]="{'justify-content-center': isSmallScreen, 'justify-content-start': !isSmallScreen}">
+      <a class="nav-link px-2" href="/guidelines">Guidelines</a>
+      <a class="nav-link px-2" href="/registration">Registration</a>
+      <a class="nav-link px-2" href="/donations">Donations</a>
+  </div>
+  <div class="col-md-2 col-12 d-flex align-items-center" [ngClass]="{'justify-content-center': isSmallScreen, 'justify-content-end': !isSmallScreen}">
+    <button class="btn btn-outline-primary p-2" *ngIf="!getIsAuthenticated(); else userTools" (click)="login()">Log In</button>&nbsp;
 
-      <ng-template #userTools>
-        <button
-          class="btn btn-outline-primary navbar-toggler d-inline-flex" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="User Name">
-          <div class="small mx-1 d-flex align-items-center justify-content-center fw-bold">{{ getUsername() }}</div>
-          <span class="navbar-toggler-icon"></span>
-        </button>
-      </ng-template>
-    </div>
+    <ng-template #userTools>
+      <button
+        class="btn btn-outline-primary navbar-toggler d-inline-flex" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="User Name">
+        <div class="small mx-1 d-flex align-items-center justify-content-center fw-bold">{{ getUsername() }}</div>
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    </ng-template>
+  </div>
 </div>

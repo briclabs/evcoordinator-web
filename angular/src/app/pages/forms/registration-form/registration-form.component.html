@@ -1,4 +1,5 @@
 <div *ngIf="participantList && participantList.length > 0 && eventInfoList && eventInfoList.length > 0" class="row mb-3">
+  <div class="col-md-1"></div>
   <div class="col-4">
     <label for="participantSelect" class="form-label">Participant</label>
     <select
@@ -32,11 +33,12 @@
 </div>
 
 <div class="row">
-  <div class="col-3 d-flex flex-column justify-content-center align-items-center">
+  <div class="col-md-1"></div>
+  <div class="col-md-3 col-7 d-flex flex-column justify-content-center align-items-center">
     <div class="form-label">Registration for Event:</div>
     <div>{{ registration.eventName }}: <i>{{ registration.eventTitle }}</i></div>
   </div>
-  <div class="col-2">
+  <div class="col-md-2 col-5">
     <label for="amountDonation" class="form-label">Donation</label>
     <div class="input-group">
       <span class="input-group-text">$</span>
@@ -44,7 +46,7 @@
     </div>
     <error-message [errorMessages]="messages" [fieldName]="'donation_pledge'"/>
   </div>
-  <div class="col-4">
+  <div class="col-md-4">
     <label for="signature" class="form-label">Signature</label>
     <input type="text" id="signature" class="form-control" [(ngModel)]="registration.signature" (input)="validate($event)" >
     <error-message [errorMessages]="messages" [fieldName]="'signature'"/>
@@ -52,8 +54,8 @@
 </div>
 
 <div class="row mt-5" *ngIf="showSubmitButton">
-  <div class="col-3"></div>
-  <div class="col-3 mx-2 text-center">
+  <div class="col-4"></div>
+  <div class="col-4 mx-2 text-center">
     <button type="button" class="btn btn-primary" (click)="submitForm()" [disabled]="!messages || messages.size > 0">Submit</button>
   </div>
 </div>

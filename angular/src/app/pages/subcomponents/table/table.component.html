@@ -1,16 +1,16 @@
-<div class="row fixed-top pt-5 bg-white" style="z-index: unset;">
+<div>
   <table-controls
-    class="mt-5 pt-4"
-    [pages]="pages"
-    (addRecord)="onAddRecord()"
-    (pageChange)="onPageChange($event)"
-    (search)="onSearch($event)"
+      [pages]="pages"
+      (addRecord)="onAddRecord()"
+      (pageChange)="onPageChange($event)"
+      (search)="onSearch($event)"
   ></table-controls>
 </div>
 <div class="row mt-5 pt-3">
-  <div class="col-12 justify-content-center">
-    <table class="table table-striped">
-      <thead>
+  <div class="row mt-5">&nbsp;</div>
+  <div class="row">&nbsp;</div>
+  <table class="table table-striped">
+    <thead #tableHeader class="bg-white sticky-top">
       <tr>
         <th *ngFor="let col of filteredColumns" scope="col" (click)="onColumnHeaderClick(col)" style="cursor: pointer;">
           {{ col | titleCase}}
@@ -18,15 +18,14 @@
           <span *ngIf="getSortDirection(col) === 'desc'" class="bi bi-arrow-up"></span>
         </th>
       </tr>
-      </thead>
-      <tbody>
-      <tr style="cursor: pointer;" *ngFor="let row of rows" (click)="onTableRowClick(row)">
-        <td *ngFor="let rawCol of filteredColumns">
-          <ng-container *ngIf="isJson(row[rawCol]); else notJson"><pre>{{ formatJson(row[rawCol]) }}</pre></ng-container>
-          <ng-template #notJson>{{ row[rawCol] }}</ng-template>
-        </td>
-      </tr>
-      </tbody>
-    </table>
-  </div>
+    </thead>
+    <tbody>
+    <tr style="cursor: pointer;" *ngFor="let row of rows" (click)="onTableRowClick(row)">
+      <td *ngFor="let rawCol of filteredColumns">
+        <ng-container *ngIf="isJson(row[rawCol]); else notJson"><pre>{{ formatJson(row[rawCol]) }}</pre></ng-container>
+        <ng-template #notJson>{{ row[rawCol] }}</ng-template>
+      </td>
+    </tr>
+    </tbody>
+  </table>
 </div>

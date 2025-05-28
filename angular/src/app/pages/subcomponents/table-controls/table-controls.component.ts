@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
+import { ActivatedRoute } from "@angular/router";
 
 @Component({
   selector: 'table-controls',
@@ -21,6 +22,13 @@ export class TableControlsComponent {
   @Output() search = new EventEmitter<string>();
 
   searchString: string = '';
+
+  showAddRecordButton: boolean = false;
+
+  constructor(private route: ActivatedRoute) {
+    const currentUrl = this.route.snapshot.url.map(segment => segment.path).join('/');
+    this.showAddRecordButton = currentUrl !== 'tools/history';
+  }
 
   onAddRecord(): void {
     this.addRecord.emit();
@@ -72,7 +80,7 @@ export class TableControlsComponent {
       return result;
     };
 
-    // Case: Current page is near the start.
+    // Case: current page is near the start.
     if (current <= maxVisible - 2) {
       return [...range(firstPage, maxVisible), '...', lastPage];
     }

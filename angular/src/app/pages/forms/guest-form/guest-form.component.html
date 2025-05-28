@@ -32,16 +32,14 @@
 </div>
 
 <div class="row">
-  <div class="col-1">
-  </div>
-  <div class="col-2">
+  <div class="col-md-2 col-5">
     <label for="relationshipType" class="form-label">Guest Type</label>
     <select class="form-select form-control" id="relationshipType" [(ngModel)]="guest.relationship" (input)="validate($event)" required>
       <option *ngFor="let option of relationshipTypeOptions" [ngValue]="option">{{ option }}</option>
     </select>
     <error-message [errorMessages]="messages" [fieldName]="'relationship'"/>
   </div>
-  <div class="col-5">
+  <div class="col-md-5 col-7">
     <label for="guestRawName" class="form-label">Guest Name</label>
     <input type="text" id="guestRawName" class="form-control" [(ngModel)]="guest.rawGuestName" (input)="validate($event)" required />
     <error-message [errorMessages]="messages" [fieldName]="'raw_guest_name'"/>

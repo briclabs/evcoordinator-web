@@ -1,113 +1,115 @@
-<div class="row mt-4 ms-3">
-  <div class="row">
-    <div class="progress mb-4">
-      <div
-        class="progress-bar"
-        role="progressbar"
-        [style.width.%]="(currentStep / totalSteps) * 100"
-        [attr.aria-valuenow]="currentStep"
-        aria-valuemin="1"
-        [attr.aria-valuemax]="totalSteps"
-      >
-        Step {{ currentStep }} of {{ totalSteps }}
+<div class="row mt-5 mb-4 ms-5 me-5">
+  <div class="col-12 progress mt-2">
+     <div class="progress-bar"
+      role="progressbar"
+      [style.width.%]="(currentStep / totalSteps) * 100"
+      [attr.aria-valuenow]="currentStep"
+      aria-valuemin="1"
+      [attr.aria-valuemax]="totalSteps"
+     >
+      Step {{ currentStep }} of {{ totalSteps }}
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="d-flex justify-content-between mt-4">
+    <button class="btn btn-primary" [disabled]="currentStep === 1" (click)="previousStep()">Back</button>
+    <button class="btn btn-primary" [disabled]="currentStep === totalSteps" (click)="nextStep()">Next</button>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-sm-12">&nbsp;</div>
+</div>
+
+<div class="row">
+  <div *ngIf="currentStep === 1" class="step step-1">
+    <profile-form
+      [(participant)]="participant"
+      (participantChange)="checkPreexistingProfile()"
+      [isPreexisting]="isPreexisting"
+      [isParticipantTypeDropdown]="false"
+      [isEmailAddressChangeable]="true"
+      [(messages)]="profileMessages"
+      [showSubmitButton]="false">
+    </profile-form>
+  </div>
+
+  <div *ngIf="currentStep === 2" class="step step-2">
+    <div class="row">
+      <div class="col-2"></div>
+      <div class="col-md-8">
+        <label class="form-label col d-flex justify-content-center align-items-center text-center">Please note any guests that will be accompanying you. Adult guests should still submit their own registration.</label>
+        <br>
+        <hr>
+      </div>
+    </div>
+    @for (guest of guestsWithMessages(); track guest; let i = $index) {
+      <div class="row mb-3">
+        <div class="col-md-3"></div>
+        <div class="col-md-1 col-2">
+          <button class="btn btn-outline-danger bi-person-fill-dash ms-auto mt-4" aria-label="Remove Guest" (click)="onRemoveGuest(i)"></button>
+        </div>
+        <div class="col-md-7 col-10">
+          <guest-form
+            [(guest)]="guestsWithMessages()[i]"
+            [(messages)]="guestsWithMessages()[i].messages">
+          </guest-form>
+        </div>
+      </div>
+    }
+    <div class="row">
+      <div class="col-md-3"></div>
+      <div class="col-md-1 col-2 mt-4">
+        <button class="btn btn-outline-primary bi-person-fill-add" aria-label="Add Guest" (click)="onAddGuest()"></button>
       </div>
     </div>
   </div>
 
-  <div class="row">
-    <div class="d-flex justify-content-between mt-4">
-      <button class="btn btn-primary" [disabled]="currentStep === 1" (click)="previousStep()">Previous</button>
-      <button class="btn btn-primary" *ngIf="currentStep < totalSteps" (click)="nextStep()">Next</button>
-    </div>
-  </div>
+  <div *ngIf="currentStep === 3" class="step step-3">
+    <registration-form
+      [(registration)]="registration"
+      [(messages)]="registrationMessages"
+      [showSubmitButton]="false">
+    </registration-form>
 
-  <div class="col-2"></div>
-  <div class="col-9">
-
-    <div *ngIf="currentStep === 1" class="step step-1">
-      <profile-form
-        [(participant)]="participant"
-        (participantChange)="checkPreexistingProfile()"
-        [isPreexisting]="isPreexisting"
-        [isParticipantTypeDropdown]="false"
-        [isEmailAddressChangeable]="true"
-        [(messages)]="profileMessages"
-        [showSubmitButton]="false">
-      </profile-form>
-    </div>
-
-    <div *ngIf="currentStep === 2" class="step step-2">
-      <div class="row">
-        <div class="col-9">
-          <label class="form-label col d-flex justify-content-center align-items-center">Please note any guests that will be accompanying you. Adult guests should still submit their own registration.</label>
-          <br>
-          <hr>
-        </div>
-      </div>
-      @for (guest of guestsWithMessages(); track guest; let i = $index) {
-        <div class="row mb-3">
-          <div class="col-1 d-flex justify-content-end align-items-start mt-4">
-            <button class="btn btn-outline-danger bi-person-fill-dash ms-auto" aria-label="Remove Guest" (click)="onRemoveGuest(i)"></button>
+    <div class="row mt-2 mt-3">
+      <div class="col-2"></div>
+      <div class="col-8 text-center">
+        @if (this.hasMessages()) {
+          <div class="alert alert-danger" role="alert">
+            Please resolve issues before continuing.
           </div>
-          <div class="col-11">
-            <guest-form
-              [(guest)]="guestsWithMessages()[i]"
-              [(messages)]="guestsWithMessages()[i].messages">
-            </guest-form>
-          </div>
+        }
+        <div class="mb-3">
+          <error-message class="text-center" [errorMessages]="generalMessages" [fieldName]="'GENERAL_MESSAGE'"/>
+          <error-message class="text-center" [errorMessages]="generalMessages" [fieldName]="'PARTICIPANT'"/>
+          <error-message class="text-center" [errorMessages]="generalMessages" [fieldName]="'GUESTS'"/>
+          <error-message class="text-center" [errorMessages]="generalMessages" [fieldName]="'REGISTRATION'"/>
         </div>
-      }
-
-      <div class="row">
-        <div class="col-1 d-flex justify-content-end align-items-start mt-4">
-          <button class="btn btn-outline-primary bi-person-fill-add" aria-label="Add Guest" (click)="onAddGuest()"></button>
-        </div>
-      </div>
-    </div>
-
-    <div *ngIf="currentStep === 3" class="step step-3">
-      <registration-form
-        [(registration)]="registration"
-        [(messages)]="registrationMessages"
-        [showSubmitButton]="false">
-      </registration-form>
-
-      <div class="row mt-2 mt-3">
-        <div class="col-9 text-center">
-          @if (this.hasMessages()) {
-            <div class="alert alert-danger" role="alert">
-              Please resolve issues before continuing.
-            </div>
-          }
-          <div class="mb-3">
-            <error-message class="text-center" [errorMessages]="generalMessages" [fieldName]="'GENERAL_MESSAGE'"/>
-            <error-message class="text-center" [errorMessages]="generalMessages" [fieldName]="'PARTICIPANT'"/>
-            <error-message class="text-center" [errorMessages]="generalMessages" [fieldName]="'GUESTS'"/>
-            <error-message class="text-center" [errorMessages]="generalMessages" [fieldName]="'REGISTRATION'"/>
-          </div>
-          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmationModal" [disabled]="this.hasMessages()">
-            Submit Registration
-          </button>
-          <div class="modal fade" id="confirmationModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h1 class="modal-title fs-5" id="confirmationModalLabel">Submit Registration</h1>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cancel"></button>
-                </div>
-                <div class="modal-body">
-                  I agree to abide by the Guidelines, and,<br>I understand submission of my registration is a promise<br>to contribute the amount I specified in my registration.
-                </div>
-                <div class="modal-footer">
-                  <button type="button" id="cancel" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                  <button type="button" id="submit" class="btn btn-primary" (click)="submitRegistration()">Submit</button>
-                </div>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmationModal" [disabled]="this.hasMessages()">
+          Submit Registration
+        </button>
+        <div class="modal fade" id="confirmationModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="confirmationModalLabel">Submit Registration</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cancel"></button>
+              </div>
+              <div class="modal-body">
+                I agree to abide by the Guidelines, and,<br>I understand submission of my registration is a promise<br>to contribute the amount I specified in my registration.
+              </div>
+              <div class="modal-footer">
+                <button type="button" id="cancel" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" id="submit" class="btn btn-primary" (click)="submitRegistration()">Submit</button>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <br>
   </div>
+  <br>
 </div>
