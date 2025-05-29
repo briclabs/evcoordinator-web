@@ -1,16 +1,12 @@
-<div>
-  <table-controls
-      [pages]="pages"
-      (addRecord)="onAddRecord()"
-      (pageChange)="onPageChange($event)"
-      (search)="onSearch($event)"
-  ></table-controls>
-</div>
-<div class="row mt-5 pt-3">
-  <div class="row mt-5">&nbsp;</div>
-  <div class="row">&nbsp;</div>
+<table-controls
+    [pages]="pages"
+    (addRecord)="onAddRecord()"
+    (pageChange)="onPageChange($event)"
+    (search)="onSearch($event)"
+></table-controls>
+<div class="row">
   <table class="table table-striped">
-    <thead #tableHeader class="bg-white sticky-top">
+    <thead class="bg-white sticky-top">
       <tr>
         <th *ngFor="let col of filteredColumns" scope="col" (click)="onColumnHeaderClick(col)" style="cursor: pointer;">
           {{ col | titleCase}}
@@ -19,13 +15,13 @@
         </th>
       </tr>
     </thead>
-    <tbody>
-    <tr style="cursor: pointer;" *ngFor="let row of rows" (click)="onTableRowClick(row)">
-      <td *ngFor="let rawCol of filteredColumns">
-        <ng-container *ngIf="isJson(row[rawCol]); else notJson"><pre>{{ formatJson(row[rawCol]) }}</pre></ng-container>
-        <ng-template #notJson>{{ row[rawCol] }}</ng-template>
-      </td>
-    </tr>
+    <tbody class="position-relative">
+      <tr style="cursor: pointer;" *ngFor="let row of rows" (click)="onTableRowClick(row)">
+        <td *ngFor="let rawCol of filteredColumns">
+          <ng-container *ngIf="isJson(row[rawCol]); else notJson"><pre>{{ formatJson(row[rawCol]) }}</pre></ng-container>
+          <ng-template #notJson>{{ row[rawCol] }}</ng-template>
+        </td>
+      </tr>
     </tbody>
   </table>
 </div>

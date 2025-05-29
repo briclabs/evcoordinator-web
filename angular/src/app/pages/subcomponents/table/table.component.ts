@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, Input, Output, ElementRef, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TableControlsComponent } from "../table-controls/table-controls.component";
 import { CommonModule } from "@angular/common";
 import { TitleCasePipe } from "../../../pipes/title-case/title-case.pipe";
@@ -13,9 +13,7 @@ import { TitleCasePipe } from "../../../pipes/title-case/title-case.pipe";
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.css']
 })
-export class TableComponent implements AfterViewInit {
-  @ViewChild('tableHeader', { static: true }) tableHeader!: ElementRef;
-
+export class TableComponent {
   @Input() columns: string[] = [];
   @Input() rows: { [key: string]: any }[] = [];
   @Input() pages: number[] = [];
@@ -41,18 +39,6 @@ export class TableComponent implements AfterViewInit {
 
   currentSortColumn?: string;
   sortAsc?: boolean;
-
-  ngAfterViewInit() {
-    const tableHeaderHeight = this.tableHeader.nativeElement.offsetTop;
-    this.setStickyTheadTop(tableHeaderHeight);
-  }
-
-  setStickyTheadTop(offset: number): void {
-    const theadElement = document.querySelector('thead.sticky-top') as HTMLElement;
-    if (theadElement) {
-      theadElement.style.top = `${offset}px`;
-    }
-  }
 
   get filteredColumns(): string[] {
     return this.columns.filter(column => !this.excludedColumns.includes(column));

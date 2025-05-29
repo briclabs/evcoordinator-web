@@ -1,7 +1,9 @@
 <div class="container-fluid">
-  <evc-nav role="navigation"></evc-nav>
-  <div class="row">&nbsp;</div>
-  <div class="row">&nbsp;</div>
-  <div class="row">&nbsp;</div>
-  <router-outlet></router-outlet>
+  <div #header>
+    <evc-header role="navigation"></evc-header>
+  </div>
+  <evc-tools-menu role="navigation"></evc-tools-menu>
+  <div #content class="position-relative">
+    <router-outlet></router-outlet>
+  </div>
 </div>
