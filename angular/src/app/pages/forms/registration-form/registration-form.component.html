@@ -1,6 +1,6 @@
 <div *ngIf="participantList && participantList.length > 0 && eventInfoList && eventInfoList.length > 0" class="row mb-3">
-  <div class="col-md-1"></div>
-  <div class="col-4">
+  <div class="col-md-3"></div>
+  <div class="col-md-3 col-6">
     <label for="participantSelect" class="form-label">Participant</label>
     <select
       id="participantSelect"
@@ -15,7 +15,7 @@
     </select>
     <error-message [errorMessages]="messages" [fieldName]="'participant_id'"/>
   </div>
-  <div class="col-5">
+  <div class="col-md-3 col-6">
     <label for="eventInfoSelect" class="form-label">Event</label>
     <select
       id="eventInfoSelect"
@@ -55,7 +55,7 @@
 
 <div class="row mt-5" *ngIf="showSubmitButton">
   <div class="col-4"></div>
-  <div class="col-4 mx-2 text-center">
+  <div class="col-4 text-center">
     <button type="button" class="btn btn-primary" (click)="submitForm()" [disabled]="!messages || messages.size > 0">Submit</button>
   </div>
 </div>

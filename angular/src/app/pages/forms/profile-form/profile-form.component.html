@@ -102,8 +102,8 @@
   </div>
 
   <div class="row mt-5">
-    <div class="col-2"></div>
-    <div class="col-md-5">
+    <div class="col-4"></div>
+    <div class="col-md-4">
       <div class="d-flex align-items-center">
         <div *ngIf="isParticipantTypeDropdown" class="flex-fill">
           <label for="participantType" class="form-label">Profile Type</label>
@@ -118,8 +118,8 @@
 }
 @else if (isPreexisting) {
   <div class="row mt-5" *ngIf="isPreexisting">
-    <div class="col-md-1"></div>
-    <div class="col-md-7 text-center">
+    <div class="col-md-2"></div>
+    <div class="col-md-8 text-center">
       <strong>Thank you for previously registering!</strong>
       <br />
       Your previously submitted information will be used for this registration.
@@ -133,8 +133,8 @@
 }
 
 <div class="row mt-5" *ngIf="showSubmitButton">
-  <div class="col-3"></div>
-  <div class="col-md-3 mx-2 text-center">
+  <div class="col-4"></div>
+  <div class="col-md-4 text-center">
     <button type="button" class="btn btn-primary" (click)="submitForm()" [disabled]="!messages || messages.size > 0">Submit</button>
   </div>
 </div>

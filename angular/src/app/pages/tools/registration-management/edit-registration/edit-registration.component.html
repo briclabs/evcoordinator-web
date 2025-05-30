@@ -1,26 +1,23 @@
-<div class="row mt-4 ms-3">
-  <div class="col-2"></div>
-  <div class="col-9">
-    <registration-form
-      [(registration)]="registration"
-      [participantList]="participantList"
-      [eventInfoList]="eventInfoList"
-      [showSubmitButton]="true"
-      [(messages)]="messages"
-      (formSubmit)="registration.id ? update() : create()">
-    </registration-form>
-    @if (registration.id) {
-      <div class="row mt-2">
-        <div class="col-3"></div>
-        <div class="col-3 mx-2 text-center">
-          <button type="button" class="btn btn-delete" (click)="delete()" [disabled]="!messages || messages.size > 0">Delete</button>
-        </div>
-      </div>
-    }
-    <div class="row">
-      <div class="col-9 mx-2 text-center">
-        <error-message class="text-center" [errorMessages]="messages" [fieldName]="'GENERAL_MESSAGE'"/>
-      </div>
+<div class="mt-4">
+  <registration-form
+    [(registration)]="registration"
+    [participantList]="participantList"
+    [eventInfoList]="eventInfoList"
+    [showSubmitButton]="true"
+    [(messages)]="messages"
+    (formSubmit)="registration.id ? update() : create()">
+  </registration-form>
+</div>
+@if (registration.id) {
+  <div class="row mt-2">
+    <div class="col-4"></div>
+    <div class="col-4 text-center">
+      <button type="button" class="btn btn-delete" (click)="delete()" [disabled]="!messages || messages.size > 0">Delete</button>
     </div>
+  </div>
+}
+<div class="row">
+  <div class="col-12 text-center">
+    <error-message class="text-center" [errorMessages]="messages" [fieldName]="'GENERAL_MESSAGE'"/>
   </div>
 </div>
