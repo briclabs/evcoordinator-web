@@ -64,7 +64,6 @@ export class GuestManagementComponent implements OnInit {
     };
     this.http.post<{ list: RegistrationWithLabels[], count: number }>(`${this.guestSearchApiUrl}`, searchRequest).subscribe({
       next: (data) => {
-        console.log('Guests:', data);
         if (data && data.list && data.count > 0) {
           this.columns = Object.keys(data.list[0]);
           this.rows = [...data.list]

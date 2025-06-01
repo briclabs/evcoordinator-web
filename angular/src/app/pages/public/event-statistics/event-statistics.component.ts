@@ -26,7 +26,6 @@ export class EventStatisticsComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['statisticsTarget']) {
-      console.log('statisticsTarget updated:', this.statisticsTarget);
       this.getEventStatistics();
     }
   }
@@ -34,7 +33,6 @@ export class EventStatisticsComponent implements OnChanges {
   private getEventStatistics() {
     this.http.get<EventStatistics>(`${this.apiUrl}/${(this.statisticsTarget)}`).subscribe({
       next: (data) => {
-        console.log('Latest Event Statistics:', data);
         this.statistics = data;
       },
       error: (error) => {

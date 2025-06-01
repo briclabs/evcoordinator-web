@@ -152,7 +152,7 @@ bootstrapApplication(AppComponent, {
         responseType: 'code',
         silentRenew: true,
         useRefreshToken: true,
-        logLevel: LogLevel.Debug,
+        logLevel: LogLevel.None,
       },
     }),
     { provide: HTTP_INTERCEPTORS, useClass: GatewayInterceptor, multi: true },

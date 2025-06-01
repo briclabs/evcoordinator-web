@@ -75,7 +75,6 @@ export class ValidatorService {
 
   mustBeValidUsState(inputValue: string, clonedMessages: Map<string, string>, messageKey: string) {
     if (!inputValue || inputValue.trim().length != 2) {
-      console.log('Input value: ', inputValue);
       clonedMessages.set(messageKey, 'Must be a valid US state abbreviation.')
     } else {
       clonedMessages.delete(messageKey);

@@ -148,7 +148,6 @@ export class EditTransactionComponent implements OnInit {
       next: (data) => {
         if (data && data.list) {
           this.eventInfoList = data.list;
-          console.log(this.eventInfoList);
         }
       },
       error: (error) => {

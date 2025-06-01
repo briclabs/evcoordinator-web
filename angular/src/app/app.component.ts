@@ -1,8 +1,19 @@
-import { Component, ElementRef, ViewChild, inject, OnInit, HostListener } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  ViewChild,
+  OnInit,
+  HostListener,
+  Renderer2,
+  Inject,
+  ChangeDetectorRef,
+} from '@angular/core';
+import { DOCUMENT } from '@angular/common';
 import { OidcSecurityService } from "angular-auth-oidc-client";
-import { RouterOutlet } from "@angular/router";
+import { NavigationEnd, Router, RouterOutlet } from "@angular/router";
 import { HeaderComponent } from "./pages/nav/header/header.component";
 import { ToolsMenuComponent } from "./pages/nav/tools-menu/tools-menu.component";
+import { filter } from "rxjs/operators";
 
 @Component({
   selector: 'app-root',
@@ -16,44 +27,69 @@ import { ToolsMenuComponent } from "./pages/nav/tools-menu/tools-menu.component"
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  @HostListener('window:resize') onResize() {
-    this.updateTops();
-  }
-
   @ViewChild('header', { static: false }) header!: ElementRef;
   @ViewChild('content', { static: false }) content!: ElementRef;
 
-  private readonly authenticationService = inject(OidcSecurityService);
-
-  @HostListener('window:load', ['$event'])
-  onWindowLoad() {
-    this.updateTops();
-  }
+  constructor(
+    private readonly authenticationService: OidcSecurityService,
+    private readonly router: Router,
+    private renderer: Renderer2,
+    private changeDetectorRef: ChangeDetectorRef,
+    @Inject(DOCUMENT) private document: Document
+  ) {}
 
   ngOnInit(): void {
     this.authenticationService.checkAuth().subscribe();
     this.authenticationService.isAuthenticated().subscribe();
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe(() => {
+        setTimeout(() => {
+          this.updateTops();
+        });
+      });
+  }
+
+  @HostListener('window:load')
+  onWindowLoad() {
+    this.updateTops();
+  }
+
+  @HostListener('window:resize')
+  onWindowResize(): void {
+    this.updateTops();
   }
 
   updateTops() {
+    if (!this.header || !this.content) {
+      return;
+    }
+
+    const headerHeight: number = this.header.nativeElement.querySelector('.fixed-top')?.getBoundingClientRect()?.height || 0;
+
+    const contentHeight = this.updateTopOfTableControlsIfPresent(headerHeight);
+    this.updateTopOfTableHeaderIfPresent(contentHeight);
+    this.updateTopOfContentBody(contentHeight);
+  }
+
+  private updateTopOfTableControlsIfPresent(headerHeight: number) {
+    const tableControls: HTMLElement | null = this.document.querySelector('table-controls .fixed-top');
+    const contentHeight = headerHeight + (tableControls?.getBoundingClientRect()?.height || 0);
+    if (tableControls) {
+      this.renderer.setStyle(tableControls, 'top', `${headerHeight}px`);
+    }
+    return contentHeight;
+  }
+
+  private updateTopOfTableHeaderIfPresent(contentHeight: number) {
+    const tableHeader: HTMLElement | null = this.document.querySelector('app-table thead');
+    if (tableHeader) {
+      this.renderer.setStyle(tableHeader, 'top', `${contentHeight}px`);
+    }
+  }
+
+  private updateTopOfContentBody(contentHeight: number) {
     const contentBody = this.content.nativeElement;
-    const headerHeight: number = this.header.nativeElement.querySelector('.fixed-top').getBoundingClientRect().height;
-    const tableControls: HTMLElement | null = document.querySelector('table-controls .fixed-top');
-    const tableHeader: HTMLElement | null = document.querySelector('app-table thead');
-    const tableHeaderHeight: number = tableHeader?.getBoundingClientRect().height ?? 0;
-    const headerHeightPlusTableControlsHeight: number = headerHeight + (tableControls?.getBoundingClientRect().height ?? 0);
-    const tableBody: HTMLElement | null = document.querySelector('app-table tbody');
-
-    console.log('Table header: ', tableHeader);
-    console.log('Table header height: ', tableHeaderHeight);
-
-    // set the content top
-    contentBody?.setAttribute('style', 'top: ' + headerHeightPlusTableControlsHeight + 'px');
-
-    // set the top of the table controls, if present
-    tableControls?.setAttribute('style', 'top: ' + headerHeight + 'px;');
-
-    // set the top of the table header, if present
-    tableHeader?.setAttribute('style', 'top: ' + headerHeightPlusTableControlsHeight + 'px;');
+    this.renderer.setStyle(contentBody, 'top', `${contentHeight}px`);
   }
 }

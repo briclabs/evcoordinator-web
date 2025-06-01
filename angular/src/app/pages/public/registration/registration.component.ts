@@ -72,9 +72,7 @@ export class RegistrationComponent implements OnInit{
   }
 
   onRemoveGuest(index: number): void {
-    console.log('Guest Messages before removal:', this.guestsWithMessages().map(guest => guest.messages));
     this.guestsWithMessages.set(this.guestsWithMessages().filter((_, i) => i !== index));
-    console.log('Guest Messages after removal:', this.guestsWithMessages().map(guest => guest.messages));
   }
 
   nextStep(): void {
@@ -169,7 +167,6 @@ export class RegistrationComponent implements OnInit{
       return;
     }
     const createResponse: CreateResponse = error.error as CreateResponse;
-    console.log('Create Response:', createResponse);
 
     let receivedMessages: Map<string, string> = new Map<string, string>();
     if (createResponse.messages instanceof Map) {
@@ -191,7 +188,6 @@ export class RegistrationComponent implements OnInit{
         filteredMessages.set(key.replace(sectionPrefix, '').trim(), value);
       }
     })
-    console.log('Filtered Messages:', filteredMessages);
     return filteredMessages;
   }
 

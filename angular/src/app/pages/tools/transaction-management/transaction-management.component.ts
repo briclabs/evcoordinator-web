@@ -64,7 +64,6 @@ export class TransactionManagementComponent implements OnInit {
     };
     this.http.post<{ list: TransactionWithLabels[], count: number }>(`${this.apiUrl}/search`, searchRequest).subscribe({
       next: (data) => {
-        console.log('Transactions:', data);
         if (data && data.list && data.count > 0) {
           const formattedList = data.list.map(transaction => {
             return {

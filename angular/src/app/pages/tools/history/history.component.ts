@@ -57,7 +57,6 @@ export class HistoryComponent implements OnInit {
     };
     this.http.post<{ list: HistoryWithLabels[], count: number }>(`${this.apiUrl}/search`, searchRequest).subscribe({
       next: (data) => {
-        console.log('History Records:', data);
         if (data && data.list && data.count > 0) {
           this.columns = [ // manually determine the order of columns
             'timeRecorded',

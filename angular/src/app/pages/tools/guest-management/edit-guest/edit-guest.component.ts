@@ -80,7 +80,6 @@ export class EditGuestComponent implements OnInit {
       next: (data) => {
         if (data && data.list) {
           this.registrationList = data.list;
-          console.log(this.registrationList);
         }
       },
       error: (error) => {

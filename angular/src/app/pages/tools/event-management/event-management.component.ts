@@ -56,7 +56,6 @@ export class EventManagementComponent implements OnInit {
     };
     this.http.post<{ list: EventInfo[], count: number }>(`${this.apiUrl}`, searchRequest).subscribe({
       next: (data) => {
-        console.log('Event Info:', data);
         if (data && data.list && data.count > 0) {
           this.columns = Object.keys(data.list[0]);
           this.rows = [...data.list]

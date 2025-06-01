@@ -58,7 +58,6 @@ export class RegistrationManagementComponent implements OnInit {
     };
     this.http.post<{ list: RegistrationWithLabels[], count: number }>(`${this.registrationSearchApiUrl}`, searchRequest).subscribe({
       next: (data) => {
-        console.log('Registrations:', data);
         if (data && data.list && data.count > 0) {
           this.columns = Object.keys(data.list[0]);
           this.rows = [...data.list]
