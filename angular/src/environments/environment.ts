@@ -7,6 +7,7 @@ export const environment = {
   apiUrl: 'http://localhost:8080/v1', // Default API URL
   authAuthority: 'http://localhost:9000/application/o/evcoordinator/', // Default Auth URL
   clientId: 'evcoordinator', // Default clientId
+  appTitle: 'EV Coordinator', // Default application title
 };
 
 /*

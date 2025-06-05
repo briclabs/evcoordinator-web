@@ -9,6 +9,7 @@ services:
         API_URL: ${API_URL}
         AUTH_AUTHORITY: ${AUTH_AUTHORITY}
         CLIENT_ID: ${CLIENT_ID}
+        APP_TITLE: ${APP_TITLE}
     ports:
       - "4200:80"
     env_file:

@@ -5,6 +5,7 @@ FROM --platform=$BUILDPLATFORM node:23.8.0-bullseye-slim AS builder
 ARG API_URL
 ARG AUTH_AUTHORITY
 ARG CLIENT_ID
+ARG APP_TITLE
 
 RUN mkdir /project
 WORKDIR /project
@@ -19,6 +20,7 @@ COPY . .
 RUN sed -i "s|__API_URL__|${API_URL}|g" src/environments/environment.prod.ts
 RUN sed -i "s|__AUTH_AUTHORITY__|${AUTH_AUTHORITY}|g" src/environments/environment.prod.ts
 RUN sed -i "s|__CLIENT_ID__|${CLIENT_ID}|g" src/environments/environment.prod.ts
+RUN sed -i "s|__APP_TITLE__|${APP_TITLE}|g" src/environments/environment.prod.ts
 RUN cat -v src/environments/environment.prod.ts
 RUN npm run buildProd
 

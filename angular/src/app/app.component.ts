@@ -14,6 +14,7 @@ import { NavigationEnd, Router, RouterOutlet } from "@angular/router";
 import { HeaderComponent } from "./pages/nav/header/header.component";
 import { ToolsMenuComponent } from "./pages/nav/tools-menu/tools-menu.component";
 import { filter } from "rxjs/operators";
+import { environment } from "../environments/environment";
 
 @Component({
   selector: 'app-root',
@@ -36,7 +37,9 @@ export class AppComponent implements OnInit {
     private renderer: Renderer2,
     private changeDetectorRef: ChangeDetectorRef,
     @Inject(DOCUMENT) private document: Document
-  ) {}
+  ) {
+    document.title = environment.appTitle;
+  }
 
   ngOnInit(): void {
     this.authenticationService.checkAuth().subscribe();
