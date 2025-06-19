@@ -9,7 +9,7 @@ import { OidcSecurityService } from "angular-auth-oidc-client";
   styleUrls: ['./tools-menu.component.css'],
 })
 export class ToolsMenuComponent implements OnInit {
-  private readonly authenticationService: OidcSecurityService = inject(OidcSecurityService);
+  readonly authenticationService: OidcSecurityService = inject(OidcSecurityService);
   protected isSmallScreen: boolean = false;
 
   constructor(private renderer: Renderer2, @Inject(DOCUMENT) private document: Document) {

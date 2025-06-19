@@ -3,19 +3,21 @@
     <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
   </div>
   <div class="offcanvas-body">
-    <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-      <h6>Coordinator Tools</h6>
-      <li class="nav-item" style="list-style-type: none;">
-        <a class="nav-link" href="/tools/events">Event Management</a>
-        <a class="nav-link" href="/tools/profile-management">Profile Management</a>
-        <a class="nav-link" href="/tools/registrations">Registration Management</a>
-        <a class="nav-link" href="/tools/guests">Guest Management</a>
-        <a class="nav-link" href="/tools/transactions">Transaction Management</a>
-        <a class="nav-link" href="/tools/configuration">Site Configuration</a>
-        <a class="nav-link" href="/tools/history">History</a>
-      </li>
-    </ul>
-    <br/><hr>
+    @if(authenticationService.userData().userData['groups'].includes("evcoordinator:admin")) {
+      <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+        <h6>Coordinator Tools</h6>
+        <li class="nav-item" style="list-style-type: none;">
+          <a class="nav-link" href="/tools/events">Event Management</a>
+          <a class="nav-link" href="/tools/profile-management">Profile Management</a>
+          <a class="nav-link" href="/tools/registrations">Registration Management</a>
+          <a class="nav-link" href="/tools/guests">Guest Management</a>
+          <a class="nav-link" href="/tools/transactions">Transaction Management</a>
+          <a class="nav-link" href="/tools/configuration">Site Configuration</a>
+          <a class="nav-link" href="/tools/history">History</a>
+        </li>
+      </ul>
+      <br/><hr>
+    }
     <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
       <li class="nav-item" style="list-style-type: none;">
         <a class="nav-link" href="/tools/my-profile">My Profile</a>
