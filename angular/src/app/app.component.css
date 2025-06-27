@@ -1,0 +1,38 @@
+.flex-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* Spacers that reserve space in the document flow */
+.spacer-header,
+.spacer-table-tools {
+  flex: 0 0 auto;
+  visibility: hidden; /* Reserve space but don't show */
+  pointer-events: none;
+}
+
+.content-area {
+  flex: 1 1 auto;
+  position: relative;
+  z-index: 0;
+}
+
+/* Fixed elements that don't affect document flow */
+.fixed-header {
+  position: fixed;
+  top: 0; /* Will be adjusted by JavaScript */
+  left: 0;
+  right: 0;
+  z-index: 1000;
+}
+
+.fixed-table-tools {
+  position: fixed;
+  top: 0; /* Will be adjusted by JavaScript */
+  left: 0;
+  right: 0;
+  z-index: 999;
+  background: white;
+}

@@ -1,9 +1,11 @@
-<div class="container-fluid">
-  <div #header>
+<div class="container-fluid flex-layout">
+  <div #header class="fixed-header">
     <evc-header role="navigation"></evc-header>
   </div>
   <evc-tools-menu role="navigation"></evc-tools-menu>
-  <div #content class="position-relative">
+  <div class="spacer-header" id="headerSpacer"></div>
+  <div class="spacer-table-controls" id="tableControlsSpacer"></div>
+  <div #content class="content-area">
     <router-outlet></router-outlet>
   </div>
 </div>
